@@ -13,7 +13,14 @@ const config: Config = {
       backgroundImage: {
         "auth-image": "url('/images/authimage.png')",
       },
-      colors: {},
+      colors: {
+        "blue-normal": "#1175A7",
+        "blue-normal-hover": "#0F6996",
+        "blue-normal-active": "#0E5E86",
+        "blue-dark-normal": "#0D587D",
+        "blue-dark-hover": "#0A4664",
+        "blue-dark-active": "#08354B",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
