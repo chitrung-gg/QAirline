@@ -44,9 +44,9 @@ export default function Footer() {
                 <div className="grid grid-cols-1 laptop:grid-cols-4 desktop:grid-cols-4 mobile:gap-2">
                     {/* Logo Column */}
                     <div className="col-span-1 flex
-                    mobile:justify-center 
-                    tablet:justify-center 
-                    mini-laptop:justify-center"
+                    mobile:justify-center mobile:pb-4
+                    tablet:justify-center tablet:pb-4
+                    mini-laptop:justify-center mini-laptop:pb-4"
                         >
                         <div className="flex w-fit h-fit hover:cursor-pointer bg-white rounded-xl items-center py-2 pr-4 pl-2" onClick={() => router.push('/')}>
                             <Image
