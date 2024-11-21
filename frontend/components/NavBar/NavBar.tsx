@@ -11,11 +11,7 @@ import {
     NavbarMenuItem,
     Button,
     Link,
-    Dropdown,
-    DropdownTrigger,
-    Avatar,
-    DropdownMenu,
-    DropdownItem
+    Divider
 } from "@nextui-org/react";
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -81,6 +77,7 @@ export default function NavBar() {
         <Navbar
             isMenuOpen={isMenuOpen}
             onMenuOpenChange={setIsMenuOpen}
+            isBordered
             className="bg-white"
             maxWidth="2xl"
         >
@@ -124,17 +121,20 @@ export default function NavBar() {
                 </NavbarItem>
             </NavbarContent>
 
-            <NavbarMenu>
+            <NavbarMenu className='gap-3 pt-4'>
                 {navItems.map((item) => (
                     <NavbarMenuItem key={item.href}>
-                        <Link
-                            color="foreground"
-                            onClick={() => router.push(item.href)}
-                            size="lg"
-                            className="w-full"
-                        >
-                            {item.label}
-                        </Link>
+                        <div>
+                            <Link
+                                onClick={() => router.push(item.href)}
+                                size="lg"
+                                className="w-full font-semibold text-blue-normal"
+                            >
+                                {item.label}
+                            </Link>
+                            <Divider className="font-bold bg-black mt-2"/>
+                        </div>
+
                     </NavbarMenuItem>
                 ))}
             </NavbarMenu>
