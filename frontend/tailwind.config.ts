@@ -20,6 +20,7 @@ const config: Config = {
         "blue-dark-normal": "#0D587D",
         "blue-dark-hover": "#0A4664",
         "blue-dark-active": "#08354B",
+        "secondary-light-hover": "#ECD8C5",
       },
       borderRadius: {
         lg: "var(--radius)",
