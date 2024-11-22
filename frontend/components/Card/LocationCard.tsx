@@ -10,8 +10,8 @@ export default function LocationCard() {
     }
 
   return (
-    <div className="gap-5 grid" >
-        <Card isPressable onPress={() => console.log("item pressed")} className="w-full h-[300px] col-span-12 sm:col-span-7">
+    <div className="gap-5 grid place-items-center" >
+        <Card isPressable onPress={() => console.log("item pressed")} className="w-full h-[300px] max-w-screen-xl">
             <Image
                 removeWrapper
                 alt="Location image"
