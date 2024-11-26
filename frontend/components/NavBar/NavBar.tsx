@@ -22,10 +22,10 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-    { label: "Về chúng tôi", href: "/about" },
-    { label: "Ưu đãi", href: "/special-deals" },
+    { label: "Giới thiệu", href: "/about" },
+    { label: "Ưu đãi", href: "/offers" },
     { label: "Đặt vé", href: "/booking" },
-    { label: "Thông tin hành trình", href: "/trip-info" },
+    { label: "Thông tin hành trình", href: "/search-flight" },
     { label: "Hỗ trợ", href: "/support" }
 ];
 
@@ -78,6 +78,7 @@ export default function NavBar() {
             isMenuOpen={isMenuOpen}
             onMenuOpenChange={setIsMenuOpen}
             isBordered
+            position='static'
             className="bg-white"
             maxWidth="2xl"
         >
@@ -107,7 +108,7 @@ export default function NavBar() {
                         <Link
                             color="foreground"
                             onClick={() => router.push(item.href)}
-                            className="text-lg font-medium hover:cursor-pointer hover:text-blue-normal"
+                            className="text-lg font-medium hover:cursor-pointer hover:text-blue-normal transition-all"
                         >
                             {item.label}
                         </Link>
@@ -115,12 +116,14 @@ export default function NavBar() {
                 ))}
             </NavbarContent>
 
+            {/* Render Auth Button */}
             <NavbarContent justify="end">
                 <NavbarItem>
                     {renderAuthButton()}
                 </NavbarItem>
             </NavbarContent>
-
+            
+            {/* Mobile menu items */}
             <NavbarMenu className='gap-3 pt-4'>
                 {navItems.map((item) => (
                     <NavbarMenuItem key={item.href}>

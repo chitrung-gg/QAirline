@@ -4,7 +4,7 @@ import React from 'react';
 import { Accordion, AccordionItem, Divider, Link } from '@nextui-org/react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaPhoneAlt, FaYoutube } from "react-icons/fa";
 import { FaXTwitter } from 'react-icons/fa6';
 
 interface FooterLink {
@@ -21,10 +21,10 @@ const footerData: FooterSection[] = [
     {
         title: "Liên kết nhanh",
         links: [
-            { label: "Về chúng tôi", href: "/about" },
+            { label: "Giới thiệu", href: "/about" },
             { label: "Đặt vé", href: "/booking" },
-            { label: "Tin tức", href: "/ariticles" },
-            { label: "Ưu đãi", href: "/special-deals" },
+            { label: "Tin tức", href: "/news" },
+            { label: "Ưu đãi", href: "/offers" },
         ]
     },
     {
@@ -96,7 +96,7 @@ export default function Footer() {
                                         <div key={link.label} className='mb-2 ml-2'>
                                             <Link
                                                 onClick={() => router.push(link.href)}
-                                                className="hover:text-gray-300 transition-colors hover:cursor-pointer hover:underline text-white text-lg"
+                                                className="hover:text-gray-300 transition-colors hover:cursor-pointer hover:underline text-white text-base"
                                             >
                                                 {link.label}
                                             </Link>
@@ -117,9 +117,13 @@ export default function Footer() {
                         <div className="flex gap-2 desktop:flex-col laptop:flex-col font-bold text-white justify-center
                         mobile:items-center
                         tablet:items-center
-                        mini-laptop:items-center">
+                        mini-laptop:items-center"
+                        >
                             <p className="text-2xl">Liên Hệ</p>
-                            <p className="text-3xl">1900.8386</p>
+                            <div className='flex items-center gap-2 p-2 w-fit rounded-lg border-2'> 
+                                <FaPhoneAlt className='text-xl'/>
+                                <p className="text-3xl">1900.8386</p>
+                            </div>
                         </div>
 
                         {/* Social media */}
