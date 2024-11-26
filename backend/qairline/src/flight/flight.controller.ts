@@ -9,27 +9,27 @@ export class FlightController {
   constructor(private flightService: FlightService) {}
 
   @Post()
-  createFlight(@Body() createFlightDto: CreateFlightDto) {
-    return this.flightService.create(createFlightDto);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: number, @Body() updateFlightDto: UpdateFlightDto) {
-    return this.flightService.update(id, updateFlightDto);
+  async createFlight(@Body() createFlightDto: CreateFlightDto) {
+    return this.flightService.createFlight(createFlightDto);
   }
 
   @Get()
   getAllFlights() {
-    return this.flightService.findAll();
+    return this.flightService.getAllFlights();
   }
 
   @Get(':id')
   getFlightById(@Param('id') id: number) {
-    return this.flightService.findOne(id)
+    return this.flightService.getFlightById(id)
+  }
+
+  @Patch(':id')
+  async updateFlight(@Param('id') id: number, @Body() updateFlightDto: UpdateFlightDto) {
+    return this.flightService.updateFlight(id, updateFlightDto);
   }
 
   @Delete(':id') 
-  deleteFlight(@Param('id') id: number) {
-    return this.flightService.remove(id)
+  async deleteFlight(@Param('id') id: number) {
+    return this.flightService.deleteFlight(id)
   }
 }

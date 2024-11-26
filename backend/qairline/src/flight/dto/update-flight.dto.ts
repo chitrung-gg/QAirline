@@ -1,17 +1,24 @@
 import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class UpdateFlightDto {
+    @IsNumber()
+    id: number
+
+    @IsOptional()
+    @IsString()
+    airline?: string
+
     @IsOptional()
     @IsString()
     flightNumber?: string
 
     @IsOptional()
-    @IsNumber()
-    departureAirportId?: number;
+    @IsString()
+    departureAirport?: string;
     
     @IsOptional()
-    @IsNumber()
-    arrivalAirportId?: number;
+    @IsString()
+    arrivalAirport?: string;
     
     @IsOptional()
     @IsDate()
@@ -24,4 +31,8 @@ export class UpdateFlightDto {
     @IsOptional()
     @IsNumber()
     availableSeats?: number
+
+    @IsOptional()
+    @IsString()
+    status?: string = "Available"
 }
