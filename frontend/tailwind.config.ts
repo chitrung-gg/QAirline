@@ -12,6 +12,7 @@ const config: Config = {
     extend: {
       backgroundImage: {
         "auth-image": "url('/images/authimage.png')",
+        "sky-image": "url('/images/sky.jpg')",
       },
       colors: {
         "blue-normal": "#1175A7",
