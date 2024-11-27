@@ -4,6 +4,7 @@ import {Card, Radio, CardBody, RadioGroup, Divider, Button, Input} from "@nextui
 import {Autocomplete, AutocompleteItem, DatePicker} from "@nextui-org/react";
 import React, { useState } from "react";
 import {parseDate, getLocalTimeZone} from "@internationalized/date";
+import { GoArrowSwitch } from "react-icons/go";
 
 const formatDate = (date: Date): string => {
     const year = date.getFullYear();
@@ -15,24 +16,32 @@ const formatDate = (date: Date): string => {
 
 export default function FlightSearchCard() {
 
-const [selected, setSelected] = React.useState("london");
-const [departureDate, setDepartureDate] = useState(parseDate(formatDate(new Date())));
-const [returnDate, setReturnDate] = useState(parseDate(formatDate(new Date())));
+    const [selected, setSelected] = React.useState("bay-thang");
+    const [departureDate, setDepartureDate] = useState(parseDate(formatDate(new Date())));
+    const [returnDate, setReturnDate] = useState(parseDate(formatDate(new Date())));
 
-const sampleData = [
-        { value: "london", label: "London" },
-        { value: "paris", label: "Paris" },
-        { value: "new-york", label: "New York" },
-        { value: "tokyo", label: "Tokyo" },
-        { value: "berlin", label: "Berlin" },
-        { value: "madrid", label: "Madrid" },
-        { value: "rome", label: "Rome" },
-        { value: "moscow", label: "Moscow" },
-        { value: "beijing", label: "Beijing" },
-        { value: "bangkok", label: "Bangkok" },
-        { value: "hanoi", label: "Hanoi" },
-        { value: "saigon", label: "Saigon" },
-    ];
+    const [departure, setDeparture] = useState("london");
+    const [destination, setDestination] = useState("paris");
+
+    const handleSwap = () => {
+        setDeparture(destination);
+        setDestination(departure);
+      };
+
+    const sampleData = [
+            { value: "london", label: "London" },
+            { value: "paris", label: "Paris" },
+            { value: "new-york", label: "New York" },
+            { value: "tokyo", label: "Tokyo" },
+            { value: "berlin", label: "Berlin" },
+            { value: "madrid", label: "Madrid" },
+            { value: "rome", label: "Rome" },
+            { value: "moscow", label: "Moscow" },
+            { value: "beijing", label: "Beijing" },
+            { value: "bangkok", label: "Bangkok" },
+            { value: "hanoi", label: "Hanoi" },
+            { value: "saigon", label: "Saigon" },
+        ];
 
   return (
     <div className="gap-5 bg-white w-full place-items-center">
@@ -45,24 +54,29 @@ const sampleData = [
                 </RadioGroup>
             </div>
             <div className="flex w-full flex-wrap md:flex-nowrap gap-4 items-center">
-                <Autocomplete label="Điểm đi" size="sm" variant="bordered" className="flex-1">
-                    {sampleData.map((data) => (
-                    <AutocompleteItem key={data.value} value={data.value}>
-                        {data.label}
-                    </AutocompleteItem>
-                    ))}
-                </Autocomplete>
-                <Autocomplete label="Điểm đến" size="sm" variant="bordered" className="flex-1">
-                    {sampleData.map((data) => (
-                    <AutocompleteItem key={data.value} value={data.value}>
-                        {data.label}
-                    </AutocompleteItem>
-                    ))}
-                </Autocomplete>
-                <DatePicker showMonthAndYearPickers label="Ngày đi" className="flex-1" size="sm" variant="bordered" value={departureDate} onChange={setDepartureDate}/>
-                <DatePicker showMonthAndYearPickers label="Ngày về" className="flex-1" size="sm" variant="bordered" value={returnDate} onChange={setReturnDate}/>
-                <Input size="sm" type="number" className="flex-1" label="Hành khách" variant="bordered" />
-                <Button size="md" radius="sm" className="flex-1 bg-blue-normal text-white font-medium text-base">Tìm chuyến bay</Button>
+                <div className="flex flex-wrap md:flex-nowrap gap-1 items-center flex-auto">
+                    <Autocomplete label="Điểm đi" size="sm" variant="bordered" className="flex-auto w-32" selectedKey={departure} onSelectionChange={(value) => setDeparture(value as string)}>
+                        {sampleData.map((data) => (
+                        <AutocompleteItem key={data.value} value={data.value}>
+                            {data.label}
+                        </AutocompleteItem>
+                        ))}
+                    </Autocomplete>
+                    <Button size="md" onClick={handleSwap} className="bg-transparent" isIconOnly>
+                        <GoArrowSwitch />
+                    </Button>
+                    <Autocomplete label="Điểm đến" size="sm" variant="bordered" className="flex-auto w-32" selectedKey={destination} onSelectionChange={(value) => setDestination(value as string)}>
+                        {sampleData.map((data) => (
+                            <AutocompleteItem key={data.value} value={data.value}>
+                                {data.label}
+                            </AutocompleteItem>
+                        ))}
+                    </Autocomplete>
+                </div>
+                <DatePicker showMonthAndYearPickers label="Ngày đi" className="flex-auto w-32" size="sm" variant="bordered" value={departureDate} onChange={setDepartureDate}/>
+                <DatePicker showMonthAndYearPickers label="Ngày về" className="flex-auto w-32" size="sm" variant="bordered" value={returnDate} onChange={setReturnDate}/>
+                <Input size="sm" type="number" className="flex-auto w-20" label="Hành khách" variant="bordered" />
+                <Button size="md" radius="sm" className="flex-auto w-32 bg-blue-normal text-white font-medium text-base">Tìm chuyến bay</Button>
             </div>
         </CardBody>
         <Divider/>
