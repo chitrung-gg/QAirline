@@ -1,7 +1,8 @@
-import { Controller, Post, Body, Patch, Param, Get, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, Get, Delete, UseGuards } from '@nestjs/common';
 import { FlightService } from './flight.service';
 import { CreateFlightDto } from './dto/create-flight.dto';
 import { UpdateFlightDto } from './dto/update-flight.dto';
+import { JwtAuthenticationGuard } from 'src/authentication/guard/jwtAuthentication.guard';
 
 
 @Controller('flights')
@@ -29,6 +30,7 @@ export class FlightController {
   }
 
   @Delete(':id') 
+  // @UseGuards(JwtAuthenticationGuard)
   async deleteFlight(@Param('id') id: number) {
     return this.flightService.deleteFlight(id)
   }
