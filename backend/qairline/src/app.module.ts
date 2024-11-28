@@ -15,6 +15,11 @@ import { UserModule } from './user/user.module';
 import { AirportModule } from './airport/airport.module';
 import { BookingModule } from './booking/booking.module';
 import { JwtModule } from '@nestjs/jwt';
+import { ReportModule } from './report/report.module';
+import { IntroductionModule } from './introduction/introduction.module';
+import { PromotionModule } from './promotion/promotion.module';
+import { AnnouncementModule } from './announcement/announcement.module';
+import { NewsModule } from './news/news.module';
 
 
 @Module({
@@ -41,7 +46,7 @@ import { JwtModule } from '@nestjs/jwt';
         expiresIn: configService.get('JWT_EXPIRATION_TIME'),
       },
     }),
-  }), DatabaseModule, AuthenticationModule, UserModule, AirportModule, BookingModule],
+  }), DatabaseModule, AuthenticationModule, UserModule, AirportModule, BookingModule, ReportModule, IntroductionModule, PromotionModule, AnnouncementModule, NewsModule],
   controllers: [AppController],
   providers: [AppService],
 })

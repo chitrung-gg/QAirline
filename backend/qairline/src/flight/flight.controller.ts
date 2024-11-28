@@ -30,7 +30,7 @@ export class FlightController {
   }
 
   @Delete(':id') 
-  // @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(JwtAuthenticationGuard)
   async deleteFlight(@Param('id') id: number) {
     return this.flightService.deleteFlight(id)
   }
