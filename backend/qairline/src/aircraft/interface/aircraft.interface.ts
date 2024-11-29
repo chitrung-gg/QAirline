@@ -4,8 +4,8 @@ export interface Aircraft {
     model: string
     manufacturer: string
     capacity: number
-    seat_classes: {}
+    seatClasses: {}
     status: "Active" | "Maintenance" | "Retired"
-    created_at: Date
-    updated_at: Date
+    createdAt: Date
+    updatedAt: Date
 }

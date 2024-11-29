@@ -39,11 +39,14 @@ export class Flight {
     @Column({ type: "int" })
     availableSeats: number; // Ghế còn trống
 
+	@Column({ type: "jsonb" })
+  	seatClasses: Record<string, number>; // Cấu hình hạng ghế mặc định (JSON)
+
     // @Column({ type: "varchar", length: 50 })
     // flightType: string; // Loại chuyến bay (Domestic, International)
 
     @OneToMany(() => Booking, (booking) => booking.flight)
-    bookings?: Booking[]; // Liên kết với bảng Booking
+    bookings: Booking[]; // Liên kết với bảng Booking
 
     @Column({ type: "float", nullable: true })
     duration?: number; // Thời gian bay (tính toán từ departureTime và arrivalTime)

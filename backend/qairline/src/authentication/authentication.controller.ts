@@ -1,7 +1,7 @@
 
 import { Body, Req, Controller, HttpCode, Post, UseGuards, Res, Get, HttpException, HttpStatus, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { CreateUserDto } from 'src/user/dto/createUser.dto';
 import RequestWithUser from './interface/requestWithUser.interface';
 import { LocalAuthenticationGuard } from './guard/localAuthentication.guard';
 import { RegisterDto } from './dto/register.dto';

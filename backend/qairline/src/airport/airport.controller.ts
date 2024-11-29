@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { AirportService } from './airport.service';
-import { CreateAirportDto } from './dto/create-airport.dto';
-import { UpdateAirportDto } from './dto/update-airport.dto';
+import { CreateAirportDto } from './dto/createAirport.dto';
+import { UpdateAirportDto } from './dto/updateAirport.dto';
 
 @Controller('airport')
 export class AirportController {

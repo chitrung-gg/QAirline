@@ -5,12 +5,14 @@ import { Repository } from "typeorm";
 import { CreateFlightDto } from "./dto/createFlight.dto";
 import { UpdateFlightDto } from "./dto/updateFlight.dto";
 import { FlightNotFoundException } from "./exception/flightNotFound.exception";
+import { AircraftService } from "src/aircraft/aircraft.service";
 
 @Injectable()
 export class FlightService {
     constructor(
         @InjectRepository(Flight)
-        private flightRepository: Repository<Flight>
+        private flightRepository: Repository<Flight>,
+        private aircraftService: AircraftService
     ) {}
 
     async setDuration(departureTime: Date, arrivalTime: Date) {
@@ -22,9 +24,18 @@ export class FlightService {
         return diff / (1000 * 60 * 60); // 1000ms = 1s, 60s = 1m, 60m = 1h
     }
 
+    async setSeatClasses(aircraftService: AircraftService, flight: Flight) {
+        flight.seatClasses = {
+            ...(await aircraftService.getAircraftById(flight.aircraft.id)).seatClasses
+        }
+    }
+
     async createFlight(flight: CreateFlightDto) {
         const newFlight = await this.flightRepository.create(flight)
         this.setDuration(newFlight.departureTime, newFlight.arrivalTime)
+        flight.seatClasses = {
+            ...(await this.aircraftService.getAircraftById(flight.aircraft.id)).seatClasses
+        }
         await this.flightRepository.save(newFlight)
         return newFlight
     }
@@ -58,7 +69,7 @@ export class FlightService {
     async deleteFlight(id: number) {
         const deleteResponse = await this.flightRepository.delete(id)
         if (!deleteResponse.affected) {
-            throw new HttpException('Flight not found', HttpStatus.NOT_FOUND);
+            throw new HttpException('Exception found in FlightService: deleteFlight', HttpStatus.NOT_FOUND);
         }
     }
 }

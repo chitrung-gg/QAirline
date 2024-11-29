@@ -13,7 +13,7 @@ export interface Flight {
     arrivalTime: Date;
     status?: "Scheduled" | "Arrived" | "Delayed" | "Cancelled";
     availableSeats: number;
-    bookings?: Booking[]
+    bookings: Booking[]
     duration?: number
     // flightDuration: string;
 }

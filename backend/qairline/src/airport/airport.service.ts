@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAirportDto } from './dto/create-airport.dto';
-import { UpdateAirportDto } from './dto/update-airport.dto';
+import { CreateAirportDto } from './dto/createAirport.dto';
+import { UpdateAirportDto } from './dto/updateAirport.dto';
 
 @Injectable()
 export class AirportService {

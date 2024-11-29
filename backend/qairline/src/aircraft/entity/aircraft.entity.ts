@@ -1,7 +1,7 @@
 import { Flight } from "src/flight/entity/flight.entity";
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
-@Entity("aircrafts")
+@Entity()
 export class Aircraft {
   @PrimaryGeneratedColumn()
   id: number; // Primary Key

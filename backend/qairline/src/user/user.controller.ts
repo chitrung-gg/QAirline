@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Post, UseFilters, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { JwtAuthenticationGuard } from "src/authentication/guard/jwtAuthentication.guard";
-import { CreateUserDto } from "./dto/create-user.dto";
+import { CreateUserDto } from "./dto/createUser.dto";
 
 @Controller('user')
 export class UserController {

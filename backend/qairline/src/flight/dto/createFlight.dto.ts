@@ -1,4 +1,4 @@
-import { IsDate, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDate, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
 import { Aircraft } from "src/aircraft/entity/aircraft.entity";
 import { Airport } from "src/airport/entity/airport.entity";
 import { Booking } from "src/booking/entity/booking.entity";
@@ -29,9 +29,11 @@ export class CreateFlightDto {
    @IsNumber()
    availableSeats: number
 
-   @IsOptional()
    @IsObject()
-   bookings?: Booking[]
+   seatClasses: Record<string, number>
+   
+   @IsArray()
+   bookings: Booking[]
 
    @IsOptional()
    @IsNumber()

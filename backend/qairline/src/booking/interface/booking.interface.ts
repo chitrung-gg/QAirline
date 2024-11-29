@@ -1,18 +1,22 @@
+import { Flight } from "src/flight/entity/flight.entity"
+import { Promotion } from "src/promotion/entity/promotion.entity"
+import { User } from "src/user/entity/user.entity"
+
 export interface Booking {
-    booking_id: number // (Primary Key)
-    user_id: number // (liên kết với bảng người dùng)
-    flight_id: number // (liên kết với bảng chuyến bay)
-    passenger_name: string
-    passenger_dob: Date
-    passport_number: string
-    ticket_code: string
-    ticket_price: number
-    seat_number: number
-    seat_class: string
-    booking_date: Date
-    booking_status: 'Purchased' | 'Waiting' | 'Cancelled'
-    // payment_status: 'Paid'
-    total_amount: number
-    promo_code: string
-    payment_date: Date
+    id: number 
+    user: User 
+    flight: Flight 
+    passengerName: string
+    passengerDob: Date
+    passportNumber: string
+    ticketCode: string
+    promotion: Promotion
+    ticketPrice: number
+    seatNumber: number
+    seatClass: string
+    bookingDate: Date
+    bookingStatus: "Confirmed" | "Pending" | "Cancelled"
+    paymentStatus: "Paid" | "Pending" | "Unpaid"
+    paymentDate: Date
+    cancelDate: Date;
 }

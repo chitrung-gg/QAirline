@@ -1,55 +1,70 @@
 import { Flight } from "src/flight/entity/flight.entity";
+import { Promotion } from "src/promotion/entity/promotion.entity";
 import { User } from "src/user/entity/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Booking {
     @PrimaryGeneratedColumn()
-    booking_id: number;
+    id: number;
   
-    @ManyToOne(() => User, (user) => user.booking, { nullable: false })
+    @ManyToOne(() => User, (user) => user.bookings, { eager: true })
+  	@JoinColumn({ name: "userId" })
     user: User; // Relation to User entity
   
-    @ManyToOne(() => Flight, (flight) => flight.bookings, { nullable: false })
+	@ManyToOne(() => Flight, (flight) => flight.bookings, { eager: true })
+	@JoinColumn({ name: "flightId" })
     flight: Flight; // Relation to Flight entity
   
     @Column({ type: "varchar", length: 255 })
-    passenger_name: string;
+    passengerName: string;
   
     @Column({ type: "date" })
-    passenger_dob: Date;
+    passengerDob: Date;
   
     @Column({ type: "varchar", length: 50 })
-    passport_number: string;
+    passportNumber: string;
   
     @Column({ type: "varchar", length: 50 })
-    ticket_code: string;
+    ticketCode: string;
+
+	@OneToOne(() => Promotion, (promotion) => promotion.booking)
+	@JoinColumn({name: "bookingId"})
+	promotion: Promotion
+
+    @Column({ type: "jsonb"})
+    ticketPrice: Record<string, number>;
   
-    @Column({ type: "decimal", precision: 10, scale: 2 })
-    ticket_price: number;
-  
-    @Column({ type: "int" })
-    seat_number: number;
+    @Column({ type: "varchar", length: 10 })
+    seatNumber: string; // Số ghế đã đặt (ví dụ: A1, B2)
   
     @Column({ type: "varchar", length: 50 })
-    seat_class: string;
+    seatClass: string; // Loại hạng ghế (Economy, Business, First Class)
 
     @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-    booking_date: Date;
+    bookingDate: Date;
   
     @Column({
       type: "enum",
-      enum: ["Purchased", "Waiting", "Cancelled"],
-      default: "Waiting",
+      enum: ["Confirmed", "Pending", "Cancelled"],
+      default: "Confirmed",
     })
-    booking_status: "Purchased" | "Waiting" | "Cancelled";
-  
-    @Column({ type: "decimal", precision: 10, scale: 2 })
-    total_amount: number;
-  
-    @Column({ type: "varchar", length: 50, nullable: true })
-    promo_code: string;
-  
+    bookingStatus: "Confirmed" | "Pending" | "Cancelled";
+
+	@Column({
+		type: "enum",
+		enum: ["Paid", "Pending", "Unpaid"],
+		default: "Paid",
+	})
+	paymentStatus: "Paid" | "Pending" | "Unpaid";
+
     @Column({ type: "timestamp", nullable: true })
-    payment_date: Date;
+    paymentDate: Date;
+
+	@Column({ type: "timestamp", nullable: true })
+    cancelDate: Date;
+
+	// @ManyToOne(() => Payment, (payment) => payment.bookings, { eager: true, nullable: true })
+	// @JoinColumn({ name: "payment_id" })
+	// payment: Payment; // Thông tin thanh toán (nếu có)
 }
