@@ -1,10 +1,11 @@
 export interface Aircraft {
-    aircraft_id: number
-    aircraft_code: string
+    id: number
+    aircraftCode: string
     model: string
     manufacturer: string
     capacity: number
     seat_classes: {}
+    status: "Active" | "Maintenance" | "Retired"
     created_at: Date
     updated_at: Date
 }

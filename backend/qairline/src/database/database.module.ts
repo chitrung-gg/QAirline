@@ -22,6 +22,7 @@ console.log('__dirname:', __dirname);
                     __dirname + '/../**/*.entity{.ts,.js}',
                 ],
                 synchronize: true,
+                autoLoadEntities: true
             })
             
         })

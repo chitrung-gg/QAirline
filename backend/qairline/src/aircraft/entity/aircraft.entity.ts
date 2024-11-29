@@ -1,12 +1,13 @@
+import { Flight } from "src/flight/entity/flight.entity";
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 @Entity("aircrafts")
 export class Aircraft {
   @PrimaryGeneratedColumn()
-  aircraft_id: number; // Primary Key
+  id: number; // Primary Key
 
   @Column({ type: "varchar", length: 50, unique: true })
-  aircraft_code: string; // Mã máy bay (unique)
+  aircraftCode: string; // Mã máy bay (unique)
 
   @Column({ type: "varchar", length: 100 })
   model: string; // Model của máy bay (Airbus A320, Boeing 737)
@@ -17,12 +18,22 @@ export class Aircraft {
   @Column({ type: "int" })
   capacity: number; // Tổng số ghế của máy bay
 
-  @Column({ type: "json" })
-  seat_classes: Record<string, number>; // Cấu hình hạng ghế mặc định (JSON)
+  @Column({ type: "jsonb" })
+  seatClasses: Record<string, number>; // Cấu hình hạng ghế mặc định (JSON)
+
+  @Column({
+    type: "enum",
+    enum: ["Active", "Maintenance", "Retired"],
+    default: "Active",
+  })
+  status: "Active" | "Maintenance" | "Retired"; // Trạng thái máy bay
 
   @CreateDateColumn()
-  created_at: Date; // Thời gian tạo
+  createdAt: Date; // Thời gian tạo
 
   @UpdateDateColumn()
-  updated_at: Date; // Thời gian cập nhật
+  updatedAt: Date; // Thời gian cập nhật
+
+  @OneToMany(() => Flight, (flight) => flight.aircraft)
+  flights?: Flight[]; // Liên kết tới các chuyến bay sử dụng máy bay này
 }

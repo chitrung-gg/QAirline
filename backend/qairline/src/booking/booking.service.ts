@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBookingDto } from './dto/create-booking.dto';
-import { UpdateBookingDto } from './dto/update-booking.dto';
+import { CreateBookingDto } from './dto/createBooking.dto';
+import { UpdateBookingDto } from './dto/updateBooking.dto';
 
 @Injectable()
 export class BookingService {

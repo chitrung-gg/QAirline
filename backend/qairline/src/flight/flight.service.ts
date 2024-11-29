@@ -2,9 +2,9 @@ import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Flight } from "./entity/flight.entity";
 import { Repository } from "typeorm";
-import { CreateFlightDto } from "./dto/create-flight.dto";
-import { UpdateFlightDto } from "./dto/update-flight.dto";
-import { FlightNotFoundException } from "./exception/flight-not-found.exception";
+import { CreateFlightDto } from "./dto/createFlight.dto";
+import { UpdateFlightDto } from "./dto/updateFlight.dto";
+import { FlightNotFoundException } from "./exception/flightNotFound.exception";
 
 @Injectable()
 export class FlightService {
@@ -13,51 +13,18 @@ export class FlightService {
         private flightRepository: Repository<Flight>
     ) {}
 
-    // async create(createFlightDto: CreateFlightDto): Promise<Flight> {
-    //     return this.flightRepository.save({
-    //         flightNumber: createFlightDto.flightNumber,
-    //         departureAirport: {id: createFlightDto.departureAirportId},
-    //         arrivalAirport: {id: createFlightDto.arrivalAirportId},
-    //         departureTime: createFlightDto.departureTime,
-    //         arrivalTime: createFlightDto.arrivalTime,
-    //         availableSeats: createFlightDto.availableSeats,
-    //     })
-    // }
+    async setDuration(departureTime: Date, arrivalTime: Date) {
+        const departure = departureTime.getTime();
+        const arrival = arrivalTime.getTime();
 
-    // async findAll(): Promise<Flight[]> {
-    //     return this.flightRepository.find()
-    // }
+        const diff = arrival - departure;
 
-    // async findOne(id: number): Promise<Flight> {
-    //     return this.flightRepository.findOne({
-    //         where: {id},
-    //     });
-    // }
-    
-    // async update(id: number, updateFlightDto: UpdateFlightDto): Promise<Flight> {
-    //     await this.flightRepository.update(id, {
-    //         flightNumber: updateFlightDto.flightNumber,
-    //         departureAirport: {id: updateFlightDto.departureAirportId},
-    //         arrivalAirport: {id: updateFlightDto.arrivalAirportId},
-    //         departureTime: updateFlightDto.departureTime,
-    //         arrivalTime: updateFlightDto.arrivalTime,
-    //         availableSeats: updateFlightDto.availableSeats,
-    //     })
-    //     return this.findOne(id)
-    // }
-
-    // async remove(id: number): Promise<void> {
-    //     await this.flightRepository.delete(id);
-    // }
-    
-    // async findByLocation(location: string): Promise<Flight[]> {
-    //     return this.flightRepository.find({
-    //         where: { location: { } },
-    //     });
-    // }
+        return diff / (1000 * 60 * 60); // 1000ms = 1s, 60s = 1m, 60m = 1h
+    }
 
     async createFlight(flight: CreateFlightDto) {
         const newFlight = await this.flightRepository.create(flight)
+        this.setDuration(newFlight.departureTime, newFlight.arrivalTime)
         await this.flightRepository.save(newFlight)
         return newFlight
     }
@@ -68,15 +35,23 @@ export class FlightService {
 
     async getFlightById(id: number) {
         // TODO: may change to find with string for real case purposes
-        const post = await this.flightRepository.findOne({where: {id: id}});
-        if (post) {
-            return post;
+        const flight = await this.flightRepository.findOne({
+            where: {
+                id: id
+            }
+        });
+        if (flight) {
+            return flight;
         }
         throw new FlightNotFoundException(id)
     }
 
     async updateFlight(id: number, flight: UpdateFlightDto) {
-        await this.flightRepository.update(id, flight)
+        await this.flightRepository.update(id, {
+            ...flight,
+            duration: await this.setDuration(flight.departureTime, flight.arrivalTime)
+        })
+
         this.getFlightById(id)
     }
 

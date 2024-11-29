@@ -23,8 +23,7 @@ export class User {
     role: 'Admin' | 'User' | 'Staff'
     
     // TODO: Implements linking with other table in database
-    @Column()
-    booking: []
+
 
     @Column({nullable: true})
     currentHashedRefreshToken?: string;
