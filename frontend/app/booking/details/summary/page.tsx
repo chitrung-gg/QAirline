@@ -8,7 +8,7 @@ import {
     Button
 } from "@nextui-org/react";
 import FlightPreviewCard from '@/components/Card/Flight/FlightPreviewCard';
-import { clearBookingLocalStorage, FlightProps, getFlightFromLocalStorage, getPassengerInfoFromLocalStorage } from '@/interfaces/flight';
+import { clearBookingLocalStorage, FlightProps, getDiscountInfoFromLocalStorage, getFlightFromLocalStorage, getPassengerInfoFromLocalStorage } from '@/interfaces/flight';
 import ImageSection from '@/components/ImageSection';
 import PolicyCard from '@/components/Card/PolicyCard';
 import PaymentCard from '@/components/Card/PaymentCard';
@@ -29,8 +29,15 @@ export default function BookingSummaryPage() {
     useEffect(() => {
         const storedPassengerInfo = getPassengerInfoFromLocalStorage();
         const storedFlightDetails = getFlightFromLocalStorage();
+        const storedDiscountInfo = getDiscountInfoFromLocalStorage();
 
         if (storedPassengerInfo && storedFlightDetails) {
+            // If there's a discount, update the flight details
+            if (storedDiscountInfo) {
+                storedFlightDetails.price = storedDiscountInfo.discountedPrice || storedFlightDetails.price;
+                storedFlightDetails.discount = storedDiscountInfo;
+            }
+
             setPassengerInfo(storedPassengerInfo);
             setFlightDetails(storedFlightDetails);
         } else {

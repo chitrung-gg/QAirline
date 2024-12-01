@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardBody, Divider } from "@nextui-org/react";
 import Image from "next/image";
-import { FlightProps, getFlightFromLocalStorage } from '@/interfaces/flight';
+import { FlightProps, getDiscountInfoFromLocalStorage } from '@/interfaces/flight';
 
 export default function FlightPreviewCard({
     type,
@@ -16,8 +16,21 @@ export default function FlightPreviewCard({
     arrival_location,
     arrival_airport,
     price,
-    duration
+    duration,
+    discount
 }: FlightProps) {
+    const [currentPrice, setCurrentPrice] = useState(price);
+    const [appliedDiscount, setAppliedDiscount] = useState<string | undefined>(undefined);
+
+    useEffect(() => {
+        // Check for stored discount info on component mount
+        const storedDiscount = getDiscountInfoFromLocalStorage();
+        if (storedDiscount) {
+            setCurrentPrice(storedDiscount.discountedPrice || price);
+            setAppliedDiscount(storedDiscount.code);
+        }
+    }, [price]);
+
     return (
         <Card className="w-full">
             <CardHeader className="justify-between">
@@ -63,7 +76,21 @@ export default function FlightPreviewCard({
                     <Divider />
                     <div className="flex justify-between items-center">
                         <p className="text-xl font-bold">Tổng tiền</p>
-                        <p className="text-xl font-bold">{price.toLocaleString()} VNĐ</p>
+                        <div className="text-right">
+                            {appliedDiscount && (
+                                <p className="text-sm text-green-600 mb-1">
+                                    Đã áp dụng mã: {appliedDiscount}
+                                </p>
+                            )}
+                            <p className="text-xl font-bold">
+                                {currentPrice.toLocaleString()} VNĐ
+                            </p>
+                            {appliedDiscount && (
+                                <p className="text-sm line-through text-gray-400">
+                                    {price.toLocaleString()} VNĐ
+                                </p>
+                            )}
+                        </div>
                     </div>
                 </div>
             </CardBody>

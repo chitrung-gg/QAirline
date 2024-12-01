@@ -170,6 +170,26 @@ export default function BookingDetailsPage() {
         }
     };
 
+    const handleDiscountApply = (discountCode: string, discountedPrice: number) => {
+        // Update flight details with discount information
+        if (flightDetails) {
+            const updatedFlightDetails = {
+                ...flightDetails,
+                price: discountedPrice,
+                discount: {
+                    code: discountCode,
+                    originalPrice: flightDetails.price,
+                    discountedPrice: discountedPrice
+                }
+            };
+
+            // Save updated flight details to local storage
+            localStorage.setItem('flightDetails', JSON.stringify(updatedFlightDetails));
+            setFlightDetails(updatedFlightDetails);
+        }
+    };
+
+
     if (!flightDetails) {
         return <div>Đang tải...</div>;
     }
@@ -274,12 +294,20 @@ export default function BookingDetailsPage() {
                             </CardBody>
                         </Card>
                     </div>
+
                     <div>
-                        <OfferInputCard />
+                        {flightDetails && (
+                            <OfferInputCard
+                                originalPrice={flightDetails.price}
+                                onDiscountApply={handleDiscountApply}
+                            />
+                        )}
                     </div>
+
                     <div>
                         <PolicyCard />
                     </div>
+
                     <div className="flex justify-end">
                         <Button
                             className='bg-blue-normal font-semibold text-white'
