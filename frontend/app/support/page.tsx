@@ -1,6 +1,6 @@
 "use client";
 
-import ImageSection from "@/components/Card/ImageSection";
+import ImageSection from "@/components/ImageSection";
 import FAQSection from "@/components/Support/FAQSection";
 import Headline from "@/components/Support/Headline";
 

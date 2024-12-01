@@ -1,4 +1,4 @@
-import ImageSection from "@/components/Card/ImageSection";
+import ImageSection from "@/components/ImageSection";
 import OfferCard from "@/components/Card/OfferCard";
 
 const offers = [
