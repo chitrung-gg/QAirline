@@ -15,6 +15,7 @@ const config: Config = {
         "sky-image": "url('/images/sky.jpg')",
       },
       colors: {
+        "primary": "#1175A7",
         "blue-normal": "#1175A7",
         "blue-normal-hover": "#0F6996",
         "blue-normal-active": "#0E5E86",
