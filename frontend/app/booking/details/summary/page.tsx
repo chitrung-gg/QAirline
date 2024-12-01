@@ -10,6 +10,8 @@ import {
 import FlightPreviewCard from '@/components/Card/Flight/FlightPreviewCard';
 import { clearBookingLocalStorage, FlightProps, getFlightFromLocalStorage, getPassengerInfoFromLocalStorage } from '@/interfaces/flight';
 import ImageSection from '@/components/ImageSection';
+import PolicyCard from '@/components/Card/PolicyCard';
+import PaymentCard from '@/components/Card/PaymentCard';
 
 interface PassengerInfo {
     firstName: string;
@@ -91,6 +93,12 @@ export default function BookingSummaryPage() {
                                 </div>
                             </CardBody>
                         </Card>
+                    </div>
+                    <div>
+                        <PolicyCard />
+                    </div>
+                    <div>
+                        <PaymentCard />
                     </div>
                     <div className="flex justify-end">
                         <Button
