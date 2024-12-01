@@ -4,13 +4,14 @@ import { Card, CardHeader, CardBody, CardFooter, Divider, Button } from "@nextui
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import FlightDetailsCard from "./FlightDetailsCard";
-import { FlightProps } from "@/interfaces/flight";
+import { clearDiscountInfoFromLocalStorage, FlightProps } from "@/interfaces/flight";
 
 export default function FlightCard(props: FlightProps) {
     const router = useRouter();
 
     const handleBookNow = () => {
         localStorage.setItem('selectedFlight', JSON.stringify(props));
+        clearDiscountInfoFromLocalStorage();
         router.push(`/booking/details?flightId=${props.id}&departure=${props.departure_location}&arrival=${props.arrival_location}`);
     };
 

@@ -8,7 +8,7 @@ import {
     Button
 } from "@nextui-org/react";
 import FlightPreviewCard from '@/components/Card/Flight/FlightPreviewCard';
-import { clearBookingLocalStorage, FlightProps, getDiscountInfoFromLocalStorage, getFlightFromLocalStorage, getPassengerInfoFromLocalStorage } from '@/interfaces/flight';
+import { clearBookingLocalStorage, clearDiscountInfoFromLocalStorage, FlightProps, getDiscountInfoFromLocalStorage, getFlightFromLocalStorage, getPassengerInfoFromLocalStorage } from '@/interfaces/flight';
 import ImageSection from '@/components/ImageSection';
 import PolicyCard from '@/components/Card/PolicyCard';
 import PaymentCard from '@/components/Card/PaymentCard';
@@ -49,6 +49,7 @@ export default function BookingSummaryPage() {
     const handleConfirmBooking = () => {
         // Implement booking confirmation logic
         clearBookingLocalStorage();
+        clearDiscountInfoFromLocalStorage();
 
         alert('Đặt vé thành công!');
         router.push('/'); // Or successful booking confirmation page

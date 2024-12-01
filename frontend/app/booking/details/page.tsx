@@ -182,7 +182,7 @@ export default function BookingDetailsPage() {
                     discountedPrice: discountedPrice
                 }
             };
-
+            
             // Save updated flight details to local storage
             localStorage.setItem('flightDetails', JSON.stringify(updatedFlightDetails));
             setFlightDetails(updatedFlightDetails);

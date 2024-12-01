@@ -107,3 +107,8 @@ export function getDiscountInfoFromLocalStorage(): DiscountInfo | null {
     return storedDiscount ? JSON.parse(storedDiscount) : null;
 }
 
+export function clearDiscountInfoFromLocalStorage() {
+    if (typeof window !== 'undefined') {
+        localStorage.removeItem('discountInfo');
+    }
+}
