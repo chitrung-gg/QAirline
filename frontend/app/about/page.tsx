@@ -3,7 +3,7 @@ import Introduction from "@/components/about/Intro";
 import OurValue from "@/components/about/OurValue";
 import OurVision from "@/components/about/OurVision";
 import Promotion from "@/components/about/Promotion";
-import ImageSection from "@/components/Card/ImageSection";
+import ImageSection from "@/components/ImageSection";
 
 export default function About() {
     return (
