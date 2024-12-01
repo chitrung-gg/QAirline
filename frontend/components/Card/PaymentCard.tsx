@@ -1,10 +1,10 @@
 "use client";
-import {Card, CardHeader, CardBody, CardFooter, Input, Link, Image, Button, Divider} from "@nextui-org/react";
+import {Card, CardHeader, CardBody, Input, Divider} from "@nextui-org/react";
 import React from "react";
 
 export default function PaymentCard() {
   return (
-    <Card className="max-w-lg">
+    <Card className="">
         <CardHeader className="flex text-left items-start px-10 py-5 justify-between">
             <div className="flex flex-col">
                 <p className="text-lg font-semibold">Thanh toán</p>
@@ -29,19 +29,17 @@ export default function PaymentCard() {
                 placeholder="xxxx xxxx xxxx xxxx"
                 size="lg" 
                 radius="sm"
-                type="email" 
                 label="Thông tin thẻ" 
                 variant="bordered" 
                 className="mb-5"
             />
-            <div className="flex flex-col md:flex-row justify-between">
+            <div className="flex flex-col md:flex-row justify-between gap-2">
                 <Input 
                     isRequired
                     labelPlacement={"outside"}
                     placeholder="Tháng"
                     size="lg" 
                     radius="sm"
-                    type="number" 
                     label="Ngày hết hạn" 
                     variant="bordered" 
                     className="mb-5"
@@ -52,7 +50,6 @@ export default function PaymentCard() {
                     placeholder="Năm"
                     size="lg" 
                     radius="sm"
-                    type="email" 
                     label="Năm hết hạn" 
                     variant="bordered" 
                     className="mb-5"
@@ -64,7 +61,6 @@ export default function PaymentCard() {
                     placeholder="xxx"
                     size="lg" 
                     radius="sm"
-                    type="number" 
                     label="CVV/CVC" 
                     variant="bordered" 
                     className="mb-5"

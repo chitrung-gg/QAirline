@@ -11,6 +11,14 @@ export interface FlightProps {
   price: number;
   duration: string;
   type: string;
+  discount?: DiscountInfo;
+}
+
+export interface DiscountInfo {
+  code?: string;
+  originalPrice: number;
+  discountedPrice?: number;
+  discountPercentage?: number;
 }
 
 interface PassengerInfo {
@@ -87,4 +95,20 @@ export function clearBookingLocalStorage() {
   } catch (error) {
     console.error("Error clearing localStorage:", error);
   }
+}
+
+// Add these functions to the existing flight interface file
+export function saveDiscountInfoToLocalStorage(discountInfo: DiscountInfo) {
+    localStorage.setItem('discountInfo', JSON.stringify(discountInfo));
+}
+
+export function getDiscountInfoFromLocalStorage(): DiscountInfo | null {
+    const storedDiscount = localStorage.getItem('discountInfo');
+    return storedDiscount ? JSON.parse(storedDiscount) : null;
+}
+
+export function clearDiscountInfoFromLocalStorage() {
+    if (typeof window !== 'undefined') {
+        localStorage.removeItem('discountInfo');
+    }
 }

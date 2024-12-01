@@ -3,7 +3,7 @@ import {Card, CardHeader, CardBody, CardFooter, Divider, Link} from "@nextui-org
 
 export default function PolicyCard() {
     return (
-        <Card className="max-w-lg">
+        <Card className="">
             <CardHeader className="flex gap-3 pb-1 ml-1">
                 <div className="flex flex-col">
                     <p className="text-lg font-semibold">Chính sách bảo vệ hành khách của QAirline</p>
@@ -30,7 +30,7 @@ export default function PolicyCard() {
                 <Link
                     isExternal
                     href="/policy"
-                    className="text-sm font-semibold"
+                    className="text-sm font-semibold text-blue-normal"
                 >
                     Đọc thêm
                 </Link>

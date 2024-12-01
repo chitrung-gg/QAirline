@@ -8,8 +8,10 @@ import {
     Button
 } from "@nextui-org/react";
 import FlightPreviewCard from '@/components/Card/Flight/FlightPreviewCard';
-import { clearBookingLocalStorage, FlightProps, getFlightFromLocalStorage, getPassengerInfoFromLocalStorage } from '@/interfaces/flight';
+import { clearBookingLocalStorage, clearDiscountInfoFromLocalStorage, FlightProps, getDiscountInfoFromLocalStorage, getFlightFromLocalStorage, getPassengerInfoFromLocalStorage } from '@/interfaces/flight';
 import ImageSection from '@/components/ImageSection';
+import PolicyCard from '@/components/Card/PolicyCard';
+import PaymentCard from '@/components/Card/PaymentCard';
 
 interface PassengerInfo {
     firstName: string;
@@ -27,8 +29,15 @@ export default function BookingSummaryPage() {
     useEffect(() => {
         const storedPassengerInfo = getPassengerInfoFromLocalStorage();
         const storedFlightDetails = getFlightFromLocalStorage();
+        const storedDiscountInfo = getDiscountInfoFromLocalStorage();
 
         if (storedPassengerInfo && storedFlightDetails) {
+            // If there's a discount, update the flight details
+            if (storedDiscountInfo) {
+                storedFlightDetails.price = storedDiscountInfo.discountedPrice || storedFlightDetails.price;
+                storedFlightDetails.discount = storedDiscountInfo;
+            }
+
             setPassengerInfo(storedPassengerInfo);
             setFlightDetails(storedFlightDetails);
         } else {
@@ -40,6 +49,7 @@ export default function BookingSummaryPage() {
     const handleConfirmBooking = () => {
         // Implement booking confirmation logic
         clearBookingLocalStorage();
+        clearDiscountInfoFromLocalStorage();
 
         alert('Đặt vé thành công!');
         router.push('/'); // Or successful booking confirmation page
@@ -91,6 +101,12 @@ export default function BookingSummaryPage() {
                                 </div>
                             </CardBody>
                         </Card>
+                    </div>
+                    <div>
+                        <PolicyCard />
+                    </div>
+                    <div>
+                        <PaymentCard />
                     </div>
                     <div className="flex justify-end">
                         <Button
