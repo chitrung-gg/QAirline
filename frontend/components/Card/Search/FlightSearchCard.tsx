@@ -44,7 +44,7 @@ export default function FlightSearchCard() {
         ];
 
   return (
-    <div className="gap-5 bg-white w-full place-items-center">
+    <div className="gap-5 bg-white w-full place-items-center rounded-lg">
         <Card className="max-w-screen-xl w-full" shadow="none">
         <CardBody>
             <div className="flex w-full flex-wrap md:flex-nowrap gap-5 items-center mb-3 mt-5">
