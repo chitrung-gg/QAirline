@@ -1,7 +1,9 @@
-import { IsArray, IsDate, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDate, IsISO8601, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
 import { Flight } from "src/flight/entity/flight.entity";
+import { CreateAircraftDto } from "./createAircraft.dto";
+import { PartialType } from "@nestjs/mapped-types";
 
-export class UpdateAircraftDto {
+export class UpdateAircraftDto extends PartialType(CreateAircraftDto) {
     @IsNumber()
     id: number
 
@@ -30,12 +32,12 @@ export class UpdateAircraftDto {
     status?: "Active" | "Maintenance" | "Retired"; 
     
     @IsOptional()
-    @IsDate()
-    createdAt?: Date; 
+    @IsISO8601()
+    createdAt?: string; 
 
     @IsOptional()
-    @IsDate()
-    updatedAt?: Date; 
+    @IsISO8601()
+    updatedAt?: string;
 
     @IsOptional()
     @IsArray()

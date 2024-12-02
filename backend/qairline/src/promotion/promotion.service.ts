@@ -1,26 +1,48 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePromotionDto } from './dto/create-promotion.dto';
-import { UpdatePromotionDto } from './dto/update-promotion.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CreatePromotionDto } from './dto/createPromotion.dto';
+import { UpdatePromotionDto } from './dto/updatePromotion.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Promotion } from './entity/promotion.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PromotionService {
-  create(createPromotionDto: CreatePromotionDto) {
-    return 'This action adds a new promotion';
+  constructor(
+      @InjectRepository(Promotion)
+      private promotionRepository: Repository<Promotion>
+  ) {}
+
+  async createPromotion(promotion: CreatePromotionDto) {
+      const newPromotion = await this.promotionRepository.create(promotion)
+      await this.promotionRepository.save(newPromotion)
+      return newPromotion
   }
 
-  findAll() {
-    return `This action returns all promotion`;
+  async getAllPromotions() {
+      return this.promotionRepository.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} promotion`;
+  async getPromotionById(id: number) {
+      const promotion = this.promotionRepository.findOne({
+          where: {
+              id: id
+          }
+      })
+      if (promotion) {
+          return promotion
+      }
+      throw new HttpException('Exception found in PromotionService: getPromotionById', HttpStatus.BAD_REQUEST)
   }
 
-  update(id: number, updatePromotionDto: UpdatePromotionDto) {
-    return `This action updates a #${id} promotion`;
+  async updatePromotion(id: number, promotion: UpdatePromotionDto) {
+      await this.promotionRepository.update(id, promotion)
+      this.getPromotionById(id)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} promotion`;
+  async deletePromotion(id: number) {
+      const deletePromotionResponse = await this.promotionRepository.delete(id)
+      if (!deletePromotionResponse) {
+          throw new HttpException('Exception found in PromotionService: deletePromotion', HttpStatus.BAD_REQUEST)
+      }
   }
 }

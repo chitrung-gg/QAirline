@@ -1,36 +1,41 @@
 import { Flight } from "src/flight/entity/flight.entity";
+import { Payment } from "src/payment/entity/payment.entity";
 import { Promotion } from "src/promotion/entity/promotion.entity";
 import { User } from "src/user/entity/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Booking {
     @PrimaryGeneratedColumn()
     id: number;
   
-    @ManyToOne(() => User, (user) => user.bookings, { eager: true })
+    @ManyToOne(() => User, { eager: true, nullable: true, cascade: true, onUpdate: "CASCADE" })
   	@JoinColumn({ name: "userId" })
-    user: User; // Relation to User entity
+    user?: User; // Relation to User entity
   
-	@ManyToOne(() => Flight, (flight) => flight.bookings, { eager: true })
+	@ManyToOne(() => Flight, { eager: true, cascade: true, onUpdate: "CASCADE" })
 	@JoinColumn({ name: "flightId" })
-    flight: Flight; // Relation to Flight entity
+    flight?: Flight; // Relation to Flight entity
   
     @Column({ type: "varchar", length: 255 })
     passengerName: string;
   
-    @Column({ type: "date" })
-    passengerDob: Date;
+    @Column({ type: 'timestamptz', transformer: {
+        to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
+        from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
+    } })
+    passengerDob: string;
   
-    @Column({ type: "varchar", length: 50 })
+    @Column({ type: "varchar", length: 50})
     passportNumber: string;
   
+    // TODO: Generate bookingCode
     @Column({ type: "varchar", length: 50 })
-    ticketCode: string;
+    bookingCode?: string;
 
-	@OneToOne(() => Promotion, (promotion) => promotion.booking)
-	@JoinColumn({name: "bookingId"})
-	promotion: Promotion
+	@ManyToOne(() => Promotion, { eager: true, cascade: true, nullable: true, onUpdate: "CASCADE" })
+	@JoinColumn({name: "promotionId"})
+	promotion?: Promotion
 
     @Column({ type: "jsonb"})
     ticketPrice: Record<string, number>;
@@ -41,30 +46,27 @@ export class Booking {
     @Column({ type: "varchar", length: 50 })
     seatClass: string; // Loại hạng ghế (Economy, Business, First Class)
 
-    @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
-    bookingDate: Date;
+    @Column({ type: 'timestamptz', transformer: {
+        to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
+        from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
+    },  default: () => "CURRENT_TIMESTAMP"})
+    bookingDate: string;
   
     @Column({
       type: "enum",
       enum: ["Confirmed", "Pending", "Cancelled"],
-      default: "Confirmed",
+      default: "Pending",
     })
-    bookingStatus: "Confirmed" | "Pending" | "Cancelled";
+    bookingStatus?: "Confirmed" | "Pending" | "Cancelled";
 
 	@Column({
 		type: "enum",
 		enum: ["Paid", "Pending", "Unpaid"],
-		default: "Paid",
+		default: "Pending",
 	})
-	paymentStatus: "Paid" | "Pending" | "Unpaid";
+	paymentStatus?: "Paid" | "Pending" | "Unpaid";
 
-    @Column({ type: "timestamp", nullable: true })
-    paymentDate: Date;
 
-	@Column({ type: "timestamp", nullable: true })
-    cancelDate: Date;
-
-	// @ManyToOne(() => Payment, (payment) => payment.bookings, { eager: true, nullable: true })
-	// @JoinColumn({ name: "payment_id" })
-	// payment: Payment; // Thông tin thanh toán (nếu có)
+    @OneToMany(() => Payment, (payment) => payment.booking)
+    payments?: Payment[]; // Track multiple payments for the booking
 }

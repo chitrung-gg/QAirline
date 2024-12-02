@@ -1,4 +1,4 @@
-import { IsArray, IsDate, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDate, IsIn, IsISO8601, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
 import { Aircraft } from "src/aircraft/entity/aircraft.entity";
 import { Airport } from "src/airport/entity/airport.entity";
 import { Booking } from "src/booking/entity/booking.entity";
@@ -7,23 +7,27 @@ export class CreateFlightDto {
    @IsString()
    flightNumber: string
 
+   @IsOptional()
    @IsObject()
-   aircraft: Aircraft
+   aircraft?: Aircraft
 
+   @IsOptional()
    @IsObject()
-   departureAirport: Airport;
+   departureAirport?: Airport;
    
+   @IsOptional()
    @IsObject()
-   arrivalAirport: Airport;
+   arrivalAirport?: Airport;
 
-   @IsDate()
-   departureTime: Date
+   @IsISO8601()
+   departureTime: string
    
-   @IsDate()
-   arrivalTime: Date
+   @IsISO8601()
+   arrivalTime: string
 
    @IsOptional()
    @IsString()
+   @IsIn([ "Scheduled", "Arrived", "Delayed", "Cancelled"])
    status?: "Scheduled" | "Arrived" | "Delayed" | "Cancelled"
 
    @IsNumber()
@@ -32,8 +36,9 @@ export class CreateFlightDto {
    @IsObject()
    seatClasses: Record<string, number>
    
+   @IsOptional()
    @IsArray()
-   bookings: Booking[]
+   bookings?: Booking[]
 
    @IsOptional()
    @IsNumber()

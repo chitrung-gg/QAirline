@@ -1,26 +1,49 @@
-import { Injectable } from '@nestjs/common';
-import { CreateNewsDto } from './dto/create-news.dto';
-import { UpdateNewsDto } from './dto/update-news.dto';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { CreateNewsDto } from './dto/createNews.dto';
+import { UpdateNewsDto } from './dto/updateNews.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { News } from './entity/news.entity';
 
 @Injectable()
 export class NewsService {
-  create(createNewsDto: CreateNewsDto) {
-    return 'This action adds a new news';
+  constructor(
+    @InjectRepository(News)
+    private readonly newsRepository: Repository<News>
+  ) {}
+
+  async createNews(news: CreateNewsDto) {
+    const newNews = await this.newsRepository.create(news)
+    await this.newsRepository.save(newNews)
+    return newNews
   }
 
-  findAll() {
-    return `This action returns all news`;
+  getAllNews() {
+    return this.newsRepository.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} news`;
+  async getNewsById(id: number) {
+    // TODO: may change to find with string for real case purposes
+    const news = await this.newsRepository.findOne({
+      where: {
+        id: id
+      }
+    });
+    if (news) {
+      return news;
+    }
+    throw new HttpException('Exception found in NewsService: getNewsById', HttpStatus.BAD_REQUEST)
   }
 
-  update(id: number, updateNewsDto: UpdateNewsDto) {
-    return `This action updates a #${id} news`;
+  async updateNews(id: number, News: UpdateNewsDto) {
+    await this.newsRepository.update(id, News)
+    this.getNewsById(id)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} news`;
+  async deleteNews(id: number) {
+    const deleteResponse = await this.newsRepository.delete(id)
+    if (!deleteResponse.affected) {
+      throw new HttpException('Exception found in NewsService: deleteNews', HttpStatus.NOT_FOUND);
+    }
   }
 }

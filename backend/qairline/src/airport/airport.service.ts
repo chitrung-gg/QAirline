@@ -1,26 +1,48 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateAirportDto } from './dto/createAirport.dto';
 import { UpdateAirportDto } from './dto/updateAirport.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Airport } from './entity/airport.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AirportService {
-  create(createAirportDto: CreateAirportDto) {
-    return 'This action adds a new airport';
-  }
+	constructor(
+        @InjectRepository(Airport)
+        private airportRepository: Repository<Airport>
+    ) {}
 
-  findAll() {
-    return `This action returns all airport`;
-  }
+    async createAirport(airport: CreateAirportDto) {
+        const newAirport = await this.airportRepository.create(airport)
+        await this.airportRepository.save(newAirport)
+        return newAirport
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} airport`;
-  }
+    async getAllAirports() {
+        return this.airportRepository.find()
+    }
 
-  update(id: number, updateAirportDto: UpdateAirportDto) {
-    return `This action updates a #${id} airport`;
-  }
+    async getAirportById(id: number) {
+        const airport = this.airportRepository.findOne({
+            where: {
+                id: id
+            }
+        })
+        if (airport) {
+            return airport
+        }
+        throw new HttpException('Exception found in AirportService: getAircratfById', HttpStatus.BAD_REQUEST)
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} airport`;
-  }
+    async updateAirport(id: number, airport: UpdateAirportDto) {
+        await this.airportRepository.update(id, airport)
+        this.getAirportById(id)
+    }
+
+    async deleteAirport(id: number) {
+        const deleteAirportResponse = await this.airportRepository.delete(id)
+        if (!deleteAirportResponse) {
+            throw new HttpException('Exception found in AirportService: deleteAirport', HttpStatus.BAD_REQUEST)
+        }
+    }
 }

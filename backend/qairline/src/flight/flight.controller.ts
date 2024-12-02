@@ -5,7 +5,7 @@ import { UpdateFlightDto } from './dto/updateFlight.dto';
 import { JwtAuthenticationGuard } from 'src/authentication/guard/jwtAuthentication.guard';
 
 
-@Controller('flights')
+@Controller('flight')
 export class FlightController {
     constructor(private flightService: FlightService) {}
 

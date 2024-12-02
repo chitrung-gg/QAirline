@@ -1,9 +1,39 @@
 import { Booking } from "src/booking/entity/booking.entity";
-import { OneToOne } from "typeorm";
+import { Flight } from "src/flight/entity/flight.entity";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
+@Entity()
 export class Promotion {
-    @OneToOne(() => Booking, (booking: Booking) => booking.id)
-    booking: Booking
+    @PrimaryGeneratedColumn()
+    id: number; // Primary Key
 
-    // Implements more ...
+    @Column({ type: "varchar", length: 50, unique: true })
+    code: string; // Unique promotion code (e.g., "SUMMER2024")
+
+    @Column({ type: "text" })
+    description: string; // Description of the promotion (e.g., "20% off on selected flights")
+
+    @Column({ type: 'timestamptz', transformer: {
+        to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
+        from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
+      } })
+    startDate: string; // Start date for the promotion (ISO date format)
+
+    @Column({ type: 'timestamptz', transformer: {
+        to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
+        from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
+      } })
+    endDate: string; // End date for the promotion (ISO date format)
+
+    @Column({ type: "float" })
+    discount: number; // Discount value (could be a percentage or a fixed amount)
+
+    @Column({ type: "enum", enum: ["Percentage", "FixedAmount"] })
+    discountType: "Percentage" | "FixedAmount"; // Type of discount (Percentage or FixedAmount)
+
+    @OneToMany(() => Booking, (booking) => booking.promotion)
+    bookings?: Booking[]; // List of bookings that have applied this promotion
+
+    @Column({ type: "boolean", default: true })
+    isActive: boolean; // Whether the promotion is active or not
 }

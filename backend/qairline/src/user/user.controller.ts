@@ -10,13 +10,13 @@ export class UserController {
     @UseGuards(JwtAuthenticationGuard)
     @Get()
     async getAll(){
-        return this.userService.getAll();
+        return this.userService.getAllUsers();
     }
 
     
     @Post()
     async createUser(@Body() createUser: CreateUserDto) {
-        const user = await this.userService.create(createUser)
+        const user = await this.userService.createUser(createUser)
         if (user) {
             return user
         }

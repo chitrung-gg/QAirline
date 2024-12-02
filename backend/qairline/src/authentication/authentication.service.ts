@@ -18,7 +18,7 @@ export class AuthenticationService {
     async register(registrationData: RegisterDto) {
         const hashedPassword = await bcrypt.hash(registrationData.password, 10);
         try {
-            const createdUser = await this.userService.create({
+            const createdUser = await this.userService.createUser({
                 ...registrationData,
                 password: hashedPassword
             });
@@ -35,7 +35,7 @@ export class AuthenticationService {
     
     public async getAuthenticatedUser(email: string, plainTextPassword: string) {
         try {
-            const user = await this.userService.getByEmail(email);
+            const user = await this.userService.getUserByEmail(email);
             await this.verifyPassword(plainTextPassword, user.password);
             user.password = undefined;
             return user;
@@ -66,21 +66,21 @@ export class AuthenticationService {
 
     async signup(signUpData: SignUpDto) {
         // console.log(signUpData.email)
-        const emailInUse = await this.userService.getByEmail(signUpData.email)
+        const emailInUse = await this.userService.getUserByEmail(signUpData.email)
         if (emailInUse) {
             throw new HttpException('Email already used', HttpStatus.BAD_REQUEST)
         }
 
         const hashedPassword = await bcrypt.hash(signUpData.password, 10)
 
-        await this.userService.create({
+        await this.userService.createUser({
             ...signUpData,
             password: hashedPassword,
         })
     }
 
     async login(@Body() logInData: LogInDto) {
-        const userInDb = await this.userService.getByEmail(logInData.email)
+        const userInDb = await this.userService.getUserByEmail(logInData.email)
         if (!userInDb) {
             throw new HttpException('Wrong login credentials', HttpStatus.BAD_REQUEST)
         }

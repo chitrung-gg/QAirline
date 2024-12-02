@@ -26,11 +26,17 @@ export class User {
     @Column({ type: "varchar", length: 50 })
     lastName: string; 
 
-    @Column({ type: "date", nullable: true })
-    dob: Date; // Ngày sinh của người dùng
+    @Column({ type: 'timestamptz', transformer: {
+        to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
+        from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
+      } })
+    dob: string; // Ngày sinh của người dùng
 
-    @Column({ type: "varchar", length: 10, nullable: true })
-    gender: string; // Giới tính
+    @Column({
+		type: "enum",
+		enum: ["Male", "Female", "Other"]
+	})
+    gender: "Male" | "Female" | "Other"; // Giới tính
 
     @Column({ type: "varchar", length: 255, nullable: true })
     address: string; // Địa chỉ
@@ -38,14 +44,22 @@ export class User {
     @Column({ type: "varchar", length: 20, nullable: true })
     passportNumber: string; // Số hộ chiếu
 
-    @Column({ type: "varchar", length: 20, default: "User" })
-    role: 'Admin' | 'User' | 'Staff'
+    @Column({
+		type: "enum",
+		enum: ['Admin', 'User', 'Staff', 'Other'],
+        default: 'User'
+	})
+    role: 'Admin' | 'User' | 'Staff' | 'Other'
     
-    @Column({ type: "varchar", length: 20, default: "Active" })
-    status: string; // Trạng thái tài khoản (Active, Inactive, Banned)
+    @Column({
+		type: "enum",
+		enum: ['Active', 'Inactive', 'Banned', 'Other'],
+        default: 'Active'
+	})
+    status?: 'Active' | 'Inactive' | 'Banned' | 'Other'; // Trạng thái tài khoản (Active, Inactive, Banned)
     
     @OneToMany(() => Booking, (booking) => booking.user)
-    bookings: Booking[];
+    bookings?: Booking[];
 
     // @OneToMany(() => Payment, (payment) => payment.user)
     // payments: Payment[];

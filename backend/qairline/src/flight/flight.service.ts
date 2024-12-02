@@ -15,9 +15,9 @@ export class FlightService {
         private aircraftService: AircraftService
     ) {}
 
-    async setDuration(departureTime: Date, arrivalTime: Date) {
-        const departure = departureTime.getTime();
-        const arrival = arrivalTime.getTime();
+    async setDuration(departureTime: string, arrivalTime: string) {
+        const departure = new Date(departureTime).getTime();
+        const arrival = new Date(arrivalTime).getTime();
 
         const diff = arrival - departure;
 
@@ -25,17 +25,17 @@ export class FlightService {
     }
 
     async setSeatClasses(aircraftService: AircraftService, flight: Flight) {
-        flight.seatClasses = {
-            ...(await aircraftService.getAircraftById(flight.aircraft.id)).seatClasses
-        }
+        // flight.seatClasses = {
+        //     ...(await aircraftService.getAircraftById(flight.aircraft.id)).seatClasses
+        // }
     }
 
     async createFlight(flight: CreateFlightDto) {
         const newFlight = await this.flightRepository.create(flight)
         this.setDuration(newFlight.departureTime, newFlight.arrivalTime)
-        flight.seatClasses = {
-            ...(await this.aircraftService.getAircraftById(flight.aircraft.id)).seatClasses
-        }
+        // flight.seatClasses = {
+        //     ...(await this.aircraftService.getAircraftById(flight.aircraft.id)).seatClasses
+        // }
         await this.flightRepository.save(newFlight)
         return newFlight
     }

@@ -20,6 +20,8 @@ import { IntroductionModule } from './introduction/introduction.module';
 import { PromotionModule } from './promotion/promotion.module';
 import { AnnouncementModule } from './announcement/announcement.module';
 import { NewsModule } from './news/news.module';
+import { PaymentModule } from './payment/payment.module';
+import { DestinationModule } from './destination/destination.module';
 
 
 @Module({
@@ -46,7 +48,7 @@ import { NewsModule } from './news/news.module';
         expiresIn: configService.get('JWT_EXPIRATION_TIME'),
       },
     }),
-  }), DatabaseModule, AuthenticationModule, UserModule, AirportModule, BookingModule, ReportModule, IntroductionModule, PromotionModule, AnnouncementModule, NewsModule],
+  }), DatabaseModule, AuthenticationModule, UserModule, AirportModule, BookingModule, ReportModule, IntroductionModule, PromotionModule, AnnouncementModule, NewsModule, PaymentModule, DestinationModule],
   controllers: [AppController],
   providers: [AppService],
 })

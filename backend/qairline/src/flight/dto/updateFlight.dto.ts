@@ -1,4 +1,4 @@
-import { IsArray, IsDate, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDate, IsISO8601, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
 import { Aircraft } from "src/aircraft/entity/aircraft.entity";
 import { Airport } from "src/airport/entity/airport.entity";
 import { Booking } from "src/booking/entity/booking.entity";
@@ -21,11 +21,13 @@ export class UpdateFlightDto extends PartialType(CreateFlightDto) {
     @IsObject()
     arrivalAirport?: Airport;
  
-    @IsDate()
-    departureTime?: Date
+    @IsOptional()
+    @IsISO8601()
+    departureTime: string
     
-    @IsDate()
-    arrivalTime?: Date
+    @IsOptional()
+    @IsISO8601()
+    arrivalTime: string
  
     @IsOptional()
     @IsString()

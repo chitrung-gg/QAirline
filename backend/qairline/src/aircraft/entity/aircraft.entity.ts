@@ -28,11 +28,17 @@ export class Aircraft {
   })
   status: "Active" | "Maintenance" | "Retired"; // Trạng thái máy bay
 
-  @CreateDateColumn()
-  createdAt: Date; // Thời gian tạo
+  @CreateDateColumn({ type: 'timestamptz', transformer: {
+    to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
+    from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
+  } })
+  createdAt: string;
 
-  @UpdateDateColumn()
-  updatedAt: Date; // Thời gian cập nhật
+  @UpdateDateColumn({ type: 'timestamptz', transformer: {
+    to: (value: string | Date) => new Date(value),
+    from: (value: Date) => value.toISOString(),
+  } })
+  updatedAt: string;
 
   @OneToMany(() => Flight, (flight) => flight.aircraft)
   flights?: Flight[]; // Liên kết tới các chuyến bay sử dụng máy bay này

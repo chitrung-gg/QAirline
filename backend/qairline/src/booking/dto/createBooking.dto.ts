@@ -1,41 +1,46 @@
-import { IsDate, IsIn, IsJSON, IsObject, IsString } from "class-validator";
+import { IsArray, IsDate, IsIn, IsISO8601, IsJSON, IsObject, IsOptional, IsString } from "class-validator";
 import { Flight } from "src/flight/entity/flight.entity";
+import { Payment } from "src/payment/entity/payment.entity";
 import { Promotion } from "src/promotion/entity/promotion.entity";
 import { User } from "src/user/entity/user.entity";
 
 export class CreateBookingDto {
     @IsObject()
-    user: User; // Relation to User entity
+    @IsOptional()
+    user?: User; // Relation to User entity
   
+    @IsOptional()
 	@IsObject()
-    flight: Flight; // Relation to Flight entity
+    flight?: Flight; // Relation to Flight entity
   
     @IsString()
     passengerName: string;
   
-    @IsDate()
-    passengerDob: Date;
+    @IsISO8601()
+    passengerDob: string;
   
     @IsString()
     passportNumber: string;
   
     @IsString()
-    ticketCode: string;
+    @IsOptional()
+    bookingCode?: string;
 
 	@IsObject()
-	promotion: Promotion
+    @IsOptional()
+	promotion?: Promotion
 
-    @IsJSON()
+    @IsObject()
     ticketPrice: Record<string, number>;
   
     @IsString()
-    seatNumber: string; // Số ghế đã đặt (ví dụ: A1, B2)
+    seatNumber: string; 
   
     @IsString()
-    seatClass: string; // Loại hạng ghế (Economy, Business, First Class)
+    seatClass: string; 
 
-    @IsDate()
-    bookingDate: Date;
+    @IsISO8601()
+    bookingDate: string;
   
     @IsString()
     @IsIn(["Confirmed", "Pending", "Cancelled"])
@@ -45,13 +50,7 @@ export class CreateBookingDto {
     @IsIn(["Paid", "Pending", "Unpaid"])
 	paymentStatus: "Paid" | "Pending" | "Unpaid";
 
-    @IsDate()
-    paymentDate: Date;
-
-	@IsDate()
-    cancelDate: Date;
-
-	// @ManyToOne(() => Payment, (payment) => payment.bookings, { eager: true, nullable: true })
-	// @JoinColumn({ name: "payment_id" })
-	// payment: Payment; // Thông tin thanh toán (nếu có)
+    @IsOptional()
+    @IsArray()
+    payments?: Payment[]
 }

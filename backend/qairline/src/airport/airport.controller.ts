@@ -5,30 +5,30 @@ import { UpdateAirportDto } from './dto/updateAirport.dto';
 
 @Controller('airport')
 export class AirportController {
-  constructor(private readonly airportService: AirportService) {}
+	constructor(private readonly airportService: AirportService) {}
 
-  @Post()
-  create(@Body() createAirportDto: CreateAirportDto) {
-    return this.airportService.create(createAirportDto);
-  }
+    @Post()
+    async createAirport(@Body() createAirportDto: CreateAirportDto) {
+        return this.airportService.createAirport(createAirportDto)
+    } 
 
-  @Get()
-  findAll() {
-    return this.airportService.findAll();
-  }
+    @Get()
+    async getAllAirports() {
+        return this.airportService.getAllAirports()
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.airportService.findOne(+id);
-  }
+    @Get(':id')
+    async getAirportById(@Param('id') id: number) {
+        return this.airportService.getAirportById(id)
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAirportDto: UpdateAirportDto) {
-    return this.airportService.update(+id, updateAirportDto);
-  }
+    @Patch(':id')
+    async updateAirport(@Param('id') id: number, @Body() updateAirportDto: UpdateAirportDto) {
+        return this.airportService.updateAirport(id, updateAirportDto);
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.airportService.remove(+id);
-  }
+    @Delete(':id') 
+    async deleteAirport(@Param('id') id: number) {
+        return this.airportService.deleteAirport(id)
+    }
 }

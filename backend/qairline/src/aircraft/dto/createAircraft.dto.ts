@@ -1,4 +1,4 @@
-import { IsArray, IsDate, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDate, IsISO8601, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
 import { Flight } from "src/flight/entity/flight.entity";
 
 export class CreateAircraftDto {
@@ -21,11 +21,11 @@ export class CreateAircraftDto {
     @IsString()
     status?: "Active" | "Maintenance" | "Retired"; 
   
-    @IsDate()
-    createdAt: Date; 
+    @IsISO8601()
+    createdAt: string; 
 
-    @IsDate()
-    updatedAt: Date; 
+    @IsISO8601()
+    updatedAt: string; 
 
     @IsOptional()
     @IsArray()
