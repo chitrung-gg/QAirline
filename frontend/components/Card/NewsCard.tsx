@@ -1,11 +1,13 @@
 "use client"
 
 import {Card, CardHeader, CardBody, CardFooter, Image, Button, image} from "@nextui-org/react";
+import Link from "next/link";
 
 interface NewsProps {
+  id: number;
   title: string;
   image: string;
-  link: string;
+  link: string
 }
 
 export default function NewsCard(prop: NewsProps) {
@@ -22,9 +24,9 @@ export default function NewsCard(prop: NewsProps) {
                 />
               </CardBody>
               <CardFooter className="flex flex-col justify-between">
-                <div className="w-full text-left col-span-4">
+                <Link href={prop.link} className="w-full text-left col-span-4">
                     <span className="text-base">{prop.title}</span>
-                </div>
+                </Link>
                 <div className="w-full text-left col-span-4 mt-1">
                     <a href={prop.link} className="text-blue-normal">Xem thêm</a>
                 </div>

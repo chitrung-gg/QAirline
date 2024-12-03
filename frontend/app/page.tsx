@@ -42,29 +42,29 @@ const offers = [
 
 const news = [
   {
+    id: 1,
     title: "Ngày mai hãng bay nghỉ",
     image: "/images/Qairline.png",
-    link: "/articles/1",
   },
   {
+    id: 2,
     title: "Ngày mai hãng bay nghỉ",
     image: "/images/Qairline.png",
-    link: "/articles/1",
   },
   {
+    id: 3,
     title: "Ngày mai hãng bay nghỉ",
     image: "/images/Qairline.png",
-    link: "/articles/1",
   },
   {
+    id: 4,
     title: "Ngày mai hãng bay nghỉ",
     image: "/images/Qairline.png",
-    link: "/articles/1",
   },
   {
+    id: 5,
     title: "Ngày mai hãng bay nghỉ",
     image: "/images/Qairline.png",
-    link: "/articles/1",
   },
 ];
 
@@ -117,7 +117,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className="flex flex-col justify-center items-center min-h-[50vh] bg-cover bg-center" style={{ backgroundImage: 'url(/images/sky.jpg)' }}>
+      <div className="flex flex-col justify-center items-center min-h-[70vh] bg-cover bg-center" style={{ backgroundImage: 'url(/images/sky.jpg)' }}>
         <h1 className="max-w-4/5 my-5 text-center text-white text-4xl font-bold">An tâm với mỗi chuyến bay của bạn</h1>
         <div className="lg:w-4/5 rounded-lg my-5">
           <FlightSearchCard />
@@ -182,7 +182,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {newsItems.map((newItem, index) => (
-              <NewsCard key={index} {...newItem} />
+              <NewsCard key={index} {...newItem} link={`/news/${newItem.id}`} />
             ))}
           </div>
         </div>
