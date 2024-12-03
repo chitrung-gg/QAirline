@@ -28,17 +28,33 @@ export class Aircraft {
   })
   status: "Active" | "Maintenance" | "Retired"; // Trạng thái máy bay
 
-  @CreateDateColumn({ type: 'timestamptz', transformer: {
-    to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
-    from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
-  } })
-  createdAt: string;
+  @CreateDateColumn({
+    type: 'timestamptz', nullable: true,
+    transformer: {
+      to: (value: string | Date | null) => {
+        if (value === null) return null;
+        return new Date(value).toISOString();
+      },
+      from: (value: Date) => {
+        return value ? value.toISOString() : null;
+      },
+    },
+  })
+  createdAt?: string;
 
-  @UpdateDateColumn({ type: 'timestamptz', transformer: {
-    to: (value: string | Date) => new Date(value),
-    from: (value: Date) => value.toISOString(),
-  } })
-  updatedAt: string;
+  @UpdateDateColumn({
+    type: 'timestamptz', nullable: true,
+    transformer: {
+      to: (value: string | Date | null) => {
+        if (value === null) return null;
+        return new Date(value).toISOString();
+      },
+      from: (value: Date) => {
+        return value ? value.toISOString() : null;
+      },
+    },
+  })
+  updatedAt?: string;
 
   @OneToMany(() => Flight, (flight) => flight.aircraft)
   flights?: Flight[]; // Liên kết tới các chuyến bay sử dụng máy bay này

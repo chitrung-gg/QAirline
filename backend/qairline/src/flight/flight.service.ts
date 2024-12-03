@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Flight } from "./entity/flight.entity";
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import { CreateFlightDto } from "./dto/createFlight.dto";
 import { UpdateFlightDto } from "./dto/updateFlight.dto";
 import { FlightNotFoundException } from "./exception/flightNotFound.exception";
@@ -12,7 +12,7 @@ export class FlightService {
     constructor(
         @InjectRepository(Flight)
         private flightRepository: Repository<Flight>,
-        private aircraftService: AircraftService
+        private dataSource: DataSource
     ) {}
 
     async setDuration(departureTime: string, arrivalTime: string) {
@@ -40,6 +40,27 @@ export class FlightService {
         return newFlight
     }
 
+    // async addAirport(flight: Flight, airportId: number) {
+    //     const queryRunner = this.dataSource.createQueryRunner();
+
+    //     await queryRunner.connect();
+    //     await queryRunner.startTransaction();
+    //     try {
+            
+    //         await queryRunner.manager.createQueryBuilder()
+    //             .relation(Flight, "departureAirport")
+    //             .of(flight)
+    //             .add(airportId);
+    //         await queryRunner.commitTransaction();
+    //     } catch (err) {
+    //         // since we have errors lets rollback the changes we made
+    //         await queryRunner.rollbackTransaction();
+    //     } finally {
+    //         // you need to release a queryRunner which was manually instantiated
+    //         await queryRunner.release();
+    //     }
+    // }
+
     getAllFlights() {
         return this.flightRepository.find()
     }
@@ -57,6 +78,15 @@ export class FlightService {
         throw new FlightNotFoundException(id)
     }
 
+    async getAircraftById(id: number) {
+        const flight = await this.flightRepository.findOne({
+            where: {
+                id: id
+            }
+        });
+
+        return flight.aircraft;
+    }
     async updateFlight(id: number, flight: UpdateFlightDto) {
         await this.flightRepository.update(id, {
             ...flight,

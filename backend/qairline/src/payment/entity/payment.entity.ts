@@ -22,10 +22,18 @@ export class Payment {
     @Column({ type: "varchar", length: 100, nullable: true })
     transactionId: string; // Transaction ID from the payment gateway (if applicable)
 
-    @Column({ type: 'timestamptz', transformer: {
-        to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
-        from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
-    } })
+    @Column({
+        type: 'timestamptz',
+        transformer: {
+          to: (value: string | Date | null) => {
+            if (value === null) return null;
+            return new Date(value).toISOString();
+          },
+          from: (value: Date) => {
+            return value ? value.toISOString() : null;
+          },
+        },
+    })
     paymentDate: string; // Date of the payment
 
     @Column({ type: "boolean", default: false })

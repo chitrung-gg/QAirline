@@ -6,46 +6,46 @@ import { CreateFlightDto } from "./createFlight.dto";
 import { PartialType } from "@nestjs/mapped-types";
 
 export class UpdateFlightDto extends PartialType(CreateFlightDto) {
-    @IsNumber()
-    id: number
+    // @IsNumber()
+    // id: number
 
-    @IsString()
-    flightNumber?: string
+    // @IsString()
+    // flightNumber?: string
  
-    @IsObject()
-    aircraft?: Aircraft
+    // @IsObject()
+    // aircraft?: Aircraft
  
-    @IsObject()
-    departureAirport?: Airport;
+    // @IsObject()
+    // departureAirport?: Airport;
     
-    @IsObject()
-    arrivalAirport?: Airport;
+    // @IsObject()
+    // arrivalAirport?: Airport;
  
-    @IsOptional()
-    @IsISO8601()
-    departureTime: string
+    // @IsOptional()
+    // @IsISO8601()
+    // departureTime: string
     
-    @IsOptional()
-    @IsISO8601()
-    arrivalTime: string
+    // @IsOptional()
+    // @IsISO8601()
+    // arrivalTime: string
  
-    @IsOptional()
-    @IsString()
-    status?: "Scheduled" | "Arrived" | "Delayed" | "Cancelled"
+    // @IsOptional()
+    // @IsString()
+    // status?: "Scheduled" | "Arrived" | "Delayed" | "Cancelled"
  
-    @IsOptional()
-    @IsNumber()
-    availableSeats?: number
+    // @IsOptional()
+    // @IsNumber()
+    // availableSeats?: number
 
-    @IsOptional()
-    @IsObject()
-    seatClasses?: Record<string, number>
+    // @IsOptional()
+    // @IsObject()
+    // seatClasses?: Record<string, number>
     
-    @IsOptional()
-    @IsArray()
-    bookings?: Booking[]
+    // @IsOptional()
+    // @IsArray()
+    // bookings?: Booking[]
  
-    @IsOptional()
-    @IsNumber()
-    duration?: number
+    // @IsOptional()
+    // @IsNumber()
+    // duration?: number
 }

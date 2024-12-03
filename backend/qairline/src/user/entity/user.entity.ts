@@ -9,7 +9,7 @@ export class User {
     id: number
 
     @Column({ type: "varchar", unique: true, length: 100 })
-    email: string; // Địa chỉ email
+    email: string; 
 
     @Column({ type: "varchar", unique: true, length: 50 })
     username: string
@@ -26,11 +26,19 @@ export class User {
     @Column({ type: "varchar", length: 50 })
     lastName: string; 
 
-    @Column({ type: 'timestamptz', transformer: {
-        to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
-        from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
-      } })
-    dob: string; // Ngày sinh của người dùng
+    @Column({
+      type: 'timestamptz', nullable: true,
+      transformer: {
+        to: (value: string | Date | null) => {
+          if (value === null) return null;
+          return new Date(value).toISOString();
+        },
+        from: (value: Date) => {
+          return value ? value.toISOString() : null;
+        },
+      },
+    })
+    dob: string | null = null;
 
     @Column({
 		type: "enum",
@@ -65,5 +73,8 @@ export class User {
     // payments: Payment[];
 
     @Column({type: "varchar", length: 255, nullable: true})
-    currentHashedRefreshToken?: string;
+    accessToken?: string;
+
+    @Column({type: "varchar", length: 255, nullable: true})
+    refreshToken?: string;
 }

@@ -11,28 +11,44 @@ export class Flight {
     @Column({ unique: true })
     flightNumber: string; // Số hiệu chuyến bay (duy nhất)
 
-    @ManyToOne(() => Aircraft, (aircraft) => aircraft.flights, { eager: true, cascade: true, onUpdate: "CASCADE"})
+    @ManyToOne(() => Aircraft, (aircraft) => aircraft.flights, { eager: true, cascade: true, onUpdate: "CASCADE", nullable: true})
     @JoinColumn({ name: "aircraftId" })
     aircraft?: Aircraft; // Liên kết với bảng Aircraft
 
-    @ManyToOne(() => Airport, (airport) => airport.departures, { eager: true, cascade: true, onUpdate: "CASCADE" })
+    @ManyToOne(() => Airport, (airport) => airport.departures, { eager: true, cascade: true, onUpdate: "CASCADE", nullable: true })
     @JoinColumn({ name: "departureAirportId" })
     departureAirport?: Airport; // Sân bay khởi hành
 
-    @ManyToOne(() => Airport, (airport) => airport.arrivals, { eager: true, cascade: true, onUpdate: "CASCADE" })
+    @ManyToOne(() => Airport, (airport) => airport.arrivals, { eager: true, cascade: true, onUpdate: "CASCADE", nullable: true })
     @JoinColumn({ name: "arrivalAirportId" })
     arrivalAirport?: Airport; // Sân bay đến
 
-    @Column({ type: 'timestamptz', transformer: {
-        to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
-        from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
-    } })
+    @Column({
+        type: 'timestamptz',
+        transformer: {
+          to: (value: string | Date | null) => {
+            if (value === null) return null;
+            return new Date(value).toISOString();
+          },
+          from: (value: Date) => {
+            return value ? value.toISOString() : null;
+          },
+        },
+    })
     departureTime: string;
 
-    @Column({ type: 'timestamptz', transformer: {
-        to: (value: string | Date) => new Date(value),
-        from: (value: Date) => value.toISOString(),
-    } })
+    @Column({
+        type: 'timestamptz',
+        transformer: {
+          to: (value: string | Date | null) => {
+            if (value === null) return null;
+            return new Date(value).toISOString();
+          },
+          from: (value: Date) => {
+            return value ? value.toISOString() : null;
+          },
+        },
+    })
     arrivalTime: string;
     
 	@Column({

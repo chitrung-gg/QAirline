@@ -24,6 +24,11 @@ export class FlightController {
       return this.flightService.getFlightById(id)
     }
 
+    @Get(':id/aircraft')
+    getAircraftById(@Param('id') id: number) {
+      return this.flightService.getAircraftById(id)
+    }
+
     @Patch(':id')
     async updateFlight(@Param('id') id: number, @Body() updateFlightDto: UpdateFlightDto) {
       return this.flightService.updateFlight(id, updateFlightDto);

@@ -6,11 +6,12 @@ import RequestWithUser from './interface/requestWithUser.interface';
 import { LocalAuthenticationGuard } from './guard/localAuthentication.guard';
 import { RegisterDto } from './dto/register.dto';
 import { JwtAuthenticationGuard } from './guard/jwtAuthentication.guard';
-import { Request, Response } from 'express';
 import { User } from 'src/user/entity/user.entity';
 import { SignUpDto } from './dto/signUp.dto';
 import { LogInDto } from './dto/logIn.dto';
 import JwtRefreshGuard from './guard/jwtRefresh.guard';
+import { RefreshToken } from './entity/token.entity';
+import { JwtRefreshTokenStrategy } from './passport/jwtRefresh.strategy';
 
  
 @Controller('authentication')
@@ -20,17 +21,15 @@ export class AuthenticationController {
         private readonly authenticationService: AuthenticationService
     ) {}
     
-    @Post('register')
-    async register(@Body() registrationData: RegisterDto) {
-        return this.authenticationService.register(registrationData);
-    }
+    // @Post('register')
+    // async register(@Body() registrationData: RegisterDto) {
+    //     return this.authenticationService.register(registrationData);
+    // }
     
     @UseGuards(JwtAuthenticationGuard)
     @Get()
-    authenticate(@Req() request: RequestWithUser) {
-        const user = request.user
-        user.password = undefined
-        return user
+    authenticate() {
+        
     }
 
     // @HttpCode(200)
@@ -46,13 +45,13 @@ export class AuthenticationController {
 
     // }
 
-    @HttpCode(200)
-    @UseGuards(JwtAuthenticationGuard)
-    @Post('logout')
-    async logOut(@Req() request: RequestWithUser, @Res() response: Response) {
-        response.setHeader('Set-Cookie', this.authenticationService.getCookieForLogOut());
-        return response.sendStatus(200);
-    }
+    // @HttpCode(200)
+    // @UseGuards(JwtAuthenticationGuard)
+    // @Post('logout')
+    // async logOut(@Req() request: RequestWithUser, @Res() response: Response) {
+    //     response.setHeader('Set-Cookie', this.authenticationService.getCookieForLogOut());
+    //     return response.sendStatus(200);
+    // }
 
     @Post('signup')
     async signUp(@Body() signUpData: SignUpDto) {
@@ -76,4 +75,15 @@ export class AuthenticationController {
         };
     }
 
+    @UseGuards(JwtAuthenticationGuard)
+    @Get('logout')
+    logout(@Req() req: RequestWithUser) {
+        this.authenticationService.logout(req.user['sub'])
+    }
+
+    @UseGuards(JwtRefreshGuard)
+    @Get('refresh')
+    refreshTokens(@Req() req: RequestWithUser) {
+        return this.authenticationService.updateRefreshToken(req.user['sub'], req.user['username'])
+    }
 }

@@ -13,16 +13,32 @@ export class Promotion {
     @Column({ type: "text" })
     description: string; // Description of the promotion (e.g., "20% off on selected flights")
 
-    @Column({ type: 'timestamptz', transformer: {
-        to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
-        from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
-      } })
+    @Column({
+      type: 'timestamptz',
+      transformer: {
+        to: (value: string | Date | null) => {
+          if (value === null) return null;
+          return new Date(value).toISOString();
+        },
+        from: (value: Date) => {
+          return value ? value.toISOString() : null;
+        },
+      },
+    })
     startDate: string; // Start date for the promotion (ISO date format)
 
-    @Column({ type: 'timestamptz', transformer: {
-        to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
-        from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
-      } })
+    @Column({
+      type: 'timestamptz',
+      transformer: {
+        to: (value: string | Date | null) => {
+          if (value === null) return null;
+          return new Date(value).toISOString();
+        },
+        from: (value: Date) => {
+          return value ? value.toISOString() : null;
+        },
+      },
+    })
     endDate: string; // End date for the promotion (ISO date format)
 
     @Column({ type: "float" })

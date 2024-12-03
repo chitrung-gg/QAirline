@@ -13,24 +13,32 @@ export class Booking {
   	@JoinColumn({ name: "userId" })
     user?: User; // Relation to User entity
   
-	@ManyToOne(() => Flight, { eager: true, cascade: true, onUpdate: "CASCADE" })
+	@ManyToOne(() => Flight, { eager: true, nullable: true, cascade: true, onUpdate: "CASCADE" })
 	@JoinColumn({ name: "flightId" })
     flight?: Flight; // Relation to Flight entity
   
     @Column({ type: "varchar", length: 255 })
     passengerName: string;
   
-    @Column({ type: 'timestamptz', transformer: {
-        to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
-        from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
-    } })
+    @Column({
+        type: 'timestamptz',
+        transformer: {
+          to: (value: string | Date | null) => {
+            if (value === null) return null;
+            return new Date(value).toISOString();
+          },
+          from: (value: Date) => {
+            return value ? value.toISOString() : null;
+          },
+        },
+      })
     passengerDob: string;
   
     @Column({ type: "varchar", length: 50})
     passportNumber: string;
   
     // TODO: Generate bookingCode
-    @Column({ type: "varchar", length: 50 })
+    @Column({ type: "varchar", length: 50, nullable: true })
     bookingCode?: string;
 
 	@ManyToOne(() => Promotion, { eager: true, cascade: true, nullable: true, onUpdate: "CASCADE" })
@@ -46,10 +54,19 @@ export class Booking {
     @Column({ type: "varchar", length: 50 })
     seatClass: string; // Loại hạng ghế (Economy, Business, First Class)
 
-    @Column({ type: 'timestamptz', transformer: {
-        to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
-        from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
-    },  default: () => "CURRENT_TIMESTAMP"})
+    @Column({
+        type: 'timestamptz', nullable: true,
+        transformer: {
+          to: (value: string | Date | null) => {
+            if (value === null) return null;
+            return new Date(value).toISOString();
+          },
+          from: (value: Date) => {
+            return value ? value.toISOString() : null;
+          },
+        },
+        default: () => "CURRENT_TIMESTAMP"
+      })
     bookingDate: string;
   
     @Column({

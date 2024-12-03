@@ -51,5 +51,9 @@ export class SignUpDto {
 
     @IsOptional()
     @IsString()
-    currentHashedRefreshToken?: string;
+    accessToken?: string;
+    
+    @IsOptional()
+    @IsString()
+    refreshToken?: string;
 }

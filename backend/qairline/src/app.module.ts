@@ -45,7 +45,7 @@ import { DestinationModule } from './destination/destination.module';
     useFactory: async (configService: ConfigService) => ({
       secret: configService.get('JWT_SECRET'),
       signOptions: {
-        expiresIn: configService.get('JWT_EXPIRATION_TIME'),
+        expiresIn: `${configService.get('JWT_EXPIRATION_TIME')}s`,
       },
     }),
   }), DatabaseModule, AuthenticationModule, UserModule, AirportModule, BookingModule, ReportModule, IntroductionModule, PromotionModule, AnnouncementModule, NewsModule, PaymentModule, DestinationModule],

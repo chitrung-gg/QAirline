@@ -62,24 +62,4 @@ export class UserService {
             throw new HttpException('Exception found in UserService: deleteUser', HttpStatus.NOT_FOUND);
         }
     }
-
-    async setCurrentRefreshToken(refreshToken: string, userId: number) {
-        const currentHashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-        await this.userRepository.update(userId, {
-            currentHashedRefreshToken
-        });
-    }
-
-    async getUserIfRefreshTokenMatches(refreshToken: string, userId: number) {
-        const user = await this.getUserById(userId);
-     
-        const isRefreshTokenMatching = await bcrypt.compare(
-            refreshToken,
-            user.currentHashedRefreshToken
-        );
-     
-        if (isRefreshTokenMatching) {
-            return user;
-        }
-    }
 }

@@ -51,5 +51,9 @@ export class CreateUserDto {
 
     @IsOptional()
     @IsString()
-    currentHashedRefreshToken?: string;
+    accessToken?: string;
+    
+    @IsOptional()
+    @IsString()
+    refreshToken?: string;
 }

@@ -20,16 +20,32 @@ export class News {
     @Column({ type: "boolean", default: true })
     isPublished: boolean; // Trạng thái xuất bản
 
-    @CreateDateColumn({ type: 'timestamptz', transformer: {
-        to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
-        from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
-      } })
+    @CreateDateColumn({
+      type: 'timestamptz',
+      transformer: {
+        to: (value: string | Date | null) => {
+          if (value === null) return null;
+          return new Date(value).toISOString();
+        },
+        from: (value: Date) => {
+          return value ? value.toISOString() : null;
+        },
+      },
+    })
     createdAt: string; // Thời gian tạo bài viết
 
-    @UpdateDateColumn({ type: 'timestamptz', transformer: {
-        to: (value: string | Date) => new Date(value),
-        from: (value: Date) => value.toISOString(),
-      } })
+    @UpdateDateColumn({
+      type: 'timestamptz',
+      transformer: {
+        to: (value: string | Date | null) => {
+          if (value === null) return null;
+          return new Date(value).toISOString();
+        },
+        from: (value: Date) => {
+          return value ? value.toISOString() : null;
+        },
+      },
+    })
     updatedAt: string; // Thời gian cập nhật bài viết
 
     // @ManyToOne(() => User, (user) => user.news, { nullable: false, eager: true })
