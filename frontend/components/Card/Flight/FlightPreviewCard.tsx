@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardBody, Divider } from "@nextui-org/react";
 import Image from "next/image";
-import { FlightProps, getDiscountInfoFromLocalStorage } from '@/interfaces/flight';
+import { FlightProps, getDiscountInfoFromLocalStorage } from '@/interfaces/flightsample';
 
 export default function FlightPreviewCard({
     type,

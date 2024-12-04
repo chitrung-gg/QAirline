@@ -11,7 +11,7 @@ import {
     SelectItem
 } from "@nextui-org/react";
 import FlightPreviewCard from '@/components/Card/Flight/FlightPreviewCard';
-import { FlightProps, getFlightFromLocalStorage, savePassengerInfoToLocalStorage } from '@/interfaces/flight';
+import { FlightProps, getFlightFromLocalStorage, savePassengerInfoToLocalStorage } from '@/interfaces/flightsample';
 import ImageSection from '@/components/ImageSection';
 import PolicyCard from '@/components/Card/PolicyCard';
 import OfferInputCard from '@/components/Card/OfferInputCard';

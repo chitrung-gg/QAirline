@@ -8,7 +8,7 @@ import {
     Button
 } from "@nextui-org/react";
 import FlightPreviewCard from '@/components/Card/Flight/FlightPreviewCard';
-import { clearBookingLocalStorage, clearDiscountInfoFromLocalStorage, FlightProps, getDiscountInfoFromLocalStorage, getFlightFromLocalStorage, getPassengerInfoFromLocalStorage } from '@/interfaces/flight';
+import { clearBookingLocalStorage, clearDiscountInfoFromLocalStorage, FlightProps, getDiscountInfoFromLocalStorage, getFlightFromLocalStorage, getPassengerInfoFromLocalStorage } from '@/interfaces/flightsample';
 import ImageSection from '@/components/ImageSection';
 import PolicyCard from '@/components/Card/PolicyCard';
 import PaymentCard from '@/components/Card/PaymentCard';
