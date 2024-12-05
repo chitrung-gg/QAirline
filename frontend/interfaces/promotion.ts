@@ -16,3 +16,13 @@ export enum discountType {
     PERCENT = 'Percentage',
     FIXED = 'FixedAmount',
 }
+
+export interface CreatePromotionDto {
+  code?: string;
+  discount?: number;
+  startDate?: Date;
+  endDate?: Date;
+  description?: string;
+}
+
+export interface UpdatePromotionDto extends Partial<CreatePromotionDto> {}

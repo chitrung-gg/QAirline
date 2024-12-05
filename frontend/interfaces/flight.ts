@@ -14,7 +14,7 @@ export interface Flight {
   availableSeats: number;
   seatClasses: Record<string, number>;
   bookings?: Booking[];
-  duration?: number;
+  duration?: string;
 }
 
 export enum FlightStatus {
@@ -23,3 +23,13 @@ export enum FlightStatus {
   DELAYED = "Delayed",
   CANCELLED = "Cancelled",
 }
+
+export interface CreateFlightDto {
+  departureAirport?: string;
+  arrivalAirport?: string;
+  departureTime?: Date;
+  arrivalTime?: Date;
+  aircraftId?: number;
+}
+
+export interface UpdateFlightDto extends Partial<CreateFlightDto> {}

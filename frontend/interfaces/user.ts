@@ -38,3 +38,11 @@ export enum UserStatus {
     BANNED = 'Banned',
     OTHER = 'Other'
 }
+
+export interface CreateUserDto {
+  username?: string;
+  email?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+}

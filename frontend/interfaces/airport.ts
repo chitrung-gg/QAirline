@@ -9,3 +9,13 @@ export interface Airport {
   departures?: Flight;
   arrivals?: Flight;
 }
+
+export interface CreateAirportDto {
+  name?: string;
+  code?: string;
+  city?: string;
+  country?: string;
+}
+
+export interface UpdateAirportDto extends Partial<CreateAirportDto> { }
+

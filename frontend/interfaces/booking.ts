@@ -31,3 +31,12 @@ export enum PaymentStatus {
     PENDING = 'Pending',
     UNPAID = 'Unpaid',
 }
+
+export interface CreateBookingDto {
+  userId?: number;
+  flightId?: number;
+  passengerName?: string;
+  seatNumber?: string;
+}
+
+export interface UpdateBookingDto extends Partial<CreateBookingDto> {}
