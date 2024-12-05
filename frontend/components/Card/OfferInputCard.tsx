@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardHeader, CardBody, Input, Button, useDisclosure } from "@nextui-org/react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from "@nextui-org/react";
-import { saveDiscountInfoToLocalStorage } from '@/interfaces/flight';
+import { saveDiscountInfoToLocalStorage } from '@/interfaces/flightsample';
 
 // Explicitly define allowed discount codes
 type DiscountCode = 'SUMMER20' | 'FLIGHT10' | 'NEW25';

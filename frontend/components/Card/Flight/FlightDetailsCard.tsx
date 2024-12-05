@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card, CardHeader, CardBody, CardFooter, Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import Image from "next/image";
-import { FlightProps } from '@/interfaces/flight';
+import { FlightProps } from '@/interfaces/flightsample';
 
 export default function FlightDetailsCard(props: FlightProps) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();

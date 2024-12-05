@@ -4,7 +4,7 @@ import { Card, CardHeader, CardBody, CardFooter, Divider, Button } from "@nextui
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import FlightDetailsCard from "./FlightDetailsCard";
-import { clearDiscountInfoFromLocalStorage, FlightProps } from "@/interfaces/flight";
+import { clearDiscountInfoFromLocalStorage, FlightProps } from "@/interfaces/flightsample";
 
 export default function FlightCard(props: FlightProps) {
     const router = useRouter();

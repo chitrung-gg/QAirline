@@ -11,10 +11,11 @@ import {
     SelectItem
 } from "@nextui-org/react";
 import FlightPreviewCard from '@/components/Card/Flight/FlightPreviewCard';
-import { FlightProps, getFlightFromLocalStorage, savePassengerInfoToLocalStorage } from '@/interfaces/flight';
+import { FlightProps, getFlightFromLocalStorage, savePassengerInfoToLocalStorage } from '@/interfaces/flightsample';
 import ImageSection from '@/components/ImageSection';
 import PolicyCard from '@/components/Card/PolicyCard';
 import OfferInputCard from '@/components/Card/OfferInputCard';
+import PaymentCard from '@/components/Card/PaymentCard';
 
 interface PassengerInfo {
     firstName: string;
@@ -305,6 +306,10 @@ export default function BookingDetailsPage() {
                     </div>
 
                     <div>
+                        <PaymentCard />
+                    </div>
+
+                    <div>
                         <PolicyCard />
                     </div>
 
@@ -313,7 +318,7 @@ export default function BookingDetailsPage() {
                             className='bg-blue-normal font-semibold text-white'
                             onClick={handleNextStep}
                         >
-                            Tiếp tục
+                            
                         </Button>
                     </div>
                 </div>
