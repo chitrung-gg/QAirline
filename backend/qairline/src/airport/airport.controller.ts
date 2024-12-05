@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
 import { AirportService } from './airport.service';
 import { CreateAirportDto } from './dto/createAirport.dto';
 import { UpdateAirportDto } from './dto/updateAirport.dto';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('airport')
+@UseInterceptors(CacheInterceptor)
 export class AirportController {
 	constructor(private readonly airportService: AirportService) {}
 

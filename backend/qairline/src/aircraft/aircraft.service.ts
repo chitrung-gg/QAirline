@@ -1,15 +1,18 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Aircraft } from "./entity/aircraft.entity";
 import { CreateAircraftDto } from "./dto/createAircraft.dto";
 import { UpdateAircraftDto } from "./dto/updateAircraft.dto";
+import { Cache, CACHE_MANAGER } from "@nestjs/cache-manager";
 
 @Injectable()
 export class AircraftService {
     constructor(
         @InjectRepository(Aircraft)
-        private aircraftRepository: Repository<Aircraft>
+        private aircraftRepository: Repository<Aircraft>,
+        @Inject(CACHE_MANAGER)
+        private cacheManager: Cache
     ) {}
 
     async createAircraft(aircraft: CreateAircraftDto) {

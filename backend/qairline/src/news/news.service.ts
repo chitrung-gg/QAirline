@@ -1,15 +1,18 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateNewsDto } from './dto/createNews.dto';
 import { UpdateNewsDto } from './dto/updateNews.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { News } from './entity/news.entity';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class NewsService {
   constructor(
     @InjectRepository(News)
-    private readonly newsRepository: Repository<News>
+    private readonly newsRepository: Repository<News>,
+    @Inject(CACHE_MANAGER)
+    private cacheManager: Cache
   ) {}
 
   async createNews(news: CreateNewsDto) {

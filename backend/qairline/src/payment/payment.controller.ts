@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/createPayment.dto';
 import { UpdatePaymentDto } from './dto/updatePayment.dto';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('payment')
+@UseInterceptors(CacheInterceptor)
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 

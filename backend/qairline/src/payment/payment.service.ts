@@ -1,15 +1,18 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/createPayment.dto';
 import { UpdatePaymentDto } from './dto/updatePayment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Payment } from './entity/payment.entity';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class PaymentService {
   constructor(
       @InjectRepository(Payment)
-      private paymentRepository: Repository<Payment>
+      private paymentRepository: Repository<Payment>,
+      @Inject(CACHE_MANAGER)
+      private cacheManager: Cache
   ) {}
 
   async createPayment(payment: CreatePaymentDto) {

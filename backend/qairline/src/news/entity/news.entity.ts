@@ -11,8 +11,12 @@ export class News {
     @Column({ type: "text" })
     content: string; // Nội dung bài viết
 
-    @Column({ type: "varchar", length: 100, nullable: true })
-    category: string; // Danh mục (Ví dụ: Updates, Promotions, Announcements, Tips)
+    @Column({
+      type: "enum",
+      enum: ['Updates', 'Promotions', 'Announcements', 'Tips'],
+      default: "Announcements",
+    })
+    category: 'Updates' | 'Promotions' | 'Announcements' | 'Tips'; // Danh mục (Ví dụ: Updates, Promotions, Announcements, Tips)
 
     @Column({ type: "varchar", length: 255, nullable: true })
     coverImage?: string; // Đường dẫn ảnh bìa (nếu có)

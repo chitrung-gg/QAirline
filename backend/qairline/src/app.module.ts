@@ -16,12 +16,14 @@ import { AirportModule } from './airport/airport.module';
 import { BookingModule } from './booking/booking.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ReportModule } from './report/report.module';
-import { IntroductionModule } from './introduction/introduction.module';
+
 import { PromotionModule } from './promotion/promotion.module';
-import { AnnouncementModule } from './announcement/announcement.module';
+
 import { NewsModule } from './news/news.module';
 import { PaymentModule } from './payment/payment.module';
 import { DestinationModule } from './destination/destination.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 
 
 @Module({
@@ -47,11 +49,24 @@ import { DestinationModule } from './destination/destination.module';
       signOptions: {
         expiresIn: `${configService.get('JWT_EXPIRATION_TIME')}s`,
       },
+    })
+  }), CacheModule.registerAsync({
+    isGlobal: true,
+    imports: [ConfigModule],
+    inject: [ConfigService],
+    useFactory: async (configService: ConfigService) => ({
+      max: Number(configService.get('MAX_CACHE_QUANTITY')),
+      ttl: Number(configService.get('MAX_CACHE_TTL')),
     }),
-  }), DatabaseModule, AuthenticationModule, UserModule, AirportModule, BookingModule, ReportModule, IntroductionModule, PromotionModule, AnnouncementModule, NewsModule, PaymentModule, DestinationModule],
+  }),
+    DatabaseModule, AuthenticationModule, UserModule, AirportModule, BookingModule, ReportModule,  PromotionModule, NewsModule, PaymentModule, DestinationModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
+  ],
 })
-export class AppModule {
 
-}
+export class AppModule {}

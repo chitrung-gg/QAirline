@@ -1,15 +1,18 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateBookingDto } from './dto/createBooking.dto';
 import { UpdateBookingDto } from './dto/updateBooking.dto';
 import { Booking } from './entity/booking.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class BookingService {
     constructor(
       @InjectRepository(Booking)
-      private bookingRepository: Repository<Booking>
+      private bookingRepository: Repository<Booking>,
+	  @Inject(CACHE_MANAGER)
+	  private cacheManager: Cache
 	) {}
 
 	async createBooking(booking: CreateBookingDto) {

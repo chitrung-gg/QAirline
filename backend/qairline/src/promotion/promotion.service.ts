@@ -1,15 +1,18 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreatePromotionDto } from './dto/createPromotion.dto';
 import { UpdatePromotionDto } from './dto/updatePromotion.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Promotion } from './entity/promotion.entity';
 import { Repository } from 'typeorm';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class PromotionService {
   constructor(
       @InjectRepository(Promotion)
-      private promotionRepository: Repository<Promotion>
+      private promotionRepository: Repository<Promotion>,
+      @Inject(CACHE_MANAGER)
+      private cacheManager: Cache
   ) {}
 
   async createPromotion(promotion: CreatePromotionDto) {

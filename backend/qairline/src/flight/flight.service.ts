@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Flight } from "./entity/flight.entity";
 import { DataSource, Repository } from "typeorm";
@@ -6,13 +6,16 @@ import { CreateFlightDto } from "./dto/createFlight.dto";
 import { UpdateFlightDto } from "./dto/updateFlight.dto";
 import { FlightNotFoundException } from "./exception/flightNotFound.exception";
 import { AircraftService } from "src/aircraft/aircraft.service";
+import { Cache, CACHE_MANAGER } from "@nestjs/cache-manager";
 
 @Injectable()
 export class FlightService {
     constructor(
         @InjectRepository(Flight)
         private flightRepository: Repository<Flight>,
-        private dataSource: DataSource
+        private dataSource: DataSource,
+        @Inject(CACHE_MANAGER)
+        private cacheManager: Cache
     ) {}
 
     async setDuration(departureTime: string, arrivalTime: string) {
@@ -67,10 +70,15 @@ export class FlightService {
 
     async getFlightById(id: number) {
         // TODO: may change to find with string for real case purposes
-        const flight = await this.flightRepository.findOne({
-            where: {
-                id: id
-            }
+        const flight = await new Promise<Flight>((resolve) => {
+            setTimeout(async () => {
+                const result = await this.flightRepository.findOne({
+                    where: {
+                        id: id
+                    }
+                });
+                resolve(result);
+            }, 1000);
         });
         if (flight) {
             return flight;

@@ -5,12 +5,15 @@ import { Repository } from "typeorm";
 import { CreateUserDto } from "./dto/createUser.dto";
 import * as bcrypt from 'bcrypt'
 import { UpdateUserDto } from "./dto/updateUser.dto";
+import { Cache, CACHE_MANAGER } from "@nestjs/cache-manager";
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
-        private userRepository: Repository<User>
+        private userRepository: Repository<User>,
+        @Inject(CACHE_MANAGER)
+        private cacheManager: Cache
     ) {}
     
     async createUser(user: CreateUserDto) {

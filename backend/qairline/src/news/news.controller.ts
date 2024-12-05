@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
 import { NewsService } from './news.service';
 import { CreateNewsDto } from './dto/createNews.dto';
 import { UpdateNewsDto } from './dto/updateNews.dto';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('news')
+@UseInterceptors(CacheInterceptor)
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 

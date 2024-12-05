@@ -12,9 +12,11 @@ import { LogInDto } from './dto/logIn.dto';
 import JwtRefreshGuard from './guard/jwtRefresh.guard';
 import { RefreshToken } from './entity/token.entity';
 import { JwtRefreshTokenStrategy } from './passport/jwtRefresh.strategy';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
  
 @Controller('authentication')
+@UseInterceptors(CacheInterceptor)
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthenticationController {
     constructor(

@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
 import { PromotionService } from './promotion.service';
 import { CreatePromotionDto } from './dto/createPromotion.dto';
 import { UpdatePromotionDto } from './dto/updatePromotion.dto';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 @Controller('promotion')
+@UseInterceptors(CacheInterceptor)
 export class PromotionController {
   constructor(private readonly promotionService: PromotionService) {}
 

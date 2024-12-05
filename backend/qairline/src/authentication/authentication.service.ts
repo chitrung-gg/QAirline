@@ -1,4 +1,4 @@
-import { Body, HttpException, HttpStatus, Injectable, Post } from "@nestjs/common";
+import { Body, HttpException, HttpStatus, Inject, Injectable, Post } from "@nestjs/common";
 import * as bcrypt from 'bcrypt';
 import { UserService } from "src/user/user.service";
 import { RegisterDto } from "./dto/register.dto";
@@ -6,13 +6,16 @@ import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { SignUpDto } from "./dto/signUp.dto";
 import { LogInDto } from "./dto/logIn.dto";
+import { Cache, CACHE_MANAGER } from "@nestjs/cache-manager";
 
 @Injectable()
 export class AuthenticationService {
     constructor(
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
-        private readonly configService: ConfigService
+        private readonly configService: ConfigService,
+        @Inject(CACHE_MANAGER)
+        private cacheManager: Cache
     ) {}
 
     // async register(registrationData: RegisterDto) {

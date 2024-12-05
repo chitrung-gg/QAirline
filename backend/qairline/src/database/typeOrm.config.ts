@@ -12,6 +12,7 @@ export default new DataSource({
     username: configService.get('POSTGRES_USER'),
     password: configService.get('POSTGRES_PASSWORD'),
     database: configService.get('POSTGRES_DB'),
+    // ssl: {rejectUnauthorized: true},         // Ignore when using localhost PostgreSQL
     entities: [
         'dist/**/*.entity{.ts,.js}'
     ],

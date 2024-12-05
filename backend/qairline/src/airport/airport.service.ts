@@ -1,15 +1,18 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateAirportDto } from './dto/createAirport.dto';
 import { UpdateAirportDto } from './dto/updateAirport.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Airport } from './entity/airport.entity';
 import { Repository } from 'typeorm';
+import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class AirportService {
 	constructor(
         @InjectRepository(Airport)
-        private airportRepository: Repository<Airport>
+        private airportRepository: Repository<Airport>,
+        @Inject(CACHE_MANAGER)
+        private cacheManager: Cache
     ) {}
 
     async createAirport(airport: CreateAirportDto) {

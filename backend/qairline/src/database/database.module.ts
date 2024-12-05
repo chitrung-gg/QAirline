@@ -17,7 +17,7 @@ console.log('__dirname:', __dirname);
                 username: configService.get('POSTGRES_USER'),
                 password: configService.get('POSTGRES_PASSWORD'),
                 database: configService.get('POSTGRES_DB'),
-                
+            // ssl: {rejectUnauthorized: true},         // Ignore when using localhost PostgreSQL
                 entities: [
                     __dirname + '/../**/*.entity{.ts,.js}',
                 ],

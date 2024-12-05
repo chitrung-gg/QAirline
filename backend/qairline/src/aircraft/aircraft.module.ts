@@ -3,6 +3,7 @@ import { AircraftController } from "./aircraft.controller";
 import { AircraftService } from "./aircraft.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Aircraft } from "./entity/aircraft.entity";
+import { CacheModule } from "@nestjs/cache-manager";
 
 @Module({
     imports: [TypeOrmModule.forFeature([Aircraft])],
