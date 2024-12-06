@@ -303,6 +303,23 @@ export default  function Page(props: { params: { id: string } }) {
                 ))}
               </RadioGroup>
             </div>
+
+            {initialData && initialData.flights && initialData.flights.length > 0 && (
+              <div>
+                <label className="block text-md font-semibold py-2">Chuyến bay</label>
+                <div className="flex flex-wrap gap-2">
+                  {initialData.flights.map((flight) => (
+                    <Link
+                      key={flight.id}
+                      href={`/admin/flights/${flight.id}`}
+                      className="text-blue-600 hover:text-blue-800 transition-colors"
+                    >
+                      {flight.flightNumber}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           <div className="mt-6 flex justify-end gap-4 pb-5">
             <Link
@@ -345,7 +362,7 @@ export default  function Page(props: { params: { id: string } }) {
 
           <Modal isOpen={isErrorOpen} onClose={handleCloseErrorModal}>
                 <ModalContent>
-                    <ModalHeader className="flex flex-col gap-1">Kiểm tra lại thông tin</ModalHeader>
+                    <ModalHeader className="flex flex-col gap-1">Không thành công</ModalHeader>
                     <ModalBody>
                         <p>Vui lòng kiểm tra lại thông tin. Đã có lỗi xảy ra khi chỉnh sửa tàu bay.</p>
                     </ModalBody>

@@ -291,7 +291,7 @@ export default function Page() {
 
           <Modal isOpen={isErrorOpen} onClose={handleCloseErrorModal}>
                 <ModalContent>
-                    <ModalHeader className="flex flex-col gap-1">Kiểm tra lại thông tin</ModalHeader>
+                    <ModalHeader className="flex flex-col gap-1">Không thành công</ModalHeader>
                     <ModalBody>
                         <p>Vui lòng kiểm tra lại thông tin. Đã có lỗi xảy ra khi tạo tàu bay.</p>
                     </ModalBody>
