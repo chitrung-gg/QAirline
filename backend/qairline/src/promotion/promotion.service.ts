@@ -38,11 +38,13 @@ export class PromotionService {
   }
 
   async updatePromotion(id: number, promotion: UpdatePromotionDto) {
+    await this.cacheManager.reset()
       await this.promotionRepository.update(id, promotion)
       this.getPromotionById(id)
   }
 
   async deletePromotion(id: number) {
+    await this.cacheManager.reset()
       const deletePromotionResponse = await this.promotionRepository.delete(id)
       if (!deletePromotionResponse) {
           throw new HttpException('Exception found in PromotionService: deletePromotion', HttpStatus.BAD_REQUEST)

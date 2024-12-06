@@ -39,6 +39,7 @@ export class NewsService {
   }
 
   async updateNews(id: number, News: UpdateNewsDto) {
+    await this.cacheManager.reset()
     await this.newsRepository.update(id, News)
     this.getNewsById(id)
   }

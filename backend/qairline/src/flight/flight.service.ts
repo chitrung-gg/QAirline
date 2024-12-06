@@ -7,6 +7,9 @@ import { UpdateFlightDto } from "./dto/updateFlight.dto";
 import { FlightNotFoundException } from "./exception/flightNotFound.exception";
 import { AircraftService } from "src/aircraft/aircraft.service";
 import { Cache, CACHE_MANAGER } from "@nestjs/cache-manager";
+import { Worker } from "worker_threads";
+import * as path from "path";
+
 
 @Injectable()
 export class FlightService {
@@ -64,8 +67,28 @@ export class FlightService {
     //     }
     // }
 
-    getAllFlights() {
-        return this.flightRepository.find()
+    async getAllFlights() {
+        const flights = await this.flightRepository.find()
+        return new Promise((resolve, reject) => {
+            const worker = new Worker(__dirname + '/worker/flight.worker.js');
+            worker.postMessage({ flights });
+
+            worker.on('message', (result) => {
+                // Handle result from the worker thread
+                resolve(result.processedFlights);
+            });
+
+            worker.on('error', (error) => {
+                // Handle error from the worker thread
+                reject(error);
+            });
+
+            worker.on('exit', (code) => {
+                if (code !== 0) {
+                    reject(new Error(`Worker stopped with exit code ${code}`));
+                }
+            });
+        });
     }
 
     async getFlightById(id: number) {
@@ -96,6 +119,7 @@ export class FlightService {
         return flight.aircraft;
     }
     async updateFlight(id: number, flight: UpdateFlightDto) {
+        await this.cacheManager.reset()
         await this.flightRepository.update(id, {
             ...flight,
             duration: await this.setDuration(flight.departureTime, flight.arrivalTime)
@@ -105,6 +129,7 @@ export class FlightService {
     }
 
     async deleteFlight(id: number) {
+        await this.cacheManager.reset()
         const deleteResponse = await this.flightRepository.delete(id)
         if (!deleteResponse.affected) {
             throw new HttpException('Exception found in FlightService: deleteFlight', HttpStatus.NOT_FOUND);

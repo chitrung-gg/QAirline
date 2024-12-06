@@ -14,8 +14,8 @@ export class AuthenticationService {
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
         private readonly configService: ConfigService,
-        @Inject(CACHE_MANAGER)
-        private cacheManager: Cache
+        // @Inject(CACHE_MANAGER)
+        // private cacheManager: Cache
     ) {}
 
     // async register(registrationData: RegisterDto) {

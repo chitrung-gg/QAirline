@@ -7,7 +7,7 @@ import { CacheInterceptor } from "@nestjs/cache-manager";
 @Controller('aircraft')
 @UseInterceptors(CacheInterceptor)
 export class AircraftController {
-    constructor(private aircraftService: AircraftService) {}
+    constructor(private readonly aircraftService: AircraftService) {}
 
     @Post()
     async createAircraft(@Body() createAircraftDto: CreateAircraftDto) {

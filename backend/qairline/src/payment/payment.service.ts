@@ -38,8 +38,9 @@ export class PaymentService {
   }
 
   async updatePayment(id: number, payment: UpdatePaymentDto) {
-      await this.paymentRepository.update(id, payment)
-      this.getPaymentById(id)
+    await this.cacheManager.reset()
+    await this.paymentRepository.update(id, payment)
+    this.getPaymentById(id)
   }
 
   async deletePayment(id: number) {

@@ -1,17 +1,33 @@
-import { NestFactory } from '@nestjs/core';
+import { LazyModuleLoader, NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as compression from 'compression';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {abortOnError: true});
+  const app = await NestFactory.create(AppModule, {abortOnError: true, cors: true});
   app.use(cookieParser())
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true
   }))
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(
+    app.get(Reflector))
+  );
+
+  const lazyModuleLoader = app.get(LazyModuleLoader);
+  
+  // Lazy loading
+  const { AircraftModule } = await import("./aircraft/aircraft.module")
+  await lazyModuleLoader.load(() => AircraftModule)
+
+  const { AirportModule } = await import("./airport/airport.module")
+  await lazyModuleLoader.load(() => AirportModule)
+  
+  const { PaymentModule } = await import("./payment/payment.module")
+  await lazyModuleLoader.load(() => PaymentModule)
+
 
   const config = new DocumentBuilder()
     .setTitle('QAirline System')
@@ -23,6 +39,8 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, documentFactory);
 
   app.use(compression())
+
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

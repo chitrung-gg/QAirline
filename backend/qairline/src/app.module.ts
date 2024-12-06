@@ -1,18 +1,12 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
-import { FlightController } from './flight/flight.controller';
-import { FlightService } from './flight/flight.service';
-import { Flight } from './flight/entity/flight.entity';
 import { FlightModule } from './flight/flight.module';
-import { DataSource } from 'typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { UserModule } from './user/user.module';
-import { AirportModule } from './airport/airport.module';
 import { BookingModule } from './booking/booking.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ReportModule } from './report/report.module';
@@ -59,7 +53,7 @@ import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
       ttl: Number(configService.get('MAX_CACHE_TTL')),
     }),
   }),
-    DatabaseModule, AuthenticationModule, UserModule, AirportModule, BookingModule, ReportModule,  PromotionModule, NewsModule, PaymentModule, DestinationModule],
+    DatabaseModule, AuthenticationModule, UserModule, BookingModule, ReportModule,  PromotionModule, NewsModule, DestinationModule],
   controllers: [AppController],
   providers: [AppService,
     {

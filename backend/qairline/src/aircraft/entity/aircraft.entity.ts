@@ -1,26 +1,34 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { Flight } from "src/flight/entity/flight.entity";
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class Aircraft {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number; // Primary Key
 
+  @ApiProperty()
   @Column({ type: "varchar", length: 50, unique: true })
   aircraftCode: string; // Mã máy bay (unique)
 
+  @ApiProperty()
   @Column({ type: "varchar", length: 100 })
   model: string; // Model của máy bay (Airbus A320, Boeing 737)
 
+  @ApiProperty()
   @Column({ type: "varchar", length: 100 })
   manufacturer: string; // Nhà sản xuất
 
+  @ApiProperty()
   @Column({ type: "int" })
   capacity: number; // Tổng số ghế của máy bay
 
+  @ApiProperty()
   @Column({ type: "jsonb" })
   seatClasses: Record<string, number>; // Cấu hình hạng ghế mặc định (JSON)
 
+  @ApiProperty()
   @Column({
     type: "enum",
     enum: ["Active", "Maintenance", "Retired"],
@@ -28,6 +36,7 @@ export class Aircraft {
   })
   status: "Active" | "Maintenance" | "Retired"; // Trạng thái máy bay
 
+  @ApiProperty()
   @CreateDateColumn({
     type: 'timestamptz', nullable: true,
     transformer: {
@@ -42,6 +51,7 @@ export class Aircraft {
   })
   createdAt?: string;
 
+  @ApiProperty()
   @UpdateDateColumn({
     type: 'timestamptz', nullable: true,
     transformer: {
@@ -56,6 +66,7 @@ export class Aircraft {
   })
   updatedAt?: string;
 
+  @ApiProperty()
   @OneToMany(() => Flight, (flight) => flight.aircraft)
   flights?: Flight[]; // Liên kết tới các chuyến bay sử dụng máy bay này
 }

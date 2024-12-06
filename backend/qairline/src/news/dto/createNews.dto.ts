@@ -11,10 +11,8 @@ export class CreateNewsDto {
     content: string; // Nội dung bài viết
 
     @IsString()
-    @IsIn(['Updates', 'Promotions', 
-    'Announcements', 'Tips'])
-    category: 'Updates' | 'Promotions' | 
-    'Announcements' | 'Tips'; 
+    @IsIn(['Updates', 'Announcements', 'Tips'])
+    category: 'Updates' | 'Announcements' | 'Tips'; 
 
     @IsString()
     coverImage?: string; // Đường dẫn ảnh bìa (nếu có)

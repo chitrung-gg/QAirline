@@ -55,11 +55,13 @@ export class UserService {
     }
 
     async updateUser(id: number, user: UpdateUserDto) {
+        await this.cacheManager.reset()
         await this.userRepository.update(id, user)
         this.getUserById(id)
     }
 
     async deleteFlight(id: number) {
+        await this.cacheManager.reset()
         const deleteResponse = await this.userRepository.delete(id)
         if (!deleteResponse.affected) {
             throw new HttpException('Exception found in UserService: deleteUser', HttpStatus.NOT_FOUND);

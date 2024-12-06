@@ -16,7 +16,7 @@ import { CacheInterceptor } from '@nestjs/cache-manager';
 
  
 @Controller('authentication')
-@UseInterceptors(CacheInterceptor)
+// @UseInterceptors(CacheInterceptor)
 @UseInterceptors(ClassSerializerInterceptor)
 export class AuthenticationController {
     constructor(

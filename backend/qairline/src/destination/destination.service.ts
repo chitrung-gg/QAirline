@@ -39,11 +39,13 @@ export class DestinationService {
   }
 
   async updateDestination(id: number, destination: UpdateDestinationDto) {
+    await this.cacheManager.reset()
     await this.destinationRepository.update(id, destination)
     this.getDestinationById(id)
   }
 
   async deleteDestination(id: number) {
+    await this.cacheManager.reset()
     const deleteResponse = await this.destinationRepository.delete(id)
     if (!deleteResponse.affected) {
       throw new HttpException('Exception found in BookingService: deleteBooking', HttpStatus.NOT_FOUND);
