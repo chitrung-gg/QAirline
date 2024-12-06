@@ -2,9 +2,6 @@ import { IsArray, IsBoolean, IsIn, IsISO8601, IsNumber, IsOptional, IsString } f
 import { Booking } from "src/booking/entity/booking.entity";
 
 export class CreatePromotionDto {
-    @IsNumber()
-    id: number; // Primary Key
-
     @IsString()
     code: string; // Unique promotion code (e.g., "SUMMER2024")
 

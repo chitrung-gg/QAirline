@@ -13,13 +13,13 @@ export class Booking {
   
     @ApiProperty()
     @Index('userIndex')
-    @ManyToOne(() => User, { eager: true, nullable: true, cascade: true, onUpdate: "CASCADE" })
+    @ManyToOne(() => User, { eager: true, nullable: true, cascade: true, onUpdate: "CASCADE", onDelete: "CASCADE" })
   	@JoinColumn({ name: "userId" })
     user?: User; // Relation to User entity
   
     @ApiProperty()
     @Index('flightIndex')
-    @ManyToOne(() => Flight, { eager: true, nullable: true, cascade: true, onUpdate: "CASCADE" })
+    @ManyToOne(() => Flight, { eager: true, nullable: true, cascade: true, onUpdate: "CASCADE", onDelete: "CASCADE" })
     @JoinColumn({ name: "flightId" })
     flight?: Flight; // Relation to Flight entity
   
@@ -53,7 +53,7 @@ export class Booking {
 
     @ApiProperty()
     @Index('promotionIndex')
-    @ManyToOne(() => Promotion, { eager: true, cascade: true, nullable: true, onUpdate: "CASCADE" })
+    @ManyToOne(() => Promotion, { eager: true, cascade: true, nullable: true, onUpdate: "CASCADE", onDelete: "CASCADE" })
     @JoinColumn({name: "promotionId"})
     promotion?: Promotion
 

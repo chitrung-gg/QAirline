@@ -60,7 +60,7 @@ export class UserService {
         this.getUserById(id)
     }
 
-    async deleteFlight(id: number) {
+    async deleteUser(id: number) {
         await this.cacheManager.reset()
         const deleteResponse = await this.userRepository.delete(id)
         if (!deleteResponse.affected) {

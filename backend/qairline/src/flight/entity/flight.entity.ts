@@ -16,19 +16,19 @@ export class Flight {
 
     @Index('aircraftIndex')
     @ApiProperty()
-    @ManyToOne(() => Aircraft, (aircraft) => aircraft.flights, { eager: true, cascade: true, onUpdate: "CASCADE", nullable: true})
+    @ManyToOne(() => Aircraft, (aircraft) => aircraft.flights, { eager: true, cascade: true, onUpdate: "CASCADE", onDelete: "CASCADE", nullable: true})
     @JoinColumn({ name: "aircraftId" })
     aircraft?: Aircraft; // Liên kết với bảng Aircraft
 
     @Index('departureAirportIndex')
     @ApiProperty()
-    @ManyToOne(() => Airport, (airport) => airport.departures, { eager: true, cascade: true, onUpdate: "CASCADE", nullable: true })
+    @ManyToOne(() => Airport, (airport) => airport.departures, { eager: true, cascade: true, onUpdate: "CASCADE", onDelete: "CASCADE", nullable: true })
     @JoinColumn({ name: "departureAirportId" })
     departureAirport?: Airport; // Sân bay khởi hành
 
     @Index('arrivalAirportIndex')
     @ApiProperty()
-    @ManyToOne(() => Airport, (airport) => airport.arrivals, { eager: true, cascade: true, onUpdate: "CASCADE", nullable: true })
+    @ManyToOne(() => Airport, (airport) => airport.arrivals, { eager: true, cascade: true, onUpdate: "CASCADE", onDelete: "CASCADE", nullable: true })
     @JoinColumn({ name: "arrivalAirportId" })
     arrivalAirport?: Airport; // Sân bay đến
 
@@ -82,10 +82,14 @@ export class Flight {
     // flightType: string; // Loại chuyến bay (Domestic, International)
 
     @ApiProperty()
-    @OneToMany(() => Booking, (booking) => booking.flight)
+    @OneToMany(() => Booking, (booking) => booking.flight, {})
     bookings?: Booking[]; // Liên kết với bảng Booking
 
     @ApiProperty()
     @Column({ type: "float", nullable: true })
     duration?: number; // Thời gian bay (tính toán từ departureTime và arrivalTime)
+
+    @ApiProperty()
+    @Column({type: "jsonb", nullable: true})
+    baseClassPrice?: Record<string, number>   // Giá tiền base cho mỗi loại hạng ghế
 }

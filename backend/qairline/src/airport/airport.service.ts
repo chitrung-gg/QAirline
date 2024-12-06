@@ -46,7 +46,7 @@ export class AirportService {
     async deleteAirport(id: number) {
         await this.cacheManager.reset()
         const deleteAirportResponse = await this.airportRepository.delete(id)
-        if (!deleteAirportResponse) {
+        if (!deleteAirportResponse.affected) {
             throw new HttpException('Exception found in AirportService: deleteAirport', HttpStatus.BAD_REQUEST)
         }
     }

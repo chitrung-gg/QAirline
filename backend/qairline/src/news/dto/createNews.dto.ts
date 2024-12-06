@@ -1,9 +1,6 @@
 import { IsBoolean, IsIn, IsISO8601, IsNumber, IsString } from "class-validator";
 
 export class CreateNewsDto {
-    @IsNumber()
-    id: number;
-
     @IsString()
     title: string; // Tiêu đề bài viết
 

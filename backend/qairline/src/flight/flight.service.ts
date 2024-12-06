@@ -6,16 +6,19 @@ import { CreateFlightDto } from "./dto/createFlight.dto";
 import { UpdateFlightDto } from "./dto/updateFlight.dto";
 import { FlightNotFoundException } from "./exception/flightNotFound.exception";
 import { AircraftService } from "src/aircraft/aircraft.service";
-import { Cache, CACHE_MANAGER } from "@nestjs/cache-manager";
+import { Cache, CACHE_MANAGER, CacheKey } from "@nestjs/cache-manager";
 import { Worker } from "worker_threads";
 import * as path from "path";
-
+import { SearchFlightDto } from "./dto/searchFlight.dto";
+import { Airport } from "src/airport/entity/airport.entity";
 
 @Injectable()
 export class FlightService {
     constructor(
         @InjectRepository(Flight)
         private flightRepository: Repository<Flight>,
+        @InjectRepository(Airport)
+        private airportRepository: Repository<Airport>,
         private dataSource: DataSource,
         @Inject(CACHE_MANAGER)
         private cacheManager: Cache
@@ -37,6 +40,7 @@ export class FlightService {
     }
 
     async createFlight(flight: CreateFlightDto) {
+        await this.cacheManager.reset()
         const newFlight = await this.flightRepository.create(flight)
         this.setDuration(newFlight.departureTime, newFlight.arrivalTime)
         // flight.seatClasses = {
@@ -46,26 +50,45 @@ export class FlightService {
         return newFlight
     }
 
-    // async addAirport(flight: Flight, airportId: number) {
-    //     const queryRunner = this.dataSource.createQueryRunner();
+    async searchFlight(flight: SearchFlightDto) {
+        await this.cacheManager.reset()
+        const departureAirport = await this.airportRepository.findOne({
+            where: { city: flight.departureCity },
+        });
+    
+        const arrivalAirport = await this.airportRepository.findOne({
+            where: { city: flight.arrivalCity },
+        });
+    
+        if (!departureAirport || !arrivalAirport) {
+            throw new HttpException('Exception found in FlightService: searchFlight', HttpStatus.BAD_REQUEST)
+            // throw new Error('Invalid departure or arrival airport code');
+        }
 
-    //     await queryRunner.connect();
-    //     await queryRunner.startTransaction();
-    //     try {
-            
-    //         await queryRunner.manager.createQueryBuilder()
-    //             .relation(Flight, "departureAirport")
-    //             .of(flight)
-    //             .add(airportId);
-    //         await queryRunner.commitTransaction();
-    //     } catch (err) {
-    //         // since we have errors lets rollback the changes we made
-    //         await queryRunner.rollbackTransaction();
-    //     } finally {
-    //         // you need to release a queryRunner which was manually instantiated
-    //         await queryRunner.release();
-    //     }
-    // }
+        let query = this.flightRepository
+            .createQueryBuilder('flight')
+            .where('flight.departureAirportId = :departureAirportId', {
+                departureAirportId: departureAirport.id,
+            })
+            .andWhere('flight.arrivalAirportId = :arrivalAirportId', {
+                arrivalAirportId: arrivalAirport.id,
+            })
+            .andWhere('flight.availableSeats >= :passengerCount', { passengerCount: flight.passengerCount})
+            .andWhere('flight.departureTime >= :departureDate', { departureDate: flight.departureDate });
+
+        // If it's a round-trip search, add conditions for return date
+        if (flight.isRoundTrip) {
+            if (flight.returnDate) {
+                query = query.andWhere('flight.departureTime >= :returnDate', { returnDate: flight.returnDate });
+            } else {
+                throw new HttpException('Exception found in FlightService: searchFlight', HttpStatus.BAD_REQUEST)
+            }
+        } 
+
+        // Execute the query
+        const flightResult =  await query.getMany();
+        return flightResult
+    }
 
     async getAllFlights() {
         const flights = await this.flightRepository.find()
@@ -93,20 +116,26 @@ export class FlightService {
 
     async getFlightById(id: number) {
         // TODO: may change to find with string for real case purposes
-        const flight = await new Promise<Flight>((resolve) => {
-            setTimeout(async () => {
-                const result = await this.flightRepository.findOne({
-                    where: {
-                        id: id
-                    }
-                });
-                resolve(result);
-            }, 1000);
+        // const flight = await new Promise<Flight>((resolve) => {
+        //     setTimeout(async () => {
+        //         const result = await this.flightRepository.findOne({
+        //             where: {
+        //                 id: id
+        //             }
+        //         });
+        //         resolve(result);
+        //     }, 1000);
+        // });
+        const flight = await this.flightRepository.findOne({
+            where: {
+                id: id
+            }
         });
         if (flight) {
             return flight;
+        } else {
+            throw new HttpException('Exception found in FlightService: getFlightById', HttpStatus.BAD_REQUEST)
         }
-        throw new FlightNotFoundException(id)
     }
 
     async getAircraftById(id: number) {
@@ -118,14 +147,19 @@ export class FlightService {
 
         return flight.aircraft;
     }
+
     async updateFlight(id: number, flight: UpdateFlightDto) {
         await this.cacheManager.reset()
-        await this.flightRepository.update(id, {
-            ...flight,
-            duration: await this.setDuration(flight.departureTime, flight.arrivalTime)
-        })
+        try {
+            await this.getFlightById(id)
 
-        this.getFlightById(id)
+            await this.flightRepository.update(id, {
+                ...flight,
+                duration: await this.setDuration(flight.departureTime, flight.arrivalTime)
+            })
+        } catch (error) {
+            throw new HttpException('Exception found in FlightService: updateFlight', HttpStatus.BAD_REQUEST)
+        }
     }
 
     async deleteFlight(id: number) {

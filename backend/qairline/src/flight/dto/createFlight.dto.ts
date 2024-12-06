@@ -43,4 +43,7 @@ export class CreateFlightDto {
    @IsOptional()
    @IsNumber()
    duration?: number
+
+   @IsObject()
+   baseClassPrice?: Record<string, number>
 }

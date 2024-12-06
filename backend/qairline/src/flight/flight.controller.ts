@@ -1,19 +1,25 @@
-import { Controller, Post, Body, Patch, Param, Get, Delete, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, Get, Delete, UseGuards, UseInterceptors, Query } from '@nestjs/common';
 import { FlightService } from './flight.service';
 import { CreateFlightDto } from './dto/createFlight.dto';
 import { UpdateFlightDto } from './dto/updateFlight.dto';
 import { JwtAuthenticationGuard } from 'src/authentication/guard/jwtAuthentication.guard';
-import { CacheInterceptor } from '@nestjs/cache-manager';
+import { CacheInterceptor, CacheKey } from '@nestjs/cache-manager';
+import { SearchFlightDto } from './dto/searchFlight.dto';
 
 
 @Controller('flight')
-@UseInterceptors(CacheInterceptor)
+// @CacheKey('GET_FLIGHTS_CACHE_KEY')
 export class FlightController {
     constructor(private flightService: FlightService) {}
 
     @Post()
     async createFlight(@Body() createFlightDto: CreateFlightDto) {
       return this.flightService.createFlight(createFlightDto);
+    }
+
+    @Get('search')
+    async searchFlight(@Query() searchFlightDto: SearchFlightDto) {
+      return this.flightService.searchFlight(searchFlightDto)
     }
 
     @Get()
