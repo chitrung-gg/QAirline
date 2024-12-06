@@ -16,7 +16,6 @@ export class PromotionService {
   ) {}
 
   async createPromotion(promotion: CreatePromotionDto) {
-    await this.cacheManager.reset()
       const newPromotion = await this.promotionRepository.create(promotion)
       await this.promotionRepository.save(newPromotion)
       return newPromotion
@@ -40,18 +39,14 @@ export class PromotionService {
 
   async updatePromotion(id: number, promotion: UpdatePromotionDto) {
     await this.cacheManager.reset()
-    try {
-        await this.getPromotionById(id)
-        await this.promotionRepository.update(id, promotion)
-    } catch (error) {
-        throw new HttpException('Exception found in PromotionService: updatePromotion', HttpStatus.BAD_REQUEST)
-    }
+      await this.promotionRepository.update(id, promotion)
+      this.getPromotionById(id)
   }
 
   async deletePromotion(id: number) {
     await this.cacheManager.reset()
       const deletePromotionResponse = await this.promotionRepository.delete(id)
-      if (!deletePromotionResponse.affected) {
+      if (!deletePromotionResponse) {
           throw new HttpException('Exception found in PromotionService: deletePromotion', HttpStatus.BAD_REQUEST)
       }
   }

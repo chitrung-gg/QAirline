@@ -16,7 +16,6 @@ export class NewsService {
   ) {}
 
   async createNews(news: CreateNewsDto) {
-    await this.cacheManager.reset()
     const newNews = await this.newsRepository.create(news)
     await this.newsRepository.save(newNews)
     return newNews
@@ -41,16 +40,11 @@ export class NewsService {
 
   async updateNews(id: number, News: UpdateNewsDto) {
     await this.cacheManager.reset()
-    try {
-      await this.getNewsById(id)
-      await this.newsRepository.update(id, News)
-    } catch (error) {
-      throw new HttpException('Exception found in NewsService: updateNews', HttpStatus.BAD_REQUEST)
-    }
+    await this.newsRepository.update(id, News)
+    this.getNewsById(id)
   }
 
   async deleteNews(id: number) {
-    await this.cacheManager.reset()
     const deleteResponse = await this.newsRepository.delete(id)
     if (!deleteResponse.affected) {
       throw new HttpException('Exception found in NewsService: deleteNews', HttpStatus.NOT_FOUND);

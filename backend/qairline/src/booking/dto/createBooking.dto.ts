@@ -1,4 +1,4 @@
-import { IsArray, IsDate, IsEmail, IsIn, IsISO8601, IsJSON, IsObject, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDate, IsIn, IsISO8601, IsJSON, IsObject, IsOptional, IsString } from "class-validator";
 import { Flight } from "src/flight/entity/flight.entity";
 import { Payment } from "src/payment/entity/payment.entity";
 import { Promotion } from "src/promotion/entity/promotion.entity";
@@ -16,9 +16,6 @@ export class CreateBookingDto {
     @IsString()
     passengerName: string;
   
-    @IsEmail()
-    passengerEmail: string
-
     @IsISO8601()
     passengerDob: string;
   

@@ -28,10 +28,6 @@ export class Booking {
     passengerName: string;
   
     @ApiProperty()
-    @Column({ type: "varchar", unique: true, length: 100 })
-    passengerEmail: string; 
-
-    @ApiProperty()
     @Column({
         type: 'timestamptz',
         transformer: {

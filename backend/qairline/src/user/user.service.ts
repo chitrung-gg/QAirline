@@ -17,7 +17,6 @@ export class UserService {
     ) {}
     
     async createUser(user: CreateUserDto) {
-        await this.cacheManager.reset()
         const newUser = await this.userRepository.create(user);
         await this.userRepository.save(newUser);
         return newUser;
@@ -57,12 +56,8 @@ export class UserService {
 
     async updateUser(id: number, user: UpdateUserDto) {
         await this.cacheManager.reset()
-        try {
-            await this.getUserById(id)
-            await this.userRepository.update(id, user)
-        } catch (error) {
-            throw new HttpException('Exception found in UserService: updateUser', HttpStatus.BAD_REQUEST)
-        }
+        await this.userRepository.update(id, user)
+        this.getUserById(id)
     }
 
     async deleteUser(id: number) {

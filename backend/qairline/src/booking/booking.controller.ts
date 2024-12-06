@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/createBooking.dto';
 import { UpdateBookingDto } from './dto/updateBooking.dto';
@@ -12,16 +12,6 @@ export class BookingController {
   @Post()
   async createBooking(@Body() createBookingDto: CreateBookingDto) {
     return this.bookingService.createBooking(createBookingDto);
-  }
-
-  @Post('cancel')
-  async cancelBooking(@Body('bookingCode') bookingCode: string) {
-    return this.bookingService.cancelBooking(bookingCode)
-  }
-
-  @Get('code')
-  async getBookingByBookingCode(@Query('bookingCode') bookingCode: string) {
-    return this.bookingService.getBookingByBookingCode(bookingCode)
   }
 
   @Get()
