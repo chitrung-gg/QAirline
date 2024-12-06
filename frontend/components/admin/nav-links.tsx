@@ -76,7 +76,7 @@ export default function NavLinks() {
                         href={child.href}
                         color="foreground"
                         className={clsx(
-                          'flex h-[48px] grow items-center justify-center gap-2 rounded-md p-3 text-2xl md:text-lg hover:text-blue-normal font-medium md:flex-none md:justify-start md:p-2 md:px-3',
+                          'flex h-[48px] grow items-center justify-center gap-2 rounded-md p-3 text-2xl md:text-lg hover:text-blue-normal font-medium md:flex-none md:justify-start md:p-2 md:px-3 md:pl-8',
                           {
                             'text-blue-normal': pathname === child.href,
                           }

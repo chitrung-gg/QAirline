@@ -25,14 +25,31 @@ import {
     HiOutlinePlus,
     HiOutlineSearch
 } from "react-icons/hi";
-import {columns, aircrafts, statusOptions} from "./tempdata";
 import Link from "next/link";
+import { Aircraft } from "@/interfaces/aircraft";
+import axios from "axios";
+
+const columns = [
+  {name: "Id", uid: "id", sortable: true},
+  {name: "Mã tàu bay", uid: "aircraftCode", sortable: true},
+  {name: "Model", uid: "model", sortable: true},
+  {name: "Nhà sản xuất", uid: "manufacturer", sortable: true},
+  {name: "Sức chứa", uid: "capacity", sortable: true},
+  {name: "Trạng thái", uid: "status", sortable: true},
+  {name: "Thêm", uid: "actions"},
+];
+
+const statusOptions = [
+  {name: "Hoạt động", uid: "Active"},
+  {name: "Vứt bỏ", uid: "Retired"},
+  {name: "Bảo trì", uid: "Maintenance"},
+];
 
 
 const statusColorMap: Record<string, ChipProps["color"]> = {
-    active: "success",
-    retired: "danger",
-    maintenance: "warning",
+    Active: "success",
+    Retired: "danger",
+    Maintenance: "warning",
 };
 
 const INITIAL_VISIBLE_COLUMNS = ["model", "manufacturer", "status", "capacity", "actions"];
@@ -41,9 +58,11 @@ function capitalize(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-type Aircraft = typeof aircrafts[0];
+interface TableProps {
+  aircrafts: Aircraft[];
+}
 
-export default function AircraftTable() {
+export default function AircraftTable({ aircrafts }: TableProps) {
     const [filterValue, setFilterValue] = React.useState("");
     const [visibleColumns, setVisibleColumns] = React.useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
     const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
@@ -125,13 +144,12 @@ export default function AircraftTable() {
                 <DropdownMenu>
                   <DropdownItem as={Link} href={`aircraft/${aircraft.id}`}>Chi tiết</DropdownItem>
                   <DropdownItem as={Link} href={`aircraft/${aircraft.id}/edit`}>Chỉnh sửa</DropdownItem>
-                  <DropdownItem>Xóa</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </div>
           );
         default:
-          return cellValue;
+          return typeof cellValue === 'object' ? JSON.stringify(cellValue) : cellValue;
       }
     }, []);
   
@@ -165,6 +183,7 @@ export default function AircraftTable() {
       setFilterValue("")
       setPage(1)
     },[])
+
   
     const topContent = React.useMemo(() => {
       return (
@@ -222,7 +241,7 @@ export default function AircraftTable() {
                   ))}
                 </DropdownMenu>
               </Dropdown>
-              <Button className="bg-blue-normal text-white" endContent={<HiOutlinePlus />}>
+              <Button as={Link} href="/admin/aircraft/create" className="bg-blue-normal text-white" endContent={<HiOutlinePlus />}>
                 Thêm mới
               </Button>
             </div>
@@ -280,11 +299,10 @@ export default function AircraftTable() {
     return (
       <Table
         aria-label="Aircraft table"
-        isHeaderSticky
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
-          wrapper: "max-h-[50vh] md:max-h-[70vh]",
+          wrapper: "max-h-[30vh] md:max-h-[70vh]",
           th: ["bg-blue-normal", "text-white", "border-b", "border-divider"],
           td: [],
         }}
