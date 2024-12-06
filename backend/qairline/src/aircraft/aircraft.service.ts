@@ -16,6 +16,7 @@ export class AircraftService {
     ) {}
 
     async createAircraft(aircraft: CreateAircraftDto) {
+        await this.cacheManager.reset()
         const newAircraft = await this.aircraftRepository.create(aircraft)
         await this.aircraftRepository.save(newAircraft)
         return newAircraft
@@ -39,14 +40,18 @@ export class AircraftService {
 
     async updateAircraft(id: number, aircraft: UpdateAircraftDto) {
         await this.cacheManager.reset()
-        await this.aircraftRepository.update(id, aircraft)
-        this.getAircraftById(id)
+        try {
+            await this.getAircraftById(id)
+            await this.aircraftRepository.update(id, aircraft)
+        } catch (error) {
+            throw new HttpException('Exception found in AircraftService: updateAircraft', HttpStatus.BAD_REQUEST)
+        }
     }
 
     async deleteAircraft(id: number) {
         await this.cacheManager.reset()
         const deleteAircraftResponse = await this.aircraftRepository.delete(id)
-        if (!deleteAircraftResponse) {
+        if (!deleteAircraftResponse.affected) {
             throw new HttpException('Exception found in AircraftService: deleteAircraft', HttpStatus.BAD_REQUEST)
         }
     }

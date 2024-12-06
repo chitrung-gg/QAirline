@@ -3,27 +3,79 @@ import { CreateBookingDto } from './dto/createBooking.dto';
 import { UpdateBookingDto } from './dto/updateBooking.dto';
 import { Booking } from './entity/booking.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Worker } from 'worker_threads';
+import { Flight } from 'src/flight/entity/flight.entity';
+import { Promotion } from 'src/promotion/entity/promotion.entity';
+import { Payment } from 'src/payment/entity/payment.entity';
 
 @Injectable()
 export class BookingService {
     constructor(
       @InjectRepository(Booking)
       private bookingRepository: Repository<Booking>,
+	  @InjectRepository(Flight)
+	  private flightRepository: Repository<Flight>,
+	  @InjectRepository(Promotion)
+	  private promotionRepository: Repository<Promotion>,
+	  @InjectRepository(Payment)
+	  private paymentRepository: Repository<Payment>,
 	  @Inject(CACHE_MANAGER)
 	  private cacheManager: Cache
 	) {}
 
 	async createBooking(booking: CreateBookingDto) {
+		await this.cacheManager.reset()
+		const flight = this.flightRepository.findOne({
+			where: {
+				id: booking.flight.id
+			}
+		})
+
 		const newBooking = await this.bookingRepository.create(booking)
+		
+		if (flight) {
+			newBooking.ticketPrice = (await flight).baseClassPrice
+		} else {
+			throw new HttpException('Exception found in BookingService: createBooking', HttpStatus.BAD_REQUEST)
+		}
 		await this.bookingRepository.save(newBooking)
 		return newBooking
 	}
 
 	getAllBookings() {
 		return this.bookingRepository.find()
+	}
+
+	async getBookingByBookingCode(bookingCode: string) {
+		const booking = await this.bookingRepository.findOne({
+			where: {
+				bookingCode: bookingCode
+			},
+		});
+		if (!booking) {
+			throw new HttpException('Exception found in BookingService: getBookingByBookingCode', HttpStatus.BAD_REQUEST)
+		}
+
+		// let query = this.bookingRepository
+        //     .createQueryBuilder('booking')
+        //     .where('booking.flightId = :flightId', {
+        //         flightId: booking.flight.id,
+        //     })
+        //     .andWhere('booking.promotionId = :promotionId', {
+        //         promotionId: booking.promotion.id,
+        //     })
+		// 	.leftJoinAndSelect('booking.payments', 'payment')
+		
+		let query = this.bookingRepository
+			.createQueryBuilder('booking')
+			.leftJoinAndSelect('booking.flight', 'flight')  // Join and select the flight entity
+			.leftJoinAndSelect('booking.promotion', 'promotion')  // Join and select the promotion entity
+			.leftJoinAndSelect('booking.payments', 'payment')  // Join and select the payments
+			.where('booking.bookingCode = :bookingCode', { bookingCode });  // Use the booking code for the where clause
+		const bookingResult = await query.getMany()
+		return bookingResult
 	}
 
 	async getBookingById(id: number) {
@@ -36,18 +88,55 @@ export class BookingService {
 		if (booking) {
 			return {
 				...booking,
-				finalPrice: await this.calculateFinalPrice(booking.id)
+				// finalPrice: await this.calculateFinalPrice(booking.id)
 			}
 		}
 		throw new HttpException('Exception found in BookingService: getBookingById', HttpStatus.BAD_REQUEST)
 	}
-
+	
 	async updateBooking(id: number, booking: UpdateBookingDto) {
 		await this.cacheManager.reset()
-		await this.bookingRepository.update(id, booking)
-		this.getBookingById(id)
+		try {
+			await this.getBookingById(id)
+			await this.bookingRepository.update(id, booking)
+		} catch (error) {
+			throw new HttpException('Exception found in BookingService: updateBooking', HttpStatus.BAD_REQUEST)
+		}
 	}
+	
+	async cancelBooking(bookingCode: string) {
+		const booking = await this.bookingRepository.findOne({
+			where: {
+				bookingCode: bookingCode
+			},
+		});
+		if (!booking) {
+			throw new HttpException('Exception found in BookingService: cancelBooking', HttpStatus.BAD_REQUEST)
+		}
 
+		booking.bookingStatus = "Cancelled"
+		const payments = await this.paymentRepository.find({
+			where: {
+				booking: { id: booking.id }
+			}
+		})
+
+		// console.log(payments)
+		await Promise.all(payments.map(async (payment) => {
+			payment.paymentStatus = "Pending";
+
+			// TODO: Cases when refund
+			payment.refundAmount = payment.amount * 0.1
+
+			const refundDate = new Date(payment.refundDate);
+			refundDate.setDate(refundDate.getDate() + 7);
+			payment.refundDate = refundDate.toISOString();
+			
+			await this.paymentRepository.save(payment);
+		}));
+
+		return this.getBookingByBookingCode(booking.bookingCode)
+	}
 	async deleteBooking(id: number) {
 		await this.cacheManager.reset()
 		const deleteResponse = await this.bookingRepository.delete(id)

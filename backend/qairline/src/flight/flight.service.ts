@@ -51,7 +51,7 @@ export class FlightService {
     }
 
     async searchFlight(flight: SearchFlightDto) {
-        await this.cacheManager.reset()
+        // await this.cacheManager.reset()
         const departureAirport = await this.airportRepository.findOne({
             where: { city: flight.departureCity },
         });

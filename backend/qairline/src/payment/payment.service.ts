@@ -16,6 +16,7 @@ export class PaymentService {
   ) {}
 
   async createPayment(payment: CreatePaymentDto) {
+    await this.cacheManager.reset()
       const newPayment = await this.paymentRepository.create(payment)
       await this.paymentRepository.save(newPayment)
       return newPayment
@@ -39,13 +40,18 @@ export class PaymentService {
 
   async updatePayment(id: number, payment: UpdatePaymentDto) {
     await this.cacheManager.reset()
-    await this.paymentRepository.update(id, payment)
-    this.getPaymentById(id)
+    try {
+        await this.getPaymentById(id)
+        await this.paymentRepository.update(id, payment)
+    } catch (error) {
+        throw new HttpException('Exception found in PaymentService: updatePayment', HttpStatus.BAD_REQUEST)
+    }
   }
 
   async deletePayment(id: number) {
+    await this.cacheManager.reset()
       const deletePaymentResponse = await this.paymentRepository.delete(id)
-      if (!deletePaymentResponse) {
+      if (!deletePaymentResponse.affected) {
           throw new HttpException('Exception found in PaymentService: deletePayment', HttpStatus.BAD_REQUEST)
       }
   }
