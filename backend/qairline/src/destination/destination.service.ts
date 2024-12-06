@@ -16,6 +16,7 @@ export class DestinationService {
   ) {}
 
   async createDestination(Destination: CreateDestinationDto) {
+    await this.cacheManager.reset()
     const newDestination = await this.destinationRepository.create(Destination)
     await this.destinationRepository.save(newDestination)
     return newDestination
@@ -40,8 +41,12 @@ export class DestinationService {
 
   async updateDestination(id: number, destination: UpdateDestinationDto) {
     await this.cacheManager.reset()
-    await this.destinationRepository.update(id, destination)
-    this.getDestinationById(id)
+    try {
+      await this.getDestinationById(id)
+      await this.destinationRepository.update(id, destination)
+    } catch (error) {
+      throw new HttpException('Exception found in DestinationService: updateDestination', HttpStatus.BAD_REQUEST)
+    }
   }
 
   async deleteDestination(id: number) {

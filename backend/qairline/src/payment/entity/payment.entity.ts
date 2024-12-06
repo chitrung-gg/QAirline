@@ -10,7 +10,7 @@ export class Payment {
 
     @ApiProperty()
     @Index('bookingIndex')
-    @ManyToOne(() => Booking, (booking) => booking.payments, {eager: true, cascade: true, onUpdate: "CASCADE"})
+    @ManyToOne(() => Booking, (booking) => booking.payments, {eager: true, cascade: true, onUpdate: "CASCADE", onDelete: "CASCADE"})
     @JoinColumn({name: "bookingId"})
     booking?: Booking; // Link to the associated booking
 
@@ -54,9 +54,16 @@ export class Payment {
     refundAmount?: number; // Amount refunded (if any)
 
     @ApiProperty()
-    @Column({ type: 'timestamptz', nullable: true, transformer: {
-        to: (value: string | Date) => new Date(value), // Convert ISO string to Date for database
-        from: (value: Date) => value.toISOString(),   // Convert Date to ISO string when retrieving
-    }})
-    refundDate?: string | null = null; // Date the refund was processed (if any)
+    @Column({
+      type: 'timestamptz', nullable: true,
+      transformer: {
+        to: (value: string | Date | null) => {
+          if (value === null) return null;
+          return new Date(value).toISOString();
+        },
+        from: (value: Date) => {
+          return value ? value.toISOString() : null;
+        },
+      }})
+    refundDate?: string; // Date the refund was processed (if any)
 }

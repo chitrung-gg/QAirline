@@ -16,6 +16,7 @@ export class AirportService {
     ) {}
 
     async createAirport(airport: CreateAirportDto) {
+        await this.cacheManager.reset()
         const newAirport = await this.airportRepository.create(airport)
         await this.airportRepository.save(newAirport)
         return newAirport
@@ -39,8 +40,12 @@ export class AirportService {
 
     async updateAirport(id: number, airport: UpdateAirportDto) {
         await this.cacheManager.reset()
-        await this.airportRepository.update(id, airport)
-        this.getAirportById(id)
+        try {
+            await this.getAirportById(id)
+            await this.airportRepository.update(id, airport)
+        } catch (error) {
+            throw new HttpException('Exception found in AirportService: updateAirport', HttpStatus.BAD_REQUEST)
+        }
     }
 
     async deleteAirport(id: number) {
