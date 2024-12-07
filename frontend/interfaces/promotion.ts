@@ -18,11 +18,14 @@ export enum discountType {
 }
 
 export interface CreatePromotionDto {
-  code?: string;
-  discount?: number;
-  startDate?: Date;
-  endDate?: Date;
-  description?: string;
+  code: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  discount: number;
+  discountType: discountType;
+  bookings?: Booking[];
+  isActive: boolean;
 }
 
 export interface UpdatePromotionDto extends Partial<CreatePromotionDto> {}

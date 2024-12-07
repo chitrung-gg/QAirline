@@ -6,7 +6,6 @@ import React, { useEffect, useState } from 'react';
 import { UpdateNewsDto, News, newsCategory } from '@/interfaces/news';
 import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
-import { on } from "events";
 
 const categoryOptions = [
   {name: "Mẹo", uid: "Tips"},
@@ -168,6 +167,7 @@ export default function Page(props: { params: { id: string } }) {
             <div className="rounded-md bg-gray-50 p-4 md:p-5">
                 <div>
                     <Input 
+                        isRequired
                         labelPlacement="outside"
                         placeholder="Tiêu đề"
                         size="lg" 
@@ -183,6 +183,7 @@ export default function Page(props: { params: { id: string } }) {
 
                 <div>
                     <Textarea 
+                        isRequired
                         labelPlacement="outside"
                         placeholder="Nội dung"
                         size="lg" 
@@ -229,7 +230,7 @@ export default function Page(props: { params: { id: string } }) {
 
                 <div className="pb-3">
                     <label className="block text-sm font-semibold my-2">
-                        Danh mục
+                        Danh mục <span className="text-red-400">*</span>
                     </label>
                     <RadioGroup 
                         orientation="horizontal"

@@ -6,7 +6,6 @@ import React from 'react';
 import { CreateNewsDto, newsCategory } from '@/interfaces/news';
 import axios from 'axios';
 import { useRouter } from "next/navigation";
-import { on } from "events";
 
 
 const categoryOptions = [
@@ -26,7 +25,7 @@ export default function Page() {
     const [coverImageValue, setCoverImageValue] = React.useState("");
     const [categoryValue, setCategoryValue] = React.useState<newsCategory>(newsCategory.ANNOUNCEMENTS);
 
-    // Email validation regex
+    // Link validation regex
     const validateURL = (url: string) => url.match(/^(https?:\/\/[^\s$.?#].[^\s]*)$/i);
 
     const isLinkInvalid = React.useMemo(() => {
@@ -84,6 +83,7 @@ export default function Page() {
             <div className="rounded-md bg-gray-50 p-4 md:p-5">
                 <div>
                     <Input 
+                        isRequired
                         labelPlacement={"outside"}
                         placeholder="Tiêu đề"
                         size="lg" 
@@ -99,6 +99,7 @@ export default function Page() {
 
                 <div>
                     <Textarea 
+                        isRequired
                         labelPlacement={"outside"}
                         placeholder="Nội dung"
                         size="lg" 
@@ -145,7 +146,7 @@ export default function Page() {
 
                 <div className="pb-3">
                     <label className="block text-sm font-semibold my-2">
-                        Danh mục
+                        Danh mục <span className="text-red-400">*</span>   
                     </label>
                     <RadioGroup 
                         orientation="horizontal"

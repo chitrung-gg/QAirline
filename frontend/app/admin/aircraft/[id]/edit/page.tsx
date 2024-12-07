@@ -186,6 +186,7 @@ export default  function Page(props: { params: { id: string } }) {
           <div className="rounded-md bg-gray-50 p-4 md:p-5">
             <div>
               <Input
+                isRequired
                 labelPlacement={"outside"}
                 placeholder="Mã máy bay"
                 size="lg"
@@ -201,6 +202,7 @@ export default  function Page(props: { params: { id: string } }) {
 
             <div>
               <Input
+                isRequired
                 labelPlacement={"outside"}
                 placeholder="Model máy bay"
                 size="lg"
@@ -216,6 +218,7 @@ export default  function Page(props: { params: { id: string } }) {
 
             <div>
               <Input
+                isRequired
                 labelPlacement={"outside"}
                 placeholder="Sức chứa máy bay"
                 size="lg"
@@ -231,6 +234,7 @@ export default  function Page(props: { params: { id: string } }) {
 
             <div>
               <Input
+                isRequired
                 labelPlacement={"outside"}
                 placeholder="Hãng máy bay"
                 size="lg"
@@ -245,7 +249,7 @@ export default  function Page(props: { params: { id: string } }) {
             </div>
 
             <div>
-              <label className="block text-md font-semibold py-2">Hạng ghế</label>
+              <label className="block text-md font-semibold py-2">Hạng ghế <span className="text-red-400">*</span></label>
               {Object.entries(seatClasses).map(([className, numSeats]) => (
                 <div key={className} className="flex items-center gap-4 mb-2">
                   <Input
@@ -289,7 +293,7 @@ export default  function Page(props: { params: { id: string } }) {
 
             <div className="pb-3">
               <label className="block text-md font-semibold my-2">
-                Trạng thái
+                Trạng thái <span className="text-red-400">*</span>
               </label>
               <RadioGroup 
                 orientation="horizontal"
