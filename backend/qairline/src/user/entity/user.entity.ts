@@ -74,9 +74,9 @@ export class User {
     
     @ApiProperty()
     @Column({
-		type: "enum",
-		enum: ['Active', 'Inactive', 'Banned', 'Other'],
-        default: 'Active'
+      type: "enum",
+      enum: ['Active', 'Inactive', 'Banned', 'Other'],
+      default: 'Inactive'
 	  })
     status?: 'Active' | 'Inactive' | 'Banned' | 'Other'; // Trạng thái tài khoản (Active, Inactive, Banned)
     

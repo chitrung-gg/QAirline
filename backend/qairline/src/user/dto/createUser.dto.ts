@@ -42,7 +42,7 @@ export class CreateUserDto {
     
     @IsString()
     @IsOptional()
-    @IsIn(['Admin', 'User', 'Staff', 'Other'])
+    @IsIn(['Active', 'Inactive', 'Banned', 'Other'])
     status?: 'Active' | 'Inactive' | 'Banned' | 'Other'
 
     @IsArray()

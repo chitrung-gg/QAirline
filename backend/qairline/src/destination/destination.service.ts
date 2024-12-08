@@ -15,9 +15,9 @@ export class DestinationService {
     private cacheManager: Cache
   ) {}
 
-  async createDestination(Destination: CreateDestinationDto) {
+  async createDestination(destination: CreateDestinationDto) {
     await this.cacheManager.reset()
-    const newDestination = await this.destinationRepository.create(Destination)
+    const newDestination = await this.destinationRepository.create(destination)
     await this.destinationRepository.save(newDestination)
     return newDestination
   }

@@ -6,6 +6,8 @@ import { CreateUserDto } from "./dto/createUser.dto";
 import * as bcrypt from 'bcrypt'
 import { UpdateUserDto } from "./dto/updateUser.dto";
 import { Cache, CACHE_MANAGER } from "@nestjs/cache-manager";
+import { VerificationService } from "src/verification/verification.service";
+import { EmailService } from "src/email/email.service";
 
 @Injectable()
 export class UserService {
@@ -13,7 +15,9 @@ export class UserService {
         @InjectRepository(User)
         private userRepository: Repository<User>,
         @Inject(CACHE_MANAGER)
-        private cacheManager: Cache
+        private cacheManager: Cache,
+        private verificationTokenService: VerificationService,
+        private emailService: EmailService,
     ) {}
     
     async createUser(user: CreateUserDto) {
@@ -71,5 +75,53 @@ export class UserService {
         if (!deleteResponse.affected) {
             throw new HttpException('Exception found in UserService: deleteUser', HttpStatus.NOT_FOUND);
         }
+    }
+
+    async generateEmailVerification(userId: number) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+        if (!user) {
+          throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        }
+    
+        console.log('User found')
+        // if (user.status === "Active") {
+        //   throw new HttpException('Account already active', HttpStatus.UNPROCESSABLE_ENTITY);
+        // }
+    
+        const otp = await this.verificationTokenService.generateOtp(user.id);
+    
+        this.emailService.sendEmail({
+            subject: 'QAirline - Account Verification',
+            recipient: user.email,
+            content: `<p>Hi${user.firstName ? ' ' + user.lastName : ''},</p><p>You may verify your QAirline account using the following OTP: <br /><span style="font-size:24px; font-weight: 700;">${otp}</span></p><p>Regards,<br />QAirline</p>`,
+        });
+    }
+
+    async verifyEmail(userId: number, token: string) {
+        const invalidMessage = '';
+
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+        if (!user) {
+            throw new HttpException('Invalid or expired OTP', HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        if (user.status === "Active") {
+            throw new HttpException('Account already active', HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        const isValid = await this.verificationTokenService.validateOtp(
+            user.id,
+            token,
+        );
+
+        if (!isValid) {
+            throw new HttpException('Invalid or expired OTP', HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        user.status = 'Active';
+
+        await this.userRepository.save(user);
+
+        return true;
     }
 }

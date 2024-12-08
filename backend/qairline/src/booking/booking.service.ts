@@ -115,11 +115,13 @@ export class BookingService {
 		}
 
 		booking.bookingStatus = "Cancelled"
+		await this.bookingRepository.save(booking)
 		const payments = await this.paymentRepository.find({
 			where: {
 				booking: { id: booking.id }
 			}
 		})
+
 
 		// console.log(payments)
 		await Promise.all(payments.map(async (payment) => {

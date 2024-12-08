@@ -8,7 +8,7 @@ const calculateFinalPrice = (ticketPrice: Record<string, number>, promotion: any
     if (promotion.discountType === 'Percentage') {
       // Apply percentage discount to each ticket price
       for (const classType in finalPrice) {
-        finalPrice[classType] -= (finalPrice[classType] * promotion.discount) / 100;
+        finalPrice[classType] -= ((finalPrice[classType] * promotion.discount) / 100);
       }
     } else if (promotion.discountType === 'FixedAmount') {
       // Apply fixed discount to each ticket price

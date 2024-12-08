@@ -27,7 +27,13 @@ async function bootstrap() {
   
   const { PaymentModule } = await import("./payment/payment.module")
   await lazyModuleLoader.load(() => PaymentModule)
-
+  
+  const { VerificationModule } = await import("./verification/verification.module")
+  await lazyModuleLoader.load(() => VerificationModule)
+  
+  const { EmailModule } = await import("./email/email.module")
+  await lazyModuleLoader.load(() => EmailModule)
+  
 
   const config = new DocumentBuilder()
     .setTitle('QAirline System')

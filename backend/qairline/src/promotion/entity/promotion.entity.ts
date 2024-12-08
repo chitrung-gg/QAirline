@@ -48,7 +48,7 @@ export class Promotion {
     endDate: string; // End date for the promotion (ISO date format)
 
     @ApiProperty()
-    @Column({ type: "float" })
+    @Column({ type: "integer" })
     discount: number; // Discount value (could be a percentage or a fixed amount)
 
     @ApiProperty()
