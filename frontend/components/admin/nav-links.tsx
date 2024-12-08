@@ -3,11 +3,12 @@
 import { 
     MdOutlineAirplaneTicket, // flight data
     MdOutlineAirplanemodeActive, // aircraft data
-    MdOutlineHome, // statistics
+    MdOutlinePerson, // user data
     MdAddCircleOutline, // add new information
     MdOutlineDoDisturbOn,
     MdOutlineArticle, // news general
     MdOutlineDiscount, // promotion
+    MdOutlinePublic // airport
 } from "react-icons/md";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -18,9 +19,9 @@ import { useState } from 'react';
 // Depending on the size of the application, this would be stored in a database.
 const links = [
     { 
-        name: 'Home', 
+        name: 'Người dùng', 
         href: '/admin', 
-        icon: MdOutlineHome 
+        icon: MdOutlinePerson 
     },
     {
         name: 'Đăng thông tin',
@@ -41,6 +42,11 @@ const links = [
         href: '/admin/flight', 
         icon: MdOutlineAirplaneTicket 
     },
+    {
+        name: 'Sân bay',
+        href: '/admin/airport',
+        icon: MdOutlinePublic
+    }
 ];
 
 export default function NavLinks() {

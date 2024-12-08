@@ -7,7 +7,7 @@ import { Aircraft, AircraftStatus } from '@/interfaces/aircraft';
 
 const statusOptions = [
   {name: "Hoạt động", uid: "Active"},
-  {name: "Vứt bỏ", uid: "Retired"},
+  {name: "Không sử dụng", uid: "Retired"},
   {name: "Bảo trì", uid: "Maintenance"},
 ];
 

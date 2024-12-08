@@ -6,10 +6,11 @@ import React, { useEffect, useState } from 'react';
 import { Aircraft, AircraftStatus, UpdateAircraftDto } from "@/interfaces/aircraft";
 import Link from 'next/link';
 import { Button, Input, RadioGroup, Radio, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from '@nextui-org/react';
+import { on } from "events";
 
 const statusOptions = [
   {name: "Hoạt động", uid: "Active"},
-  {name: "Vứt bỏ", uid: "Retired"},
+  {name: "Không sử dụng", uid: "Retired"},
   {name: "Bảo trì", uid: "Maintenance"},
 ];
 
@@ -18,6 +19,7 @@ export default  function Page(props: { params: { id: string } }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isErrorOpen, onOpen: onErrorOpen, onClose: onErrorClose } = useDisclosure();
     const { isOpen: isDeletedOpen, onOpen: onDeletedOpen, onClose: onDeletedClose } = useDisclosure();
+    const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
 
     const router = useRouter();
     const { id } = useParams();
@@ -341,7 +343,7 @@ export default  function Page(props: { params: { id: string } }) {
             {initialData && (!initialData.flights || initialData.flights.length === 0) && (
               <Button 
               className="bg-red-400 text-white"
-              onClick={() => handleDelete()}
+              onClick={onDeleteOpen}
               >
               Xóa tàu bay
               </Button>
@@ -373,6 +375,23 @@ export default  function Page(props: { params: { id: string } }) {
                     <ModalFooter>
                         <Button color="primary" variant="light" onPress={handleCloseErrorModal}>
                             Đóng
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+            <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+                <ModalContent>
+                    <ModalHeader className="flex flex-col gap-1">Xác Nhận Xóa</ModalHeader>
+                    <ModalBody>
+                        <p>Bạn có chắc chắn muốn xóa thông tin này?</p>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="default" variant="light" onPress={onDeleteClose}>
+                            Hủy
+                        </Button>
+                        <Button className="bg-red-400 text-white" onPress={handleDelete}>
+                            Xóa
                         </Button>
                     </ModalFooter>
                 </ModalContent>

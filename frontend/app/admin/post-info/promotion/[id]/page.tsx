@@ -39,12 +39,13 @@ export default function Page(props: { params: { id: string } }) {
   const data = initialData;
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <div className="text-xl md:text-2xl">Loading...</div>;
   }
-//T23:59:59
-  const localTimeZone = getLocalTimeZone();
-  const startZonedDateTime = parseZonedDateTime(data.startDate.slice(0, 19) + "[" + localTimeZone + "]");
-  const endZonedDateTime = parseZonedDateTime(data.endDate.slice(0, 19) + "[" + localTimeZone + "]");
+
+  // const startZonedDateTime = parseZonedDateTime(data.startDate.slice(0, 19) + "[" + localTimeZone + "]");
+  // const endZonedDateTime = parseZonedDateTime(data.endDate.slice(0, 19) + "[" + localTimeZone + "]");
+  const startZonedDateTime = parseZonedDateTime(data.startDate.slice(0, 19) + "[UTC]"); 
+  const endZonedDateTime = parseZonedDateTime(data.endDate.slice(0, 19) + "[UTC]");
 
     return (
       <main className='h-full w-full'>
@@ -97,7 +98,7 @@ export default function Page(props: { params: { id: string } }) {
 
               <DateRangePicker
                   isRequired
-                  label="Thời gian áp dụng"
+                  label="Thời gian áp dụng (theo UTC)"
                   labelPlacement={"outside"}
                   size="lg"
                   radius="sm"
@@ -153,7 +154,7 @@ export default function Page(props: { params: { id: string } }) {
                       {data.bookings.map((booking) => (
                         <Link
                           key={booking.id}
-                          href={`/admin/${booking.id}`}
+                          href={`/admin/booking/${booking.id}`}
                           className="text-blue-600 hover:text-blue-800 transition-colors"
                         >
                           {booking.bookingCode}

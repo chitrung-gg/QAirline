@@ -7,7 +7,7 @@ import { Promotion, discountType, CreatePromotionDto } from "@/interfaces/promot
 import axios from 'axios';
 import { useRouter } from "next/navigation";
 import { today } from "@internationalized/date";
-import { getLocalTimeZone, parseDate, now, CalendarDateTime } from "@internationalized/date";
+import { getLocalTimeZone, now, CalendarDateTime } from "@internationalized/date";
 
 const discountTypeOptions = [
   {name: "Phần trăm", uid: "Percentage"},
@@ -35,12 +35,18 @@ export default function Page() {
     });
     
     React.useEffect(() => {
-      const startZoned = now(getLocalTimeZone());
-      const endZoned = now(getLocalTimeZone()).add({ days: 7 });
-      const start = new CalendarDateTime(startZoned.year, startZoned.month, startZoned.day, startZoned.hour, startZoned.minute, startZoned.second);
-      const end = new CalendarDateTime(endZoned.year, endZoned.month, endZoned.day, endZoned.hour, endZoned.minute, endZoned.second);
+      // const startZoned = now(getLocalTimeZone());
+      // const endZoned = now(getLocalTimeZone()).add({ days: 7 });
+      // const start = new CalendarDateTime(startZoned.year, startZoned.month, startZoned.day, startZoned.hour, startZoned.minute, startZoned.second);
+      // const end = new CalendarDateTime(endZoned.year, endZoned.month, endZoned.day, endZoned.hour, endZoned.minute, endZoned.second);
+      // setDateRange({ start, end });
+      const startUTC = now("UTC");
+      const endUTC = now("UTC").add({ days: 7 });
+      const start = new CalendarDateTime(startUTC.year, startUTC.month, startUTC.day, startUTC.hour, startUTC.minute, startUTC.second);
+      const end = new CalendarDateTime(endUTC.year, endUTC.month, endUTC.day, endUTC.hour, endUTC.minute, endUTC.second);
       setDateRange({ start, end });
     }, []);
+    
 
     const handleDiscountTypeChange = (value: string) => {
       setDiscountTypeValue(value as discountType);
@@ -65,8 +71,8 @@ export default function Page() {
         const data: CreatePromotionDto = {
             code: codeValue,
             description: descriptionValue,
-            startDate: dateRange.start.toString(),
-            endDate: dateRange.end.toString(),
+            startDate: dateRange.start.toDate("UTC").toISOString(),
+            endDate: dateRange.end.toDate("UTC").toISOString(),
             discount: discountValue,
             discountType: discountTypeValue,
             isActive: isActiveValue,
@@ -137,7 +143,7 @@ export default function Page() {
 
                 <DateRangePicker
                   isRequired
-                  label="Thời gian áp dụng"
+                  label="Thời gian áp dụng (theo UTC)"
                   labelPlacement={"outside"}
                   size="lg"
                   radius="sm"

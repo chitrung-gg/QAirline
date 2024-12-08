@@ -17,61 +17,46 @@ import {
     Pagination,
     Selection,
     ChipProps,
-    SortDescriptor,
-    Tab
+    SortDescriptor
   } from "@nextui-org/react";
 import { 
-    HiOutlineDotsVertical, 
     HiOutlineChevronDown,
     HiOutlineChevronRight,
     HiOutlinePlus,
     HiOutlineSearch
 } from "react-icons/hi";
 import Link from "next/link";
-import { Promotion, discountType } from "@/interfaces/promotion";
+import { User, UserGender, UserRole, UserStatus } from "@/interfaces/user";
 
 const columns = [
-    { name: "Id", uid: "id", sortable: true },
-    { name: "Mã", uid: "code", sortable: true },
-    { name: "Mô tả", uid: "description", sortable: true },
-    { name: "Ngày bắt đầu", uid: "startDate", sortable: true },
-    { name: "Ngày kết thúc", uid: "endDate", sortable: true },
-    { name: "Giảm giá", uid: "discount", sortable: true },
-    { name: "Loại giảm giá", uid: "discountType", sortable: true },
-    { name: "Trạng thái", uid: "isActive", sortable: true },
-    { name: "Thêm", uid: "actions" },
+  { name: "Id", uid: "id", sortable: true },
+  { name: "Email", uid: "email", sortable: true },
+  { name: "Tên người dùng", uid: "username", sortable: true }, // change into fullname
+//   { name: "Tên họ", uid: "firstName", sortable: true },
+//   { name: "Tên", uid: "lastName", sortable: true },
+  { name: "Vai trò", uid: "role", sortable: true },
+  { name: "Chi tiết", uid: "actions" },
 ];
 
-const activeOptions = [
-    {name: "Đang hiệu lực", uid: "active"},
-    {name: "Hết hiệu lực", uid: "inactive"},
-  ];
+const roleOptions = [
+  {name: "Quản trị", uid: "Admin"},
+  {name: "Người dùng", uid: "User"}
+];
 
-const discountTypeOptions = [
-    {name: "Phần trăm", uid: "Percentage"},
-    {name: "Cố định", uid: "FixedAmount"},
-  ];
-
-  const activeColorMap: Record<string, ChipProps["color"]> = {
-    active: "success",
-    inactive: "danger",
-};
-
-const INITIAL_VISIBLE_COLUMNS = ["code", "discount", "discountType", "isActive", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["email", "username", "role", "actions"];
 
 function capitalize(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-interface TableData {
-    data: Promotion[];
+interface TableProps {
+  data: User[];
 }
 
-export default function PromotionTable({ data }: TableData) {
+export default function UserTable({ data }: TableProps) {
     const [filterValue, setFilterValue] = React.useState("");
     const [visibleColumns, setVisibleColumns] = React.useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
-    const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
-    const [categoryFilter, setCategoryFilter] = React.useState<Selection>("all");
+    const [roleFilter, setRoleFilter] = React.useState<Selection>("all");
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
       column: "id",
@@ -89,27 +74,21 @@ export default function PromotionTable({ data }: TableData) {
     }, [visibleColumns]);
   
     const filteredItems = React.useMemo(() => {
-      let filteredPromotions = [...data];
+      let filteredData = [...data];
   
       if (hasSearchFilter) {
-        filteredPromotions = filteredPromotions.filter((data) =>
-            data.code.toLowerCase().includes(filterValue.toLowerCase()),
+        filteredData = filteredData.filter((data) =>
+            data.email.toLowerCase().includes(filterValue.toLowerCase()),
         );
       }
-      if (statusFilter !== "all" && Array.from(statusFilter).length !== activeOptions.length) {
-        filteredPromotions = filteredPromotions.filter((data) =>
-          Array.from(statusFilter).includes(data.isActive ? "active" : "inactive"),
+      if (roleFilter !== "all" && Array.from(roleFilter).length !== roleOptions.length) {
+        filteredData = filteredData.filter((newData) =>
+          Array.from(roleFilter).includes(newData.role),
         );
-      }
-
-      if (categoryFilter !== "all" && Array.from(categoryFilter).length !== discountTypeOptions.length) {
-        filteredPromotions = filteredPromotions.filter((data) =>
-          Array.from(categoryFilter).includes(data.discountType),
-        );
-      }
+    }
   
-      return filteredPromotions;
-    }, [data, filterValue, statusFilter, categoryFilter]);
+      return filteredData;
+    }, [data, filterValue, roleFilter]);
   
     const pages = Math.ceil(filteredItems.length / rowsPerPage);
   
@@ -121,84 +100,45 @@ export default function PromotionTable({ data }: TableData) {
     }, [page, filteredItems, rowsPerPage]);
 
     const sortedItems = React.useMemo(() => {
-      return [...items].sort((a: Promotion, b: Promotion) => {
-          const first = a[sortDescriptor.column as keyof Promotion];
-          const second = b[sortDescriptor.column as keyof Promotion];
-  
-          if (first === undefined || second === undefined) {
-            return 0;
-          }
-      
-          let cmp = 0;
-  
-          if (sortDescriptor.column === "isActive") {
-            const statusA = a.isActive ? 1 : 0; 
-            const statusB = b.isActive ? 1 : 0;
-            cmp = statusA - statusB; 
-          } else if (sortDescriptor.column === "discountType") {
-            const categoryA = a.discountType;
-            const categoryB = b.discountType;
-            cmp = categoryA < categoryB ? -1 : categoryA > categoryB ? 1 : 0;
-          } else {
-            cmp = first < second ? -1 : first > second ? 1 : 0;
-          }
-  
-          return sortDescriptor.direction === "descending" ? -cmp : cmp;
+      return [...items].sort((a: User, b: User) => {
+        const first = a[sortDescriptor.column as keyof User];
+        const second = b[sortDescriptor.column as keyof User];
+    
+        if (first === undefined || second === undefined) {
+          return 0;
+        }
+    
+        let cmp = 0;
+    
+        if (sortDescriptor.column === "role") {
+          const roleA = a.role;
+          const roleB = b.role;
+          cmp = roleA < roleB ? -1 : roleA > roleB ? 1 : 0;
+        } else {
+          cmp = first < second ? -1 : first > second ? 1 : 0;
+        }
+    
+        return sortDescriptor.direction === "descending" ? -cmp : cmp;
       });
-  }, [sortDescriptor, items]);
+    }, [items, sortDescriptor]);
   
-    const renderCell = React.useCallback((data: Promotion, columnKey: React.Key) => {
-      const cellValue = data[columnKey as keyof Promotion];
-  
-      const activeNameMap = Object.fromEntries(
-        activeOptions.map(option => [option.uid, option.name])
-      );
-      const activeName = activeNameMap[data.isActive ? "active" : "inactive"] || "Không rõ";
+    const renderCell = React.useCallback((data: User, columnKey: React.Key) => {
+      const cellValue = data[columnKey as keyof User];
+    
       switch (columnKey) {
-        case "isActive":
-          return (
-            <Chip className="capitalize" color={activeColorMap[data.isActive ? "active" : "inactive"]} size="sm" variant="flat">
-              {activeName}
-            </Chip>
-          );
-        case "discountType":
-          const categoryOption = discountTypeOptions.find(option => option.uid === data.discountType);
-          return categoryOption ? categoryOption.name : "Không rõ";
-        case "description":
-            return (
-                <div
-                    style={{
-                        maxWidth: '200px',  
-                        whiteSpace: 'nowrap', 
-                        overflow: 'hidden', 
-                        textOverflow: 'ellipsis',  
-                    }}
-                >
-                    {typeof cellValue === 'object' ? JSON.stringify(cellValue) : cellValue}
-                </div>
-            );
-        case "startDate":
-            return new Date(data.startDate).toUTCString();
-        case "endDate":
-            return new Date(data.endDate).toUTCString();
+        case "role":
+          const roleOption = roleOptions.find(option => option.uid === data.role);
+          return roleOption ? roleOption.name : "Không rõ";
         case "actions":
           return (
             <div className="relative flex justify-end items-center gap-2">
-                <Dropdown>
-                  <DropdownTrigger>
-                    <Button isIconOnly size="sm" variant="light">
-                      <HiOutlineDotsVertical />
-                    </Button>
-                  </DropdownTrigger>
-                  <DropdownMenu>
-                    <DropdownItem as={Link} href={`/admin/post-info/promotion/${data.id}`}>Chi tiết</DropdownItem>
-                    <DropdownItem as={Link} href={`/admin/post-info/promotion/${data.id}/edit`}>Chỉnh sửa</DropdownItem>
-                  </DropdownMenu>
-              </Dropdown>
+                <Link href={`/admin/${data.id}`} className="hover:scale-500 transition-all">
+                    <HiOutlineChevronRight className="hover:scale-500 transition-all"/>
+                </Link>
             </div>
           );
         default:
-          return typeof cellValue === 'object' ? JSON.stringify(cellValue) : cellValue;
+          return cellValue !== undefined ? cellValue.toString() : "";
       }
     }, []);
   
@@ -240,52 +180,30 @@ export default function PromotionTable({ data }: TableData) {
             <Input
               isClearable
               className="w-full"
-              placeholder="Tra bằng mã..."
+              placeholder="Tra bằng email..."
               startContent={<HiOutlineSearch />}
               value={filterValue}
               onClear={() => onClear()}
               onValueChange={onSearchChange}
             />
             <div className="flex gap-3">
-                <Dropdown>
-                <DropdownTrigger className="hidden sm:flex text-black">
-                  <Button endContent={<HiOutlineChevronDown className="text-small" />} variant="flat">
-                    Hiệu lực
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                  disallowEmptySelection
-                  aria-label="Table Columns"
-                  closeOnSelect={false}
-                  selectedKeys={statusFilter}
-                  selectionMode="multiple"
-                  onSelectionChange={setStatusFilter}
-                >
-                  {activeOptions.map((status) => (
-                    <DropdownItem key={status.uid} className="capitalize">
-                      {capitalize(status.name)}
-                    </DropdownItem>
-                  ))}
-                </DropdownMenu>
-              </Dropdown>
-
               <Dropdown>
                 <DropdownTrigger className="hidden sm:flex text-black">
                   <Button endContent={<HiOutlineChevronDown className="text-small" />} variant="flat">
-                    Loại giảm giá
+                    Danh mục
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu
                   disallowEmptySelection
                   aria-label="Table Columns"
                   closeOnSelect={false}
-                  selectedKeys={categoryFilter}
+                  selectedKeys={roleFilter}
                   selectionMode="multiple"
-                  onSelectionChange={setCategoryFilter}
+                  onSelectionChange={setRoleFilter}
                 >
-                  {discountTypeOptions.map((type) => (
-                    <DropdownItem key={type.uid} className="capitalize">
-                      {capitalize(type.name)}
+                  {roleOptions.map((role) => (
+                    <DropdownItem key={role.uid} className="capitalize">
+                      {capitalize(role.name)}
                     </DropdownItem>
                   ))}
                 </DropdownMenu>
@@ -312,13 +230,10 @@ export default function PromotionTable({ data }: TableData) {
                   ))}
                 </DropdownMenu>
               </Dropdown>
-              <Button as={Link} href="/admin/post-info/promotion/create" className="bg-blue-normal text-white" endContent={<HiOutlinePlus />}>
-                Thêm mới
-              </Button>
             </div>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-small">Tổng cộng {data.length} khuyến mãi</span>
+            <span className="text-small">Tổng cộng {data.length} người dùng</span>
             <label className="flex items-center text-small">
               Số hàng mỗi trang:
               <select
@@ -335,8 +250,7 @@ export default function PromotionTable({ data }: TableData) {
       );
     }, [
       filterValue,
-      statusFilter,
-      categoryFilter,
+      roleFilter,
       visibleColumns,
       onSearchChange,
       onRowsPerPageChange,
@@ -370,8 +284,8 @@ export default function PromotionTable({ data }: TableData) {
   
     return (
       <Table
-        aria-label="Promotion table"
-        isHeaderSticky
+        aria-label="User table"
+        //isHeaderSticky
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
@@ -396,7 +310,7 @@ export default function PromotionTable({ data }: TableData) {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"Không tìm thấy khuyến mại nào"} items={sortedItems}>
+        <TableBody emptyContent={"Không tìm thấy người dùng nào"} items={sortedItems}>
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

@@ -20,6 +20,7 @@ export default function Page(props: { params: { id: string } }) {
     const { isOpen: isErrorOpen, onOpen: onErrorOpen, onClose: onErrorClose } = useDisclosure();
     const { isOpen: isDeletedOpen, onOpen: onDeletedOpen, onClose: onDeletedClose } = useDisclosure();
     const { isOpen: isPublishedOpen, onOpen: onPublishedOpen, onClose: onPublishedClose } = useDisclosure();
+    const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
 
     const [titleValue, setTitleValue] = useState("");
     const [contentValue, setContentValue] = useState("");
@@ -89,8 +90,8 @@ export default function Page(props: { params: { id: string } }) {
     };
 
     const handleDelete = async () => {
-        const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa thông tin này?"); // Remake UI for confirmation
-        if (confirmDelete) {
+        // const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa thông tin này?"); // Remake UI for confirmation
+        // if (confirmDelete) {
             try {
                 await axios.delete(`http://localhost:5000/news/${id}`);
                 onDeletedOpen();
@@ -98,7 +99,7 @@ export default function Page(props: { params: { id: string } }) {
                 console.error(error);
                 onErrorOpen();
             }
-        }
+        // }
     };
 
     const handlePublish = async () => {
@@ -256,7 +257,7 @@ export default function Page(props: { params: { id: string } }) {
                 <Button 
                     type="button" 
                     className="bg-red-400 text-white"
-                    onClick={handleDelete}
+                    onClick={onDeleteOpen}
                 >
                     Xóa Thông Tin
                 </Button>
@@ -295,6 +296,23 @@ export default function Page(props: { params: { id: string } }) {
                 <ModalFooter>
                     <Button color="primary" variant="light" onPress={handleCloseErrorModal}>
                         Đóng
+                    </Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+
+        <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+            <ModalContent>
+                <ModalHeader className="flex flex-col gap-1">Xác Nhận Xóa</ModalHeader>
+                <ModalBody>
+                    <p>Bạn có chắc chắn muốn xóa thông tin này?</p>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="default" variant="light" onPress={onDeleteClose}>
+                        Hủy
+                    </Button>
+                    <Button className="bg-red-400 text-white" onPress={handleDelete}>
+                        Xóa
                     </Button>
                 </ModalFooter>
             </ModalContent>

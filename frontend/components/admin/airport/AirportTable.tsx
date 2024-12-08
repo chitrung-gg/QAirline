@@ -22,50 +22,35 @@ import {
 import { 
     HiOutlineDotsVertical, 
     HiOutlineChevronDown,
+    HiOutlineChevronRight,
     HiOutlinePlus,
     HiOutlineSearch
 } from "react-icons/hi";
 import Link from "next/link";
-import { Aircraft } from "@/interfaces/aircraft";
-import axios from "axios";
+import { Airport } from "@/interfaces/airport";
 
 const columns = [
-  {name: "Id", uid: "id", sortable: true},
-  {name: "Mã tàu bay", uid: "aircraftCode", sortable: true},
-  {name: "Model", uid: "model", sortable: true},
-  {name: "Nhà sản xuất", uid: "manufacturer", sortable: true},
-  {name: "Sức chứa", uid: "capacity", sortable: true},
-  {name: "Trạng thái", uid: "status", sortable: true},
-  {name: "Thêm", uid: "actions"},
+  { name: "Id", uid: "id", sortable: true },
+  { name: "Tên sân bay", uid: "name", sortable: true },
+  { name: "Thành phố", uid: "city", sortable: true },
+  { name: "Quốc gia", uid: "country", sortable: true },
+  { name: "Mã IATA", uid: "iataCode", sortable: true },
+  { name: "Chi tiết", uid: "actions" },
 ];
 
-const statusOptions = [
-  {name: "Hoạt động", uid: "Active"},
-  {name: "Không sử dụng", uid: "Retired"},
-  {name: "Bảo trì", uid: "Maintenance"},
-];
-
-
-const statusColorMap: Record<string, ChipProps["color"]> = {
-    Active: "success",
-    Retired: "danger",
-    Maintenance: "warning",
-};
-
-const INITIAL_VISIBLE_COLUMNS = ["model", "manufacturer", "status", "capacity", "actions"];
+const INITIAL_VISIBLE_COLUMNS = ["name", "city", "country", "iataCode", "actions"];
 
 function capitalize(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 interface TableProps {
-  aircrafts: Aircraft[];
+  data: Airport[];
 }
 
-export default function AircraftTable({ aircrafts }: TableProps) {
+export default function AirportTable({ data }: TableProps) {
     const [filterValue, setFilterValue] = React.useState("");
     const [visibleColumns, setVisibleColumns] = React.useState<Selection>(new Set(INITIAL_VISIBLE_COLUMNS));
-    const [statusFilter, setStatusFilter] = React.useState<Selection>("all");
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [sortDescriptor, setSortDescriptor] = React.useState<SortDescriptor>({
       column: "id",
@@ -83,21 +68,16 @@ export default function AircraftTable({ aircrafts }: TableProps) {
     }, [visibleColumns]);
   
     const filteredItems = React.useMemo(() => {
-      let filteredAircrafts = [...aircrafts];
+      let filteredData = [...data];
   
       if (hasSearchFilter) {
-        filteredAircrafts = filteredAircrafts.filter((aircraft) =>
-          aircraft.model.toLowerCase().includes(filterValue.toLowerCase()),
-        );
-      }
-      if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-        filteredAircrafts = filteredAircrafts.filter((aircraft) =>
-          Array.from(statusFilter).includes(aircraft.status),
+        filteredData = filteredData.filter((data) =>
+            data.name.toLowerCase().includes(filterValue.toLowerCase()),
         );
       }
   
-      return filteredAircrafts;
-    }, [aircrafts, filterValue, statusFilter]);
+      return filteredData;
+    }, [data, filterValue]);
   
     const pages = Math.ceil(filteredItems.length / rowsPerPage);
   
@@ -107,49 +87,37 @@ export default function AircraftTable({ aircrafts }: TableProps) {
   
       return filteredItems.slice(start, end);
     }, [page, filteredItems, rowsPerPage]);
-  
+
     const sortedItems = React.useMemo(() => {
-      return [...items].sort((a: Aircraft, b: Aircraft) => {
-        const first = a[sortDescriptor.column as keyof Aircraft] as number;
-        const second = b[sortDescriptor.column as keyof Aircraft] as number;
-        const cmp = first < second ? -1 : first > second ? 1 : 0;
-  
+      return [...items].sort((a: Airport, b: Airport) => {
+        const first = a[sortDescriptor.column as keyof Airport];
+        const second = b[sortDescriptor.column as keyof Airport];
+    
+        if (first === undefined || second === undefined) {
+          return 0;
+        }
+    
+        let cmp = 0;
+        cmp = first < second ? -1 : first > second ? 1 : 0;
+    
         return sortDescriptor.direction === "descending" ? -cmp : cmp;
       });
-    }, [sortDescriptor, items]);
+    }, [items, sortDescriptor]);
   
-    const renderCell = React.useCallback((aircraft: Aircraft, columnKey: React.Key) => {
-      const cellValue = aircraft[columnKey as keyof Aircraft];
+    const renderCell = React.useCallback((data: Airport, columnKey: React.Key) => {
+      const cellValue = data[columnKey as keyof Airport];
   
-      const statusNameMap = Object.fromEntries(
-        statusOptions.map(option => [option.uid, option.name])
-      );
-      const statusName = statusNameMap[aircraft.status] || "Không rõ";
       switch (columnKey) {
-        case "status":
-          return (
-            <Chip className="capitalize" color={statusColorMap[aircraft.status]} size="sm" variant="flat">
-              {statusName}
-            </Chip>
-          );
         case "actions":
           return (
             <div className="relative flex justify-end items-center gap-2">
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button isIconOnly size="sm" variant="light">
-                    <HiOutlineDotsVertical />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu>
-                  <DropdownItem as={Link} href={`aircraft/${aircraft.id}`}>Chi tiết</DropdownItem>
-                  <DropdownItem as={Link} href={`aircraft/${aircraft.id}/edit`}>Chỉnh sửa</DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+                <Link href={`/admin/airport/${data.id}`} className="hover:scale-500 transition-all">
+                    <HiOutlineChevronRight className="hover:scale-500 transition-all"/>
+                </Link>
             </div>
           );
         default:
-          return typeof cellValue === 'object' ? JSON.stringify(cellValue) : cellValue;
+          return cellValue?.toString();
       }
     }, []);
   
@@ -183,7 +151,6 @@ export default function AircraftTable({ aircrafts }: TableProps) {
       setFilterValue("")
       setPage(1)
     },[])
-
   
     const topContent = React.useMemo(() => {
       return (
@@ -192,34 +159,13 @@ export default function AircraftTable({ aircrafts }: TableProps) {
             <Input
               isClearable
               className="w-full"
-              placeholder="Tra bằng model..."
+              placeholder="Tra bằng tên..."
               startContent={<HiOutlineSearch />}
               value={filterValue}
               onClear={() => onClear()}
               onValueChange={onSearchChange}
             />
             <div className="flex gap-3">
-              <Dropdown>
-                <DropdownTrigger className="hidden sm:flex text-black">
-                  <Button endContent={<HiOutlineChevronDown className="text-small" />} variant="flat">
-                    Trạng thái
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                  disallowEmptySelection
-                  aria-label="Table Columns"
-                  closeOnSelect={false}
-                  selectedKeys={statusFilter}
-                  selectionMode="multiple"
-                  onSelectionChange={setStatusFilter}
-                >
-                  {statusOptions.map((status) => (
-                    <DropdownItem key={status.uid} className="capitalize">
-                      {capitalize(status.name)}
-                    </DropdownItem>
-                  ))}
-                </DropdownMenu>
-              </Dropdown>
               <Dropdown>
                 <DropdownTrigger className="hidden sm:flex text-black">
                   <Button endContent={<HiOutlineChevronDown className="text-small" />} variant="flat">
@@ -241,13 +187,13 @@ export default function AircraftTable({ aircrafts }: TableProps) {
                   ))}
                 </DropdownMenu>
               </Dropdown>
-              <Button as={Link} href="/admin/aircraft/create" className="bg-blue-normal text-white" endContent={<HiOutlinePlus />}>
+              <Button as={Link} href="/admin/airport/create" className="bg-blue-normal text-white" endContent={<HiOutlinePlus />}>
                 Thêm mới
               </Button>
             </div>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-small">Tổng cộng {aircrafts.length} tàu bay</span>
+            <span className="text-small">Tổng cộng {data.length} sân bay</span>
             <label className="flex items-center text-small">
               Số hàng mỗi trang:
               <select
@@ -264,11 +210,10 @@ export default function AircraftTable({ aircrafts }: TableProps) {
       );
     }, [
       filterValue,
-      statusFilter,
       visibleColumns,
       onSearchChange,
       onRowsPerPageChange,
-      aircrafts.length,
+      data.length,
       hasSearchFilter,
     ]);
   
@@ -298,7 +243,8 @@ export default function AircraftTable({ aircrafts }: TableProps) {
   
     return (
       <Table
-        aria-label="Aircraft table"
+        aria-label="News general table"
+        //isHeaderSticky
         bottomContent={bottomContent}
         bottomContentPlacement="outside"
         classNames={{
@@ -323,7 +269,7 @@ export default function AircraftTable({ aircrafts }: TableProps) {
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody emptyContent={"No aircrafts found"} items={sortedItems}>
+        <TableBody emptyContent={"Không tìm thấy sân bay nào"} items={sortedItems}>
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

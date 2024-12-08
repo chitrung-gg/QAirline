@@ -6,7 +6,8 @@ import React, { useEffect, useState } from 'react';
 import { UpdatePromotionDto, discountType, Promotion } from "@/interfaces/promotion";
 import axios from 'axios';
 import { useRouter, useParams } from 'next/navigation';
-import { getLocalTimeZone, parseDate, now, CalendarDateTime, parseZonedDateTime, toCalendarDateTime } from "@internationalized/date";
+import { getLocalTimeZone, now, CalendarDateTime, parseZonedDateTime, toCalendarDateTime } from "@internationalized/date";
+import { on } from "events";
 
 const discountTypeOptions = [
     {name: "Phần trăm", uid: "Percentage"},
@@ -19,6 +20,7 @@ export default function Page(props: { params: { id: string } }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isErrorOpen, onOpen: onErrorOpen, onClose: onErrorClose } = useDisclosure();
     const { isOpen: isDeletedOpen, onOpen: onDeletedOpen, onClose: onDeletedClose } = useDisclosure();
+    const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
 
     const [codeValue, setCodeValue] = React.useState("");
     const [descriptionValue, setDescriptionValue] = React.useState(""); 
@@ -55,9 +57,8 @@ export default function Page(props: { params: { id: string } }) {
             setDiscountValue(data.discount);
             setIsActiveValue(data.isActive);
 
-            const localTimeZone = getLocalTimeZone();
-            const startZonedDateTime = parseZonedDateTime(data.startDate.slice(0, 19) + "[" + localTimeZone + "]");
-            const endZonedDateTime = parseZonedDateTime(data.endDate.slice(0, 19) + "[" + localTimeZone + "]");
+            const startZonedDateTime = parseZonedDateTime(data.startDate.slice(0, 19) + "[UTC]");
+            const endZonedDateTime = parseZonedDateTime(data.endDate.slice(0, 19) + "[UTC]");
             setDateRange({
                 start: toCalendarDateTime(startZonedDateTime), 
                 end: toCalendarDateTime(endZonedDateTime),
@@ -97,8 +98,8 @@ export default function Page(props: { params: { id: string } }) {
             description: descriptionValue,
             discountType: discountTypeValue,
             discount: discountValue,
-            startDate: dateRange.start.toString(),
-            endDate: dateRange.end.toString(),
+            startDate: dateRange.start.toDate("UTC").toISOString(),
+            endDate: dateRange.end.toDate("UTC").toISOString(),
             isActive: isActiveValue,
         };
 
@@ -113,8 +114,8 @@ export default function Page(props: { params: { id: string } }) {
     };
 
     const handleDelete = async () => {
-        const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa thông tin này?"); // Remake UI for confirmation
-        if (confirmDelete) {
+        // const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa thông tin này?"); // Remake UI for confirmation
+        // if (confirmDelete) {
             try {
                 await axios.delete(`http://localhost:5000/promotion/${id}`);
                 onDeletedOpen();
@@ -122,7 +123,7 @@ export default function Page(props: { params: { id: string } }) {
                 console.error(error);
                 onErrorOpen();
             }
-        }
+        // }
     };
 
     const handleCloseModal = () => {
@@ -186,7 +187,7 @@ export default function Page(props: { params: { id: string } }) {
 
                 <DateRangePicker
                   isRequired
-                  label="Thời gian áp dụng"
+                  label="Thời gian áp dụng (theo UTC)"
                   labelPlacement={"outside"}
                   size="lg"
                   radius="sm"
@@ -256,7 +257,7 @@ export default function Page(props: { params: { id: string } }) {
                       {initialData.bookings.map((booking) => (
                         <Link
                           key={booking.id}
-                          href={`/admin/${booking.id}`}
+                          href={`/admin/booking/${booking.id}`}
                           className="text-blue-600 hover:text-blue-800 transition-colors"
                         >
                           {booking.bookingCode}
@@ -314,7 +315,7 @@ export default function Page(props: { params: { id: string } }) {
                     <Button 
                         type="button" 
                         className="bg-red-400 text-white"
-                        onClick={handleDelete}
+                        onClick={onDeleteOpen}
                     >
                         Xóa Khuyến mãi
                     </Button>
@@ -348,6 +349,23 @@ export default function Page(props: { params: { id: string } }) {
                 <ModalFooter>
                     <Button color="primary" variant="light" onPress={handleCloseErrorModal}>
                         Đóng
+                    </Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+
+        <Modal isOpen={isDeleteOpen} onClose={onDeleteClose}>
+            <ModalContent>
+                <ModalHeader className="flex flex-col gap-1">Xác Nhận Xóa</ModalHeader>
+                <ModalBody>
+                    <p>Bạn có chắc chắn muốn xóa thông tin này?</p>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="default" variant="light" onPress={onDeleteClose}>
+                        Hủy
+                    </Button>
+                    <Button className="bg-red-400 text-white" onPress={handleDelete}>
+                        Xóa
                     </Button>
                 </ModalFooter>
             </ModalContent>

@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 const statusOptions = [
   {name: "Hoạt động", uid: "Active"},
-  {name: "Vứt bỏ", uid: "Retired"},
+  {name: "Không sử dụng", uid: "Retired"},
   {name: "Bảo trì", uid: "Maintenance"},
 ];
 
@@ -17,7 +17,6 @@ export default function Page() {
     const router = useRouter(); 
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     const { isOpen: isErrorOpen, onOpen: onErrorOpen, onClose: onErrorClose } = useDisclosure();
-
 
     const [aircraftCodeValue, setAircraftCodeValue] = React.useState("");
     const [manufacturerValue, setManufacturerValue] = React.useState("");

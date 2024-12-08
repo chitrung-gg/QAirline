@@ -5,16 +5,16 @@ import { Booking } from "./booking";
 export interface Flight {
   id: number;
   flightNumber: string;
-  aircraft?: Aircraft;
-  departureAirport?: Airport;
-  arrivalAirport?: Airport;
+  aircraft: Aircraft;
+  departureAirport: Airport;
+  arrivalAirport: Airport;
   departureTime: string;
   arrivalTime: string;
-  status?: FlightStatus;
+  status: FlightStatus;
   availableSeats: number;
   seatClasses: Record<string, number>;
   bookings?: Booking[];
-  duration?: string;
+  duration?: number; //minutes
 }
 
 export enum FlightStatus {
@@ -25,11 +25,17 @@ export enum FlightStatus {
 }
 
 export interface CreateFlightDto {
-  departureAirport?: string;
-  arrivalAirport?: string;
-  departureTime?: Date;
-  arrivalTime?: Date;
-  aircraftId?: number;
+  flightNumber: string;
+  aircraft: Aircraft;
+  departureAirport: Airport;
+  arrivalAirport: Airport;
+  departureTime: string;
+  arrivalTime: string;
+  status: FlightStatus;
+  availableSeats: number;
+  seatClasses: Record<string, number>;
+  bookings?: Booking[];
+  duration?: number;
 }
 
 export interface UpdateFlightDto extends Partial<CreateFlightDto> {}
