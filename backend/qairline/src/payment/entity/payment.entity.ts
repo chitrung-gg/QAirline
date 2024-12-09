@@ -4,33 +4,33 @@ import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } 
 
 @Entity()
 export class Payment {
-    @ApiProperty()
+    @ApiProperty({ description: 'Primary Key', example: 1 })
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Booking associated with the payment', type: () => Booking })
     @Index('bookingIndex')
-    @ManyToOne(() => Booking, (booking) => booking.payments, {eager: true, cascade: true, onUpdate: "CASCADE", onDelete: "CASCADE"})
-    @JoinColumn({name: "bookingId"})
+    @ManyToOne(() => Booking, (booking) => booking.payments, { eager: true, cascade: true, onUpdate: "CASCADE", onDelete: "CASCADE" })
+    @JoinColumn({ name: "bookingId" })
     booking?: Booking; // Link to the associated booking
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Amount of the payment', example: 100 })
     @Column({ type: "float" })
     amount: number; // Amount paid
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Status of the payment', enum: ["Paid", "Refunded", "Failed", "Pending"], example: 'Paid' })
     @Column({ type: "enum", enum: ["Paid", "Refunded", "Failed", "Pending"] })
     paymentStatus: "Paid" | "Refunded" | "Failed" | "Pending"; // Payment status
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Method of the payment', example: 'Credit Card' })
     @Column({ type: "varchar", length: 50 })
     paymentMethod: string; // Payment method (e.g., Credit Card, PayPal, Bank Transfer)
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Transaction ID of the payment', example: 'txn_1234567890', nullable: true })
     @Column({ type: "varchar", length: 100, nullable: true })
     transactionId: string; // Transaction ID from the payment gateway (if applicable)
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Date of the payment', example: '2023-01-01T00:00:00Z' })
     @Column({
         type: 'timestamptz',
         transformer: {
@@ -45,15 +45,15 @@ export class Payment {
     })
     paymentDate: string; // Date of the payment
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Indicates if the payment is refunded', example: false })
     @Column({ type: "boolean", default: false })
     isRefunded?: boolean; // Flag to check if the payment has been refunded
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Amount refunded (if any)', example: 50, nullable: true })
     @Column({ type: "float", nullable: true })
     refundAmount?: number; // Amount refunded (if any)
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Date the refund was processed (if any)', example: '2023-01-02T00:00:00Z', nullable: true })
     @Column({
       type: 'timestamptz', nullable: true,
       transformer: {
@@ -64,6 +64,7 @@ export class Payment {
         from: (value: Date) => {
           return value ? value.toISOString() : null;
         },
-      }})
+      }
+    })
     refundDate?: string; // Date the refund was processed (if any)
 }

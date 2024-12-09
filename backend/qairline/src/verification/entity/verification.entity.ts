@@ -4,20 +4,20 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGenerat
 
 @Entity()
 export class Verification {
-    @ApiProperty()
+    @ApiProperty({ description: 'Primary Key', example: 1 })
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ApiProperty()
-    @ManyToOne(() => User, {eager: true, cascade: true, onUpdate: "CASCADE", onDelete: "CASCADE"})
+    @ApiProperty({ description: 'User associated with the verification', type: () => User })
+    @ManyToOne(() => User, { eager: true, cascade: true, onUpdate: "CASCADE", onDelete: "CASCADE" })
     @JoinColumn({ name: 'userId' }) 
     user: User;
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Verification token', example: 'some-verification-token' })
     @Column()
     token: string;
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Expiration date of the verification token', example: '2023-01-01T00:00:00Z' })
     @Column({
         type: 'timestamptz', 
         transformer: {
@@ -32,7 +32,7 @@ export class Verification {
     })
     expiresAt: string;
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Creation date of the verification token', example: '2023-01-01T00:00:00Z', required: false })
     @CreateDateColumn({
         type: 'timestamptz', nullable: true,
         transformer: {

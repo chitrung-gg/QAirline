@@ -5,19 +5,19 @@ import { Column, Entity, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGene
 
 @Entity()
 export class Promotion {
-    @ApiProperty()
+    @ApiProperty({ description: 'Primary Key', example: 1 })
     @PrimaryGeneratedColumn()
     id: number; // Primary Key
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Unique promotion code', example: 'SUMMER2024' })
     @Column({ type: "varchar", length: 50, unique: true })
     code: string; // Unique promotion code (e.g., "SUMMER2024")
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Description of the promotion', example: '20% off on selected flights' })
     @Column({ type: "text" })
     description: string; // Description of the promotion (e.g., "20% off on selected flights")
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Start date for the promotion', example: '2023-06-01T00:00:00Z' })
     @Column({
       type: 'timestamptz',
       transformer: {
@@ -32,7 +32,7 @@ export class Promotion {
     })
     startDate: string; // Start date for the promotion (ISO date format)
 
-    @ApiProperty()
+    @ApiProperty({ description: 'End date for the promotion', example: '2023-08-31T23:59:59Z' })
     @Column({
       type: 'timestamptz',
       transformer: {
@@ -47,19 +47,19 @@ export class Promotion {
     })
     endDate: string; // End date for the promotion (ISO date format)
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Discount value', example: 20 })
     @Column({ type: "integer" })
     discount: number; // Discount value (could be a percentage or a fixed amount)
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Type of discount', enum: ["Percentage", "FixedAmount"], example: 'Percentage' })
     @Column({ type: "enum", enum: ["Percentage", "FixedAmount"] })
     discountType: "Percentage" | "FixedAmount"; // Type of discount (Percentage or FixedAmount)
 
-    @ApiProperty()
+    @ApiProperty({ description: 'List of bookings that have applied this promotion', type: () => [Booking], required: false })
     @OneToMany(() => Booking, (booking) => booking.promotion)
     bookings?: Booking[]; // List of bookings that have applied this promotion
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Whether the promotion is active or not', example: true })
     @Column({ type: "boolean", default: true })
     isActive: boolean; // Whether the promotion is active or not
 }

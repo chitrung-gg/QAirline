@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { FaqService } from './faq.service';
-import { CreateFaqDto } from './dto/create-faq.dto';
-import { UpdateFaqDto } from './dto/update-faq.dto';
+import { CreateFaqDto } from './dto/createFaq.dto';
+import { UpdateFaqDto } from './dto/updateFaq.dto';
 
 @Controller('faq')
 export class FaqController {

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFaqDto } from './dto/create-faq.dto';
-import { UpdateFaqDto } from './dto/update-faq.dto';
+import { CreateFaqDto } from './dto/createFaq.dto';
+import { UpdateFaqDto } from './dto/updateFaq.dto';
 
 @Injectable()
 export class FaqService {

@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { PolicyService } from './policy.service';
-import { CreatePolicyDto } from './dto/create-policy.dto';
-import { UpdatePolicyDto } from './dto/update-policy.dto';
+import { CreatePolicyDto } from './dto/createPolicy.dto';
+import { UpdatePolicyDto } from './dto/updatePolicy.dto';
 
 @Controller('policy')
 export class PolicyController {

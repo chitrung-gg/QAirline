@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/swagger';
-import { CreatePolicyDto } from './create-policy.dto';
+import { CreatePolicyDto } from './createPolicy.dto';
 
 export class UpdatePolicyDto extends PartialType(CreatePolicyDto) {}

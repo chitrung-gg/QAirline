@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, Req, Request } from '@nestjs/common';
 import { CreateBookingDto } from './dto/createBooking.dto';
 import { UpdateBookingDto } from './dto/updateBooking.dto';
 import { Booking } from './entity/booking.entity';
@@ -9,6 +9,10 @@ import { Worker } from 'worker_threads';
 import { Flight } from 'src/flight/entity/flight.entity';
 import { Promotion } from 'src/promotion/entity/promotion.entity';
 import { Payment } from 'src/payment/entity/payment.entity';
+import RequestWithUser from 'src/authentication/interface/requestWithUser.interface';
+import { UserService } from 'src/user/user.service';
+import { User } from 'src/user/entity/user.entity';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class BookingService {
@@ -21,13 +25,15 @@ export class BookingService {
 	  private promotionRepository: Repository<Promotion>,
 	  @InjectRepository(Payment)
 	  private paymentRepository: Repository<Payment>,
+	  private userService: UserService,
+	  private emailService: EmailService,
 	  @Inject(CACHE_MANAGER)
 	  private cacheManager: Cache
 	) {}
 
-	async createBooking(booking: CreateBookingDto) {
+	async createBooking(booking: CreateBookingDto, user: any) {
 		await this.cacheManager.reset()
-		const flight = this.flightRepository.findOne({
+		const flight = await this.flightRepository.findOne({
 			where: {
 				id: booking.flight.id
 			}
@@ -36,12 +42,230 @@ export class BookingService {
 		const newBooking = await this.bookingRepository.create(booking)
 		
 		if (flight) {
-			newBooking.ticketPrice = (await flight).baseClassPrice
+			newBooking.ticketPrice = flight.baseClassPrice
 		} else {
 			throw new HttpException('Exception found in BookingService: createBooking', HttpStatus.BAD_REQUEST)
 		}
+		
+		console.log(user)
+		if (user) {
+			newBooking.user = await this.userService.getUserById(user.id)
+		}
+
+		console.log(newBooking.user)
 		await this.bookingRepository.save(newBooking)
+
+		/* Uncomment for send email */
+		// this.emailService.sendEmail({
+		// 	recipient: booking.passengerEmail,
+		// 	subject: 'QAirline - Booking Information',
+		// 	content: `<!DOCTYPE html>
+		// 			<html lang="en">
+		// 			<head>
+		// 				<meta charset="UTF-8">
+		// 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		// 				<title>Flight Booking Confirmation</title>
+		// 				<style>
+		// 					body {
+		// 						font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		// 						background-color: #f4f7fb;
+		// 						margin: 0;
+		// 						padding: 0;
+		// 						color: #333;
+		// 					}
+
+		// 					.email-wrapper {
+		// 						width: 100%;
+		// 						max-width: 650px;
+		// 						margin: 40px auto;
+		// 						padding: 25px;
+		// 						background-color: #fff;
+		// 						border-radius: 10px;
+		// 						box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		// 					}
+
+		// 					h2 {
+		// 						font-size: 28px;
+		// 						font-weight: 600;
+		// 						color: #0d47a1;
+		// 						margin-bottom: 15px;
+		// 					}
+
+		// 					p {
+		// 						font-size: 16px;
+		// 						line-height: 1.6;
+		// 						margin-bottom: 20px;
+		// 						color: #555;
+		// 					}
+
+		// 					table {
+		// 						width: 100%;
+		// 						border-collapse: collapse;
+		// 						margin-bottom: 20px;
+		// 					}
+
+		// 					td, th {
+		// 						padding: 15px;
+		// 						text-align: left;
+		// 						font-size: 16px;
+		// 						border-bottom: 1px solid #e0e0e0;
+		// 					}
+
+		// 					th {
+		// 						background-color: #f7f7f7;
+		// 						font-weight: 500;
+		// 						color: #777;
+		// 					}
+
+		// 					td {
+		// 						background-color: #fafafa;
+		// 						color: #555;
+		// 					}
+
+		// 					td.highlight {
+		// 						font-weight: 600;
+		// 						color: #1a73e8;
+		// 					}
+
+		// 					.cta-button {
+		// 						display: inline-block;
+		// 						padding: 12px 24px;
+		// 						font-size: 16px;
+		// 						font-weight: 500;
+		// 						background-color: #1a73e8;
+		// 						color: #fff;
+		// 						text-decoration: none;
+		// 						border-radius: 5px;
+		// 						margin-top: 20px;
+		// 						transition: background-color 0.3s ease;
+		// 					}
+
+		// 					.cta-button:hover {
+		// 						background-color: #1565c0;
+		// 					}
+
+		// 					.footer {
+		// 						text-align: center;
+		// 						font-size: 14px;
+		// 						color: #777;
+		// 						margin-top: 30px;
+		// 					}
+
+		// 					.footer a {
+		// 						color: #1a73e8;
+		// 						text-decoration: none;
+		// 					}
+
+		// 					.footer p {
+		// 						margin-top: 10px;
+		// 						color: #999;
+		// 					}
+
+		// 					.separator {
+		// 						margin-top: 25px;
+		// 						border-top: 2px solid #f0f0f0;
+		// 						margin-bottom: 20px;
+		// 					}
+
+		// 				</style>
+		// 			</head>
+		// 			<body>
+
+		// 				<div class="email-wrapper">
+
+		// 					<h2>Hello ${newBooking.passengerName},</h2>
+
+		// 					<p>Thank you for booking your flight with QAirline! Below are the details of your booking:</p>
+
+		// 					<table>
+		// 						<tr>
+		// 							<th>Passenger Name</th>
+		// 							<td>${newBooking.passengerName}</td>
+		// 						</tr>
+		// 						<tr>
+		// 							<th>Email</th>
+		// 							<td>${newBooking.passengerEmail}</td>
+		// 						</tr>
+		// 						<tr>
+		// 							<th>Date of Birth</th>
+		// 							<td>${newBooking.passengerDob}</td>
+		// 						</tr>
+		// 						<tr>
+		// 							<th>Booking Code</th>
+		// 							<td>${newBooking.bookingCode}</td>
+		// 						</tr>
+		// 						<tr>
+		// 							<th>Passport Number</th>
+		// 							<td>${newBooking.passportNumber}</td>
+		// 						</tr>
+		// 						<tr>
+		// 							<th>Seat Number</th>
+		// 							<td>${newBooking.seatNumber}</td>
+		// 						</tr>
+		// 						<tr>
+		// 							<th>Seat Class</th>
+		// 							<td>${newBooking.seatClass}</td>
+		// 						</tr>
+		// 						<tr>
+		// 							<th>Booking Date</th>
+		// 							<td>${newBooking.bookingDate}</td>
+		// 						</tr>
+		// 						<tr>
+		// 							<th>Booking Status</th>
+		// 							<td class="highlight">${newBooking.bookingStatus}</td>
+		// 						</tr>
+		// 						<tr>
+		// 							<th>Flight Number</th>
+		// 							<td>${flight.flightNumber}</td>
+		// 						</tr>
+		// 						<tr>
+		// 							<th>Departure Time</th>
+		// 							<td>${flight.departureTime}</td>
+		// 						</tr>
+		// 						<tr>
+		// 							<th>Arrival Time (estimated)</th>
+		// 							<td>${flight.arrivalTime}</td>
+		// 						</tr>
+		// 						<tr>
+		// 							<th>Departure Airport (City)</th>
+		// 							<td>${flight.departureAirport.name} (${flight.departureAirport.city})</td>
+		// 						</tr>
+		// 						<tr>
+		// 							<th>Arrival Airport (City)</th>
+		// 							<td>${flight.arrivalAirport.name} (${flight.arrivalAirport.city})</td>
+		// 						</tr>
+		// 					</table>
+
+		// 					<div class="separator"></div>
+
+		// 					<p>If you have any questions or need assistance, feel free to contact our customer support team.</p>
+							
+		// 					<a href="mailto:support@qairline.com" class="cta-button">Contact Support</a>
+
+		// 					<div class="footer">
+		// 						<p>Best regards,<br>QAirline Team</p>
+		// 						<p><a href="mailto:support@qairline.com">support@qairline.com</a></p>
+		// 					</div>
+
+		// 				</div>
+
+		// 			</body>
+		// 			</html>`
+		// })
+		
 		return newBooking
+	}
+
+	async addUserToBooking(bookingId: number, userId: number) {
+		await this.cacheManager.reset()
+		const booking = await this.getBookingById(bookingId)
+		if (booking.user) {
+			throw new HttpException('User already in this booking', HttpStatus.FORBIDDEN)
+		}
+		const user = await this.userService.getUserById(userId);
+		booking.user = user
+		await this.bookingRepository.save(booking)
+		return booking
 	}
 
 	getAllBookings() {

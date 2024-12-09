@@ -14,8 +14,8 @@ export class AuthenticationService {
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
         private readonly configService: ConfigService,
-        // @Inject(CACHE_MANAGER)
-        // private cacheManager: Cache
+        @Inject(CACHE_MANAGER)
+        private cacheManager: Cache
     ) {}
 
     // async register(registrationData: RegisterDto) {
@@ -55,16 +55,6 @@ export class AuthenticationService {
     //     }
     // }
 
-    // public getCookieWithJwtToken(userId: number) {
-    //     const payload: TokenPayload = { userId };
-    //     const token = this.jwtService.sign(payload);
-    //     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;
-    // }
-
-    // public getCookieForLogOut() {
-    //     return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
-    // }
-
     async signup(signUpData: SignUpDto) {
         // console.log(signUpData.email)
         const emailInUse = await this.userService.getUserByEmail(signUpData.email)
@@ -100,8 +90,8 @@ export class AuthenticationService {
         //     access_token: this.jwtService.sign(payload),
         // };
 
-        const tokens = await this.getTokens(userInDb.id, userInDb.username)
-        await this.updateRefreshToken(userInDb.id, userInDb.username)
+        const tokens = await this.getTokens(userInDb.id, userInDb.username, userInDb.email)
+        await this.updateRefreshToken(userInDb.id, userInDb.username, userInDb.email)
         return tokens
     }
 
@@ -123,37 +113,17 @@ export class AuthenticationService {
         }
     }
 
-    async logout(userId: number) {
-        return this.userService.updateUser(userId, {refreshToken: null})
+    async logout(id: number) {
+        return this.userService.updateUser(id, {refreshToken: null})
     }
-    // getCookieWithJwtAccessToken(userId: number) {
-    //     const payload = { userId };
-    //     const token = this.jwtService.sign(payload, {
-    //       secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
-    //       expiresIn: this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME')
-    //     });
-    //     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME')}`;
-    // }
-     
-    // getCookieWithJwtRefreshToken(userId: number) {
-    //     const payload = { userId };
-    //     const token = this.jwtService.sign(payload, {
-    //         secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
-    //         expiresIn: this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME')
-    //     });
-    //     const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME')}`;
-    //     return {
-    //         cookie,
-    //         token
-    //     }
-    // }
 
-    async getTokens(userId: number, username: string) {
+    async getTokens(id: number, username: string, email: string) {
         const [accessToken, refreshToken] = await Promise.all([
           this.jwtService.sign(
             {
-              sub: userId,
+              id,
               username,
+              email
             },
             {
               secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
@@ -162,8 +132,9 @@ export class AuthenticationService {
           ),
           this.jwtService.sign(
             {
-              sub: userId,
+              id,
               username,
+              email
             },
             {
               secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
@@ -178,8 +149,8 @@ export class AuthenticationService {
         };
     }
 
-    async refreshTokens(userId: number, refreshToken: string) {
-        const user = await this.userService.getUserById(userId);
+    async refreshTokens(id: number, refreshToken: string) {
+        const user = await this.userService.getUserById(id);
         if (!user || !user.refreshToken) {
             throw new HttpException('Access Denied', HttpStatus.FORBIDDEN)
         }
@@ -187,23 +158,24 @@ export class AuthenticationService {
         if (!refreshTokenMatches) {
             throw new HttpException('Access Denied', HttpStatus.FORBIDDEN)
         }   
-        const tokens = await this.getTokens(user.id, user.username);
-        await this.updateRefreshToken(user.id, tokens.refreshToken);
+        const tokens = await this.getTokens(user.id, user.username, user.email);
+        await this.updateRefreshToken(user.id, user.username, user.email);
         return tokens;
     }
 
 
-    async updateRefreshToken(userId: number, username: string) {
+    async updateRefreshToken(id: number, username: string, email: string) {
         const token = this.jwtService.sign({
-            userId,
-            username
+            id,
+            username,
+            email
         }, {
             secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
             expiresIn: `${this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME')}s`
         });
-        await this.userService.updateUser(userId,  {
+        await this.userService.updateUser(id, {
             refreshToken: token
         });
-        return await this.getTokens(userId, username)
+        return await this.getTokens(id, username, email)
     }
 }

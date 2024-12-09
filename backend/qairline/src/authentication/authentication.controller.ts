@@ -1,4 +1,3 @@
-
 import { Body, Req, Controller, HttpCode, Post, UseGuards, Res, Get, HttpException, HttpStatus, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from 'src/user/dto/createUser.dto';
@@ -13,8 +12,9 @@ import JwtRefreshGuard from './guard/jwtRefresh.guard';
 import { RefreshToken } from './entity/token.entity';
 import { JwtRefreshTokenStrategy } from './passport/jwtRefresh.strategy';
 import { CacheInterceptor } from '@nestjs/cache-manager';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 
- 
+@ApiTags('authentication')
 @Controller('authentication')
 // @UseInterceptors(CacheInterceptor)
 @UseInterceptors(ClassSerializerInterceptor)
@@ -23,44 +23,28 @@ export class AuthenticationController {
         private readonly authenticationService: AuthenticationService
     ) {}
     
-    // @Post('register')
-    // async register(@Body() registrationData: RegisterDto) {
-    //     return this.authenticationService.register(registrationData);
-    // }
-    
     @UseGuards(JwtAuthenticationGuard)
     @Get()
-    authenticate() {
-        
-    }
-
-    // @HttpCode(200)
-    // @UseGuards(JwtAuthenticationGuard)
-    // @Post('login')
-    // // NOTE: 
-    // async logIn(@Req() request: RequestWithUser, @Res() response: Response) {
-    //     const { user } = request;
-    //     const cookie = this.authenticationService.getCookieWithJwtToken(user.id);
-    //     response.setHeader('Set-Cookie', cookie);
-    //     user.password = undefined;
-    //     return response.json(user);
-
-    // }
-
-    // @HttpCode(200)
-    // @UseGuards(JwtAuthenticationGuard)
-    // @Post('logout')
-    // async logOut(@Req() request: RequestWithUser, @Res() response: Response) {
-    //     response.setHeader('Set-Cookie', this.authenticationService.getCookieForLogOut());
-    //     return response.sendStatus(200);
-    // }
+    @ApiOperation({ summary: 'Authenticate user' })
+    @ApiBearerAuth()
+    @ApiResponse({ status: 200, description: 'User authenticated successfully.' })
+    @ApiResponse({ status: 401, description: 'Unauthorized.' })
+    authenticate() {}
 
     @Post('signup')
+    @ApiOperation({ summary: 'Sign up a new user' })
+    @ApiBody({ type: () => SignUpDto })
+    @ApiResponse({ status: 201, description: 'The user has been successfully signed up.' })
+    @ApiResponse({ status: 400, description: 'Invalid input.' })
     async signUp(@Body() signUpData: SignUpDto) {
         return this.authenticationService.signup(signUpData)
     }
 
     @Post('login')
+    @ApiOperation({ summary: 'Log in a user' })
+    @ApiBody({ type: () => LogInDto })
+    @ApiResponse({ status: 200, description: 'Login successful.' })
+    @ApiResponse({ status: 400, description: 'Invalid input.' })
     async logIn(@Body() logInData: LogInDto) {
         const user = await this.authenticationService.login(logInData)
 
@@ -79,13 +63,21 @@ export class AuthenticationController {
 
     @UseGuards(JwtAuthenticationGuard)
     @Get('logout')
+    @ApiOperation({ summary: 'Log out a user' })
+    @ApiBearerAuth()
+    @ApiResponse({ status: 200, description: 'Logout successful.' })
+    @ApiResponse({ status: 401, description: 'Unauthorized.' })
     logout(@Req() req: RequestWithUser) {
-        this.authenticationService.logout(req.user['sub'])
+        this.authenticationService.logout(req.user.id)
     }
 
     @UseGuards(JwtRefreshGuard)
     @Get('refresh')
+    @ApiOperation({ summary: 'Refresh tokens' })
+    @ApiBearerAuth()
+    @ApiResponse({ status: 200, description: 'Tokens refreshed successfully.' })
+    @ApiResponse({ status: 401, description: 'Unauthorized.' })
     refreshTokens(@Req() req: RequestWithUser) {
-        return this.authenticationService.updateRefreshToken(req.user['sub'], req.user['username'])
+        return this.authenticationService.updateRefreshToken(req.user.id, req.user.username, req.user.email)
     }
 }

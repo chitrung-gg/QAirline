@@ -90,11 +90,12 @@ export class UserService {
     
         const otp = await this.verificationTokenService.generateOtp(user.id);
     
-        this.emailService.sendEmail({
-            subject: 'QAirline - Account Verification',
-            recipient: user.email,
-            content: `<p>Hi${user.firstName ? ' ' + user.lastName : ''},</p><p>You may verify your QAirline account using the following OTP: <br /><span style="font-size:24px; font-weight: 700;">${otp}</span></p><p>Regards,<br />QAirline</p>`,
-        });
+        /* Uncomment for send email */
+        // this.emailService.sendEmail({
+        //     subject: 'QAirline - Account Verification',
+        //     recipient: user.email,
+        //     content: `<p>Hi${user.firstName ? ' ' + user.lastName : ''},</p><p>You may verify your QAirline account using the following OTP: <br /><span style="font-size:24px; font-weight: 700;">${otp}</span></p><p>Regards,<br />QAirline</p>`,
+        // });
     }
 
     async verifyEmail(userId: number, token: string) {

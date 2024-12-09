@@ -4,39 +4,43 @@ import { ApiProperty } from "@nestjs/swagger";
 
 @Entity()
 export class Destination {
-  @ApiProperty()
+  @ApiProperty({ description: 'Primary Key', example: 1 })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Name of the destination', example: 'Paris' })
   @Column({ type: "varchar", length: 100 })
   name: string; // Tên địa điểm (ví dụ: "Paris", "Tokyo Tower", "Grand Canyon")
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Description of the destination', example: 'A beautiful city with rich history.', nullable: true })
   @Column({ type: "text", nullable: true })
   description: string; // Mô tả chi tiết về địa điểm
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Image URL of the destination', example: 'http://example.com/image.jpg', nullable: true })
   @Column({ type: "varchar", length: 255, nullable: true })
   image?: string; // URL hình ảnh của địa điểm
 
-  @ApiProperty()
-  @Column({ type: "varchar", length: 100})
+  @ApiProperty({ description: 'City where the destination is located', example: 'Paris' })
+  @Column({ type: "varchar", length: 100 })
   city: string; // Thành phố nơi có địa điểm (ví dụ: "Paris", "Tokyo")
 
-  @ApiProperty()
-  @Column({ type: "varchar", length: 100})
-  country: string; // Quốc gia nơi có địa điểm (ví dụ: "France", "Japan")\\\\\\
+  @ApiProperty({ description: 'Country where the destination is located', example: 'France' })
+  @Column({ type: "varchar", length: 100 })
+  country: string; // Quốc gia nơi có địa điểm (ví dụ: "France", "Japan")
 
-//   @Column({ type: "int", default: 0 })
-//   popularityScore: number; // Điểm đánh giá hoặc độ phổ biến của địa điểm
+  // @ApiProperty({ description: 'Popularity score of the destination', example: 95 })
+  // @Column({ type: "int", default: 0 })
+  // popularityScore: number; // Điểm đánh giá hoặc độ phổ biến của địa điểm
 
-//   @CreateDateColumn()
-//   createdAt: Date; // Thời gian địa điểm được thêm vào hệ thống
+  // @ApiProperty({ description: 'Creation date of the destination', example: '2023-01-01T00:00:00Z' })
+  // @CreateDateColumn()
+  // createdAt: Date; // Thời gian địa điểm được thêm vào hệ thống
 
-//   @UpdateDateColumn()
-//   updatedAt: Date; // Thời gian cập nhật thông tin địa điểm
+  // @ApiProperty({ description: 'Last update date of the destination', example: '2023-01-01T00:00:00Z' })
+  // @UpdateDateColumn()
+  // updatedAt: Date; // Thời gian cập nhật thông tin địa điểm
 
-//   @ManyToOne(() => User, (user) => user.recommendedDestinations, { nullable: true })
-//   recommendedBy: User; // Người dùng hoặc admin đã recommend địa điểm (nếu có)
+  // @ApiProperty({ description: 'User who recommended the destination', type: () => User, nullable: true })
+  // @ManyToOne(() => User, (user) => user.recommendedDestinations, { nullable: true })
+  // recommendedBy: User; // Người dùng hoặc admin đã recommend địa điểm (nếu có)
 }

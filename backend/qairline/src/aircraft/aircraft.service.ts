@@ -23,14 +23,17 @@ export class AircraftService {
     }
 
     async getAllAircrafts() {
-        return this.aircraftRepository.find()
+        return this.aircraftRepository.find({
+            relations: ['flights']
+        })
     }
 
     async getAircraftById(id: number) {
-        const aircraft = this.aircraftRepository.findOne({
+        const aircraft = await this.aircraftRepository.findOne({
             where: {
                 id: id
-            }
+            },
+            relations: ['flights']
         })
         if (aircraft) {
             return aircraft

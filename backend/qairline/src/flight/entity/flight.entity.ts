@@ -6,33 +6,33 @@ import { ApiProperty } from "@nestjs/swagger";
 
 @Entity()
 export class Flight {
-    @ApiProperty()
+    @ApiProperty({ description: 'Unique identifier for the flight' })
     @PrimaryGeneratedColumn()
     id: number; // Khóa chính
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Unique flight number' })
     @Column({ unique: true })
     flightNumber: string; // Số hiệu chuyến bay (duy nhất)
 
     @Index('aircraftIndex')
-    @ApiProperty()
+    @ApiProperty({ description: 'Aircraft assigned to this flight', type: () => Aircraft, nullable: true })
     @ManyToOne(() => Aircraft, (aircraft) => aircraft.flights, { eager: true, cascade: true, onUpdate: "CASCADE", onDelete: "CASCADE", nullable: true})
     @JoinColumn({ name: "aircraftId" })
     aircraft?: Aircraft; // Liên kết với bảng Aircraft
 
     @Index('departureAirportIndex')
-    @ApiProperty()
+    @ApiProperty({ description: 'Airport where the flight departs from', type: () => Airport, nullable: true })
     @ManyToOne(() => Airport, (airport) => airport.departures, { eager: true, cascade: true, onUpdate: "CASCADE", onDelete: "CASCADE", nullable: true })
     @JoinColumn({ name: "departureAirportId" })
     departureAirport?: Airport; // Sân bay khởi hành
 
     @Index('arrivalAirportIndex')
-    @ApiProperty()
+    @ApiProperty({ description: 'Airport where the flight arrives at', type: () => Airport, nullable: true })
     @ManyToOne(() => Airport, (airport) => airport.arrivals, { eager: true, cascade: true, onUpdate: "CASCADE", onDelete: "CASCADE", nullable: true })
     @JoinColumn({ name: "arrivalAirportId" })
     arrivalAirport?: Airport; // Sân bay đến
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Time of departure' })
     @Column({
         type: 'timestamptz',
         transformer: {
@@ -47,7 +47,7 @@ export class Flight {
     })
     departureTime: string;
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Time of arrival' })
     @Column({
         type: 'timestamptz',
         transformer: {
@@ -62,7 +62,7 @@ export class Flight {
     })
     arrivalTime: string;
     
-    @ApiProperty()
+    @ApiProperty({ description: 'Current status of the flight', enum: ['Scheduled', 'Arrived', 'Delayed', 'Cancelled'], default: 'Scheduled' })
     @Column({
       type: "enum",
       enum: ["Scheduled", "Arrived", "Delayed", "Cancelled"],
@@ -70,26 +70,35 @@ export class Flight {
     })
     status?: "Scheduled" | "Arrived" | "Delayed" | "Cancelled"; // Trạng thái máy bay
   
-    @ApiProperty()
+    @ApiProperty({ description: 'Number of available seats for the flight' })
     @Column({ type: "int" })
     availableSeats: number; // Ghế còn trống
 
-    @ApiProperty()
+    @ApiProperty({ 
+      description: 'JSON configuration for seat classes', 
+      type: () => Object, 
+      // additionalProperties: { type: 'number' }
+    })
 	  @Column({ type: "jsonb" })
   	seatClasses: Record<string, number>; // Cấu hình hạng ghế mặc định (JSON)
 
     // @Column({ type: "varchar", length: 50 })
     // flightType: string; // Loại chuyến bay (Domestic, International)
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Bookings associated with the flight', type: () => Booking })
     @OneToMany(() => Booking, (booking) => booking.flight, {})
     bookings?: Booking[]; // Liên kết với bảng Booking
 
-    @ApiProperty()
+    @ApiProperty({ description: 'Flight duration in hours (calculated from departureTime and arrivalTime)', nullable: true })
     @Column({ type: "float", nullable: true })
     duration?: number; // Thời gian bay (tính toán từ departureTime và arrivalTime)
 
-    @ApiProperty()
+    @ApiProperty({ 
+      description: 'Base price for each seat class', 
+      type: () => Object, 
+      // additionalProperties: { type: 'number' }, 
+      nullable: true 
+    })
     @Column({type: "jsonb", nullable: true})
     baseClassPrice?: Record<string, number>   // Giá tiền base cho mỗi loại hạng ghế
 }

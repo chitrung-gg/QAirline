@@ -9,7 +9,6 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { UserModule } from './user/user.module';
 import { BookingModule } from './booking/booking.module';
 import { JwtModule } from '@nestjs/jwt';
-import { ReportModule } from './report/report.module';
 
 import { PromotionModule } from './promotion/promotion.module';
 
@@ -55,7 +54,7 @@ import { FaqModule } from './faq/faq.module';
       ttl: Number(configService.get('MAX_CACHE_TTL')),
     }),
   }),
-    DatabaseModule, AuthenticationModule, UserModule, BookingModule, ReportModule,  PromotionModule, NewsModule, DestinationModule, PolicyModule, FaqModule],
+    DatabaseModule, AuthenticationModule, UserModule, BookingModule,  PromotionModule, NewsModule, DestinationModule, PolicyModule, FaqModule],
   controllers: [AppController],
   providers: [AppService,
     {
