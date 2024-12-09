@@ -20,6 +20,7 @@ import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { EmailModule } from './email/email.module';
 import { PolicyModule } from './policy/policy.module';
 import { FaqModule } from './faq/faq.module';
+import { AboutusModule } from './aboutus/aboutus.module';
 
 @Module({
   imports: [FlightModule, ConfigModule.forRoot({
@@ -54,7 +55,7 @@ import { FaqModule } from './faq/faq.module';
       ttl: Number(configService.get('MAX_CACHE_TTL')),
     }),
   }),
-    DatabaseModule, AuthenticationModule, UserModule, BookingModule,  PromotionModule, NewsModule, DestinationModule, PolicyModule, FaqModule],
+    DatabaseModule, AuthenticationModule, UserModule, BookingModule, PromotionModule, NewsModule, DestinationModule],
   controllers: [AppController],
   providers: [AppService,
     {

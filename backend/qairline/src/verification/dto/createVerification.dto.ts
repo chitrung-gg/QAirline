@@ -19,4 +19,9 @@ export class CreateVerificationDto {
     @IsOptional()
     @IsISO8601()
     createdAt?: string;
+    
+    @ApiProperty({ description: 'Updation date of the verification token', example: '2023-01-01T00:00:00Z', required: false })
+    @IsOptional()
+    @IsISO8601()
+    updatedAt?: string;
 }

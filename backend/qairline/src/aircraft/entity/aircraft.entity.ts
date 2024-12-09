@@ -39,30 +39,32 @@ export class Aircraft {
   @ApiProperty({ description: 'Creation date of the aircraft record', example: '2023-01-01T00:00:00Z' })
   @CreateDateColumn({
     type: 'timestamptz', nullable: true,
-    transformer: {
-      to: (value: string | Date | null) => {
-        if (value === null) return null;
-        return new Date(value).toISOString();
-      },
-      from: (value: Date) => {
-        return value ? value.toISOString() : null;
-      },
-    },
+    // transformer: {
+    //   to: (value: string | Date | null) => {
+    //     if (value === null) return null;
+    //     return new Date(value).toISOString();
+    //   },
+    //   from: (value: Date) => {
+    //     return value ? value.toISOString() : null;
+    //   },
+    // },
+    default: () => "CURRENT_TIMESTAMP"
   })
   createdAt?: string;
 
   @ApiProperty({ description: 'Last update date of the aircraft record', example: '2023-01-01T00:00:00Z' })
   @UpdateDateColumn({
     type: 'timestamptz', nullable: true,
-    transformer: {
-      to: (value: string | Date | null) => {
-        if (value === null) return null;
-        return new Date(value).toISOString();
-      },
-      from: (value: Date) => {
-        return value ? value.toISOString() : null;
-      },
-    },
+    // transformer: {
+    //   to: (value: string | Date | null) => {
+    //     if (value === null) return null;
+    //     return new Date(value).toISOString();
+    //   },
+    //   from: (value: Date) => {
+    //     return value ? value.toISOString() : null;
+    //   },
+    // },
+    default: () => "CURRENT_TIMESTAMP"
   })
   updatedAt?: string;
 

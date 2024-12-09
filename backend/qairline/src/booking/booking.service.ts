@@ -31,6 +31,16 @@ export class BookingService {
 	  private cacheManager: Cache
 	) {}
 
+	generateBookingCode(airlineCode: string, flightId: number): string {
+		const todayDate = new Date().toISOString().slice(2, 10).replace(/-/g, '');
+
+		// Generate a simple random 4-character alphanumeric passenger ID
+		const passengerId = Math.random().toString(36).substring(2, 6).toUpperCase();
+	
+		// Combine all elements to form the ticket code
+		return `${airlineCode}${flightId}-${todayDate}-${passengerId}`;
+	}
+
 	async createBooking(booking: CreateBookingDto, user: any) {
 		await this.cacheManager.reset()
 		const flight = await this.flightRepository.findOne({
@@ -40,19 +50,19 @@ export class BookingService {
 		})
 
 		const newBooking = await this.bookingRepository.create(booking)
+		newBooking.bookingCode = this.generateBookingCode(flight.aircraft.aircraftCode, flight.id)
 		
 		if (flight) {
 			newBooking.ticketPrice = flight.baseClassPrice
 		} else {
 			throw new HttpException('Exception found in BookingService: createBooking', HttpStatus.BAD_REQUEST)
 		}
-		
-		console.log(user)
+
 		if (user) {
 			newBooking.user = await this.userService.getUserById(user.id)
 		}
 
-		console.log(newBooking.user)
+
 		await this.bookingRepository.save(newBooking)
 
 		/* Uncomment for send email */

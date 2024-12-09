@@ -29,12 +29,14 @@ export class CreateAircraftDto {
     status?: "Active" | "Maintenance" | "Retired"; 
   
     @ApiProperty({ description: 'Creation date of the aircraft record', example: '2023-01-01T00:00:00Z' })
+    @IsOptional()
     @IsISO8601()
-    createdAt: string; 
+    createdAt?: string; 
 
     @ApiProperty({ description: 'Last update date of the aircraft record', example: '2023-01-01T00:00:00Z' })
+    @IsOptional()
     @IsISO8601()
-    updatedAt: string; 
+    updatedAt?: string; 
 
     @ApiProperty({ description: 'List of flights associated with the aircraft', type: () => Flight, required: false })
     @IsOptional()

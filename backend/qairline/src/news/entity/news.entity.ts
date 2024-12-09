@@ -35,32 +35,34 @@ export class News {
     @ApiProperty({ description: 'Creation date of the news article', example: '2023-01-01T00:00:00Z' })
     @CreateDateColumn({
       type: 'timestamptz',
-      transformer: {
-        to: (value: string | Date | null) => {
-          if (value === null) return null;
-          return new Date(value).toISOString();
-        },
-        from: (value: Date) => {
-          return value ? value.toISOString() : null;
-        },
-      },
+      // transformer: {
+      //   to: (value: string | Date | null) => {
+      //     if (value === null) return null;
+      //     return new Date(value).toISOString();
+      //   },
+      //   from: (value: Date) => {
+      //     return value ? value.toISOString() : null;
+      //   },
+      // },
+      default: () => "CURRENT_TIMESTAMP"
     })
-    createdAt: string; // Thời gian tạo bài viết
+    createdAt?: string; // Thời gian tạo bài viết
 
     @ApiProperty({ description: 'Last update date of the news article', example: '2023-01-01T00:00:00Z' })
     @UpdateDateColumn({
       type: 'timestamptz',
-      transformer: {
-        to: (value: string | Date | null) => {
-          if (value === null) return null;
-          return new Date(value).toISOString();
-        },
-        from: (value: Date) => {
-          return value ? value.toISOString() : null;
-        },
-      },
+      // transformer: {
+      //   to: (value: string | Date | null) => {
+      //     if (value === null) return null;
+      //     return new Date(value).toISOString();
+      //   },
+      //   from: (value: Date) => {
+      //     return value ? value.toISOString() : null;
+      //   },
+      // },
+      default: () => "CURRENT_TIMESTAMP"
     })
-    updatedAt: string; // Thời gian cập nhật bài viết
+    updatedAt?: string; // Thời gian cập nhật bài viết
 
     // @ApiProperty({ description: 'Author of the news article', type: () => User })
     // @ManyToOne(() => User, (user) => user.news, { nullable: false, eager: true })
