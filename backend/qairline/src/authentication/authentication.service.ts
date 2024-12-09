@@ -55,6 +55,29 @@ export class AuthenticationService {
     //     }
     // }
 
+    async decodeToken(token: string) {
+        let user: { 
+            id?: string, 
+            username?: string, 
+            email?: string 
+        }
+        
+        if (token) {
+            try {
+                const decodedToken = this.jwtService.verify(token, {secret: process.env.JWT_ACCESS_TOKEN_SECRET});
+                user = {
+                    id: decodedToken?.id,
+                    username: decodedToken?.username,
+                    email: decodedToken?.email
+                }
+            } catch (error) {
+                console.log('Invalid or expired token', error);
+            }
+        }
+
+        return user
+      }
+
     async signup(signUpData: SignUpDto) {
         // console.log(signUpData.email)
         const emailInUse = await this.userService.getUserByEmail(signUpData.email)
@@ -92,7 +115,12 @@ export class AuthenticationService {
 
         const tokens = await this.getTokens(userInDb.id, userInDb.username, userInDb.email)
         await this.updateRefreshToken(userInDb.id, userInDb.username, userInDb.email)
-        return tokens
+        return {
+            ...tokens,
+            id: userInDb.id,
+            username: userInDb.username,
+            role: userInDb.role
+        }
     }
 
     async validateUser(email: string, password: string) {
