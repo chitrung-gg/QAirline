@@ -8,7 +8,13 @@ import {
     Input,
     Button,
     Select,
-    SelectItem
+    SelectItem,
+    useDisclosure,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader
 } from "@nextui-org/react";
 import FlightPreviewCard from '@/components/Card/Flight/FlightPreviewCard';
 import { FlightProps, getFlightFromLocalStorage, savePassengerInfoToLocalStorage } from '@/interfaces/flightsample';
@@ -16,6 +22,9 @@ import ImageSection from '@/components/ImageSection';
 import PolicyCard from '@/components/Card/PolicyCard';
 import OfferInputCard from '@/components/Card/OfferInputCard';
 import PaymentCard from '@/components/Card/PaymentCard';
+import Loading from '@/components/Loading';
+import { Flight, FlightStatus } from '@/interfaces/flight';
+import axios from 'axios';
 
 interface PassengerInfo {
     firstName: string;
@@ -36,7 +45,8 @@ interface ValidationErrors {
 export default function BookingDetailsPage() {
     const router = useRouter();
 
-    const [flightDetails, setFlightDetails] = useState<FlightProps | null>(null);
+    const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [passengerInfo, setPassengerInfo] = useState<PassengerInfo>({
         firstName: '',
         lastName: '',
@@ -52,13 +62,6 @@ export default function BookingDetailsPage() {
         phoneNumber: '',
         gender: ''
     });
-
-    useEffect(() => {
-        const storedFlightDetails = getFlightFromLocalStorage();
-        if (storedFlightDetails) {
-            setFlightDetails(storedFlightDetails);
-        }
-    }, []);
 
     // Capitalize first letter of a string
     const capitalizeFirstLetter = (str: string) => {
@@ -165,35 +168,35 @@ export default function BookingDetailsPage() {
 
     const handleNextStep = () => {
         if (validateForm()) {
-            // Store passenger info using new helper function
-            savePassengerInfoToLocalStorage(passengerInfo);
-            router.push('/booking/details/summary');
+            // Open confirmation modal instead of directly navigating
+            onOpen();
         }
     };
 
-    const handleDiscountApply = (discountCode: string, discountedPrice: number) => {
-        // Update flight details with discount information
-        if (flightDetails) {
-            const updatedFlightDetails = {
-                ...flightDetails,
-                price: discountedPrice,
-                discount: {
-                    code: discountCode,
-                    originalPrice: flightDetails.price,
-                    discountedPrice: discountedPrice
-                }
+    const confirmBooking = async () => {
+        setIsSubmitting(true);
+        try {
+            // Simple booking submission
+            const bookingData = {
+                passengerName: `${passengerInfo.lastName} ${passengerInfo.firstName}`,
+                passengerDob: passengerInfo.phoneNumber,
+                passportNumber: passengerInfo.email,
+                
             };
-            
-            // Save updated flight details to local storage
-            localStorage.setItem('flightDetails', JSON.stringify(updatedFlightDetails));
-            setFlightDetails(updatedFlightDetails);
+
+            // Simulated API call
+            await axios.post('/api/booking', bookingData);
+
+            // Close modal and navigate to confirmation page
+            onClose();
+            router.push('/booking/confirmation');
+        } catch (error) {
+            console.error('Booking error', error);
+            // Handle error (show toast, error message, etc.)
+        } finally {
+            setIsSubmitting(false);
         }
     };
-
-
-    if (!flightDetails) {
-        return <div>Đang tải...</div>;
-    }
 
     return (
         <div>
@@ -202,7 +205,39 @@ export default function BookingDetailsPage() {
                 <div className="px-4 py-6 flex flex-col gap-8 justify-center">
                     <div className='flex flex-col gap-4'>
                         <h1 className="text-2xl font-bold text-blue-normal pl-1">Thông tin chuyến bay</h1>
-                        <FlightPreviewCard {...flightDetails} />
+                        {/* <FlightPreviewCard {...flightDetails} /> */}
+                        <FlightPreviewCard
+                            id={1}
+                            flightNumber="QA123"
+                            departureAirport={{
+                                id: 1,
+                                name: "Sân bay Nội Bài",
+                                iataCode: "HAN",
+                                city: "Hà Nội",
+                                country: "Việt Nam"
+                            }}
+                            arrivalAirport={{
+                                id: 2,
+                                name: "Sân bay Tân Sơn Nhất",
+                                iataCode: "SGN",
+                                city: "Hồ Chí Minh",
+                                country: "Việt Nam"
+                            }}
+                            departureTime="08:00"
+                            arrivalTime="10:00"
+                            duration="2h"
+                            availableSeats={50}
+                            baseClassPrice={{
+                                "economy": 1500000
+                            }}
+                            status={FlightStatus.SCHEDULED}
+                            seatClasses={ 
+                                {
+                                    "economy": 50,
+                                    "business": 20
+                                }
+                            }
+                        />
                     </div>
                     <div className="flex flex-col items-start gap-4">
                         <div className='pl-1'>
@@ -297,15 +332,6 @@ export default function BookingDetailsPage() {
                     </div>
 
                     <div>
-                        {flightDetails && (
-                            <OfferInputCard
-                                originalPrice={flightDetails.price}
-                                onDiscountApply={handleDiscountApply}
-                            />
-                        )}
-                    </div>
-
-                    <div>
                         <PaymentCard />
                     </div>
 
@@ -318,8 +344,38 @@ export default function BookingDetailsPage() {
                             className='bg-blue-normal font-semibold text-white'
                             onClick={handleNextStep}
                         >
-                            
+                            Xác nhận và đặt vé
                         </Button>
+
+                        {/* Confirmation Modal */}
+                        <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+                            <ModalContent>
+                                {(onClose) => (
+                                    <>
+                                        <ModalHeader>Xác nhận đặt vé</ModalHeader>
+                                        <ModalBody>
+                                            Bạn có chắc chắn muốn đặt vé này không?
+                                        </ModalBody>
+                                        <ModalFooter>
+                                            <Button
+                                                color="danger"
+                                                variant="light"
+                                                onPress={onClose}
+                                            >
+                                                Không
+                                            </Button>
+                                            <Button
+                                                color="primary"
+                                                onPress={confirmBooking}
+                                                isLoading={isSubmitting}
+                                            >
+                                                Có
+                                            </Button>
+                                        </ModalFooter>
+                                    </>
+                                )}
+                            </ModalContent>
+                        </Modal>
                     </div>
                 </div>
             </div>

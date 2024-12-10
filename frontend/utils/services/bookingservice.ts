@@ -48,4 +48,13 @@ export const bookingService = {
       throw error;
     }
   },
+
+  changeStatus: async (id: number, status: string) => { 
+    try {
+      const response = await axios.patch(`${API_BASE_URL}/booking/${id}/status`, { status });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 };

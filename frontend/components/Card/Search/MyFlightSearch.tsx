@@ -20,15 +20,6 @@ export default function MyFlightSearch(props: MyFlightSearchProps) {
 
     try {
       alert("Search flight with ticket code: " + ticketCode);
-      // Call API to search flight with ticket code
-      // const response = await fetch(`/api/searchFlight?ticketCode=${ticketCode}`);
-      // const data = await response.json();
-
-      // if (data.found) {
-      //   onSearch(data); 
-      // } else {
-      //   onSearch(null); 
-      // }
     } catch (error) {
       console.error("Lỗi khi tìm kiếm chuyến bay", error);
       props.onSearch(null); 

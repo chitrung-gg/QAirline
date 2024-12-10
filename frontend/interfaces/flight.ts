@@ -15,6 +15,7 @@ export interface Flight {
   seatClasses: Record<string, number>;
   bookings?: Booking[];
   duration?: string;
+  baseClassPrice?: Record<string, number>;
 }
 
 export enum FlightStatus {
@@ -30,6 +31,7 @@ export interface CreateFlightDto {
   departureTime?: Date;
   arrivalTime?: Date;
   aircraftId?: number;
+  duration?: string;
 }
 
 export interface UpdateFlightDto extends Partial<CreateFlightDto> {}

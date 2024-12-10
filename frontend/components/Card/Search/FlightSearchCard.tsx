@@ -1,86 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import {
     Card,
     Radio,
     CardBody,
     RadioGroup,
-    Divider,
     Button,
     Input,
     Autocomplete,
     AutocompleteItem,
-    DateRangePicker
+    DatePicker,
 } from "@nextui-org/react";
 import { GoArrowSwitch } from "react-icons/go";
 import { today } from "@internationalized/date";
 import { getLocalTimeZone } from "@internationalized/date";
 
-// TypeORM Flight Entity (to be created in NestJS)
-interface Flight {
-    id: number;
-    departure: string;
-    destination: string;
-    departureDate: Date;
-    returnDate?: Date;
-    availableSeats: number;
-}
-
-// Flight Search Service (to be implemented in NestJS with TypeORM)
-const FlightService = {
-    async searchFlights(searchParams: {
-        departure: string,
-        destination: string,
-        departureDate: Date,
-        returnDate?: Date
-    }): Promise<Flight[]> {
-        try {
-            const response = await fetch('/api/flights/search', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(searchParams)
-            });
-
-            if (!response.ok) {
-                throw new Error('Flight search failed');
-            }
-
-            return await response.json();
-        } catch (error) {
-            console.error('Error searching flights:', error);
-            return [];
-        }
-    }
-};
+// Importing services
+import { airportService } from '@/utils/services/airportservice';
+import { flightService, FlightSearchParams } from '@/utils/services/flightservices';
+import { Airport } from '@/interfaces/airport';
 
 export default function FlightSearchCard() {
-    // State management
-    const [selected, setSelected] = useState("bay-thang");
-    const [departure, setDeparture] = useState("london");
-    const [destination, setDestination] = useState("paris");
-    const [passengers, setPassengers] = useState(1);
-    const [flights, setFlights] = useState<Flight[]>([]);
-    const [dateRange, setDateRange] = useState({
-        start: today(getLocalTimeZone()),
-        end: today(getLocalTimeZone()).add({ days: 7 })
-    });
+    const router = useRouter();
 
-    // Sample location data
-    const sampleData = [
-        { value: "london", label: "London" },
-        { value: "paris", label: "Paris" },
-        { value: "new-york", label: "New York" },
-        { value: "tokyo", label: "Tokyo" },
-        { value: "berlin", label: "Berlin" },
-        { value: "madrid", label: "Madrid" },
-        { value: "rome", label: "Rome" },
-        { value: "moscow", label: "Moscow" },
-        { value: "beijing", label: "Beijing" },
-        { value: "bangkok", label: "Bangkok" },
-        { value: "hanoi", label: "Hanoi" },
-        { value: "saigon", label: "Saigon" },
-    ];
+    // State for airports
+    const [airports, setAirports] = useState<Airport[]>([]);
+
+    // Search states
+    const [selected, setSelected] = useState("bay-thang");
+    const [departure, setDeparture] = useState("");
+    const [destination, setDestination] = useState("");
+    const [passengers, setPassengers] = useState(1);
+    const [departureDate, setDepartureDate] = useState(today(getLocalTimeZone()));
+    const [returnDate, setReturnDate] = useState(today(getLocalTimeZone()).add({ days: 7 }));
+
+    // Fetch airports on component mount
+    useEffect(() => {
+        const fetchAirports = async () => {
+            try {
+                const fetchedAirports = await airportService.getAll();
+                setAirports(fetchedAirports);
+
+                // Set default airports if not set
+                if (!departure && fetchedAirports.length > 0) {
+                    setDeparture(fetchedAirports[0].iataCode);
+                }
+                if (!destination && fetchedAirports.length > 1) {
+                    setDestination(fetchedAirports[1].iataCode);
+                }
+            } catch (error) {
+                console.error('Error fetching airports:', error);
+            }
+        };
+
+        fetchAirports();
+    }, []);
 
     // Swap departure and destination
     const handleSwap = () => {
@@ -88,22 +62,32 @@ export default function FlightSearchCard() {
         setDestination(departure);
     };
 
+    // Determine if the trip is round trip
+    const isRoundTrip = selected === 'khu-hoi';
+
     // Search flights handler
     const handleSearchFlights = async () => {
         try {
-            const searchParams = {
+            const searchParams: FlightSearchParams = {
+                isRoundTrip,
                 departure,
                 destination,
-                departureDate: new Date(dateRange.start.toString()),
-                returnDate: selected === 'khu-hoi'
-                    ? new Date(dateRange.end.toString())
-                    : undefined,
+                departureDate: departureDate.toDate(getLocalTimeZone()),
             };
 
-            const results = await FlightService.searchFlights(searchParams);
-            setFlights(results);
+            // Add return date for round trips
+            if (selected === 'khu-hoi') {
+                searchParams.returnDate = returnDate.toDate(getLocalTimeZone());
+            }
+
+            // Search flights
+            const flights = await flightService.searchFlights(searchParams);
+
+            // Navigate to results page with search parameters
+            router.push(`/booking/results?flights=${JSON.stringify(flights)}&searchParams=${JSON.stringify(searchParams)}`);
         } catch (error) {
             console.error('Flight search error:', error);
+            // Optional: Add error handling UI
         }
     };
 
@@ -135,9 +119,12 @@ export default function FlightSearchCard() {
                                 selectedKey={departure}
                                 onSelectionChange={(value) => setDeparture(value as string)}
                             >
-                                {sampleData.map((data) => (
-                                    <AutocompleteItem key={data.value} value={data.value}>
-                                        {data.label}
+                                {airports.map((airport) => (
+                                    <AutocompleteItem
+                                        key={airport.iataCode}
+                                        value={airport.iataCode}
+                                    >
+                                        {`${airport.name} (${airport.iataCode})`}
                                     </AutocompleteItem>
                                 ))}
                             </Autocomplete>
@@ -161,26 +148,40 @@ export default function FlightSearchCard() {
                                 selectedKey={destination}
                                 onSelectionChange={(value) => setDestination(value as string)}
                             >
-                                {sampleData.map((data) => (
-                                    <AutocompleteItem key={data.value} value={data.value}>
-                                        {data.label}
+                                {airports.map((airport) => (
+                                    <AutocompleteItem
+                                        key={airport.iataCode}
+                                        value={airport.iataCode}
+                                    >
+                                        {`${airport.name} (${airport.iataCode})`}
                                     </AutocompleteItem>
                                 ))}
                             </Autocomplete>
                         </div>
 
-                        {/* Date Range Picker */}
-                        <DateRangePicker
+                        {/* Departure Date Picker */}
+                        <DatePicker
                             label="Ngày đi"
                             size="sm"
                             variant="bordered"
                             className="flex-auto w-64"
-                            value={dateRange}
-                            onChange={setDateRange}
+                            value={departureDate}
+                            onChange={setDepartureDate}
                             minValue={today(getLocalTimeZone())}
-                            isDisabled={selected === 'bay-thang'}
-                            isReadOnly={selected === 'bay-thang'}
                         />
+
+                        {/* Return Date Picker (Only for round trips) */}
+                        {selected === 'khu-hoi' && (
+                            <DatePicker
+                                label="Ngày về"
+                                size="sm"
+                                variant="bordered"
+                                className="flex-auto w-64"
+                                value={returnDate}
+                                onChange={setReturnDate}
+                                minValue={departureDate}
+                            />
+                        )}
 
                         {/* Passengers Input */}
                         <Input
@@ -205,24 +206,6 @@ export default function FlightSearchCard() {
                         </Button>
                     </div>
                 </CardBody>
-                <Divider />
-
-                {/* Flight Results Section (Optional) */}
-                {flights.length > 0 && (
-                    <div className="p-4">
-                        <h2 className="text-lg font-semibold mb-3">Kết quả tìm kiếm</h2>
-                        {flights.map((flight) => (
-                            <div key={flight.id} className="border-b py-2">
-                                <p>{flight.departure} → {flight.destination}</p>
-                                <p>Ngày đi: {flight.departureDate.toLocaleDateString()}</p>
-                                {flight.returnDate && (
-                                    <p>Ngày về: {flight.returnDate.toLocaleDateString()}</p>
-                                )}
-                                <p>Ghế còn trống: {flight.availableSeats}</p>
-                            </div>
-                        ))}
-                    </div>
-                )}
             </Card>
         </div>
     );

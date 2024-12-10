@@ -29,6 +29,21 @@ interface PassengerInfo {
   gender: string;
 }
 
+export const sampleData = [
+  { value: "london", label: "London" },
+  { value: "paris", label: "Paris" },
+  { value: "new-york", label: "New York" },
+  { value: "tokyo", label: "Tokyo" },
+  { value: "berlin", label: "Berlin" },
+  { value: "madrid", label: "Madrid" },
+  { value: "rome", label: "Rome" },
+  { value: "moscow", label: "Moscow" },
+  { value: "beijing", label: "Beijing" },
+  { value: "bangkok", label: "Bangkok" },
+  { value: "hanoi", label: "Hanoi" },
+  { value: "saigon", label: "Saigon" },
+];
+
 export const sampleFlightData = [
   {
     id: 1,

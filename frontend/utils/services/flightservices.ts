@@ -1,6 +1,15 @@
-import { CreateFlightDto, UpdateFlightDto } from "@/interfaces/flight";
+import { CreateFlightDto, Flight, UpdateFlightDto } from "@/interfaces/flight";
 import axios from "axios";
 import { API_BASE_URL } from "../api/config";
+import { isRouteErrorResponse } from "react-router-dom";
+
+export interface FlightSearchParams {
+  isRoundTrip: boolean;
+  departure: string;
+  destination: string;
+  departureDate: Date;
+  returnDate?: Date;
+}
 
 export const flightService = {
   create: async (data: CreateFlightDto) => {
@@ -56,4 +65,26 @@ export const flightService = {
       throw error;
     }
   },
+
+  searchFlights: async (params: FlightSearchParams): Promise<Flight[]> => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/flight/`, {
+        params: {
+          isRoundTrip: params.isRoundTrip,
+          departureAirport: params.departure,
+          arrivalAirport: params.destination,
+          departureDate: params.departureDate.toISOString(),
+          returnDate: params.returnDate
+            ? params.returnDate.toISOString()
+            : undefined,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Flight search error:", error);
+      throw error;
+    }
+  },
+
+  
 };

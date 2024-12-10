@@ -51,4 +51,13 @@ export const promotionService = {
       throw error;
     }
   },
+
+  getByName: async (name: string) => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/promotion/${name}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
 };

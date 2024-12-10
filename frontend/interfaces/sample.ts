@@ -5,198 +5,138 @@ import { Airport } from "@/interfaces/airport";
 // Sample Aircraft Data
 const sampleAircraft: Aircraft = {
   id: 1,
-  aircraftCode: "B787-9",
-  model: "Boeing 787-9 Dreamliner",
-  manufacturer: "Boeing",
-  capacity: 296,
+  aircraftCode: "A320-VN01",
+  model: "A320",
+  manufacturer: "Airbus",
+  capacity: 180,
   seatClasses: {
-    Economy: 240,
-    "Premium Economy": 28,
-    Business: 28,
+    Economy: 150,
+    Business: 20,
+    "Premium Economy": 10,
   },
   status: AircraftStatus.ACTIVE,
-  createdAt: new Date("2022-01-15").toISOString(),
-  updatedAt: new Date("2024-01-20").toISOString(),
 };
 
-// Sample Departure Airport
-const departureAirport: Airport = {
-  id: 101,
-  name: "Tan Son Nhat International Airport",
-  city: "Ho Chi Minh City",
-  country: "Vietnam",
-  iataCode: "SGN",
-};
-
-// Sample Arrival Airport
-const arrivalAirport: Airport = {
-  id: 201,
+// Sample Airport Data for Departure
+const hanoi: Airport = {
+  id: 1,
   name: "Noi Bai International Airport",
   city: "Hanoi",
   country: "Vietnam",
   iataCode: "HAN",
 };
 
+// Sample Airport Data for Arrival
+const hcmc: Airport = {
+  id: 2,
+  name: "Tan Son Nhat International Airport",
+  city: "Ho Chi Minh City",
+  country: "Vietnam",
+  iataCode: "SGN",
+};
+
 // Sample Flight Data
 export const sampleFlights: Flight[] = [
   {
-    id: 1001,
+    id: 1,
     flightNumber: "VN123",
     aircraft: sampleAircraft,
-    departureAirport: departureAirport,
-    arrivalAirport: arrivalAirport,
-    departureTime: new Date("2024-07-15T08:00:00").toISOString(),
-    arrivalTime: new Date("2024-07-15T09:30:00").toISOString(),
+    departureAirport: hanoi,
+    arrivalAirport: hcmc,
+    departureTime: "08:00",
+    arrivalTime: "09:30",
     status: FlightStatus.SCHEDULED,
     availableSeats: 150,
     seatClasses: {
       Economy: 120,
-      "Premium Economy": 15,
-      Business: 15,
-    },
-    duration: 90,
-    bookings: [],
-  },
-  {
-    id: 1002,
-    flightNumber: "VN456",
-    aircraft: {
-      ...sampleAircraft,
-      id: 2,
-      aircraftCode: "A350-900",
-      model: "Airbus A350-900",
-      manufacturer: "Airbus",
-      capacity: 320,
-    },
-    departureAirport: {
-      ...departureAirport,
-      id: 102,
-      name: "Da Nang International Airport",
-      iataCode: "DAD",
-    },
-    arrivalAirport: {
-      ...arrivalAirport,
-      id: 202,
-      name: "Can Tho International Airport",
-      iataCode: "VCA",
-    },
-    departureTime: new Date("2024-07-16T14:45:00").toISOString(),
-    arrivalTime: new Date("2024-07-16T16:15:00").toISOString(),
-    status: FlightStatus.SCHEDULED,
-    availableSeats: 200,
-    seatClasses: {
-      Economy: 160,
-      "Premium Economy": 20,
       Business: 20,
+      "Premium Economy": 10,
     },
-    duration: 90,
+    duration: "1h 30m",
     bookings: [],
+    baseClassPrice: {
+      Economy: 100,
+      Business: 200,
+      "Premium Economy": 150,
+    },
   },
   {
-    id: 1003,
+    id: 2,
+    flightNumber: "VN456",
+    aircraft: sampleAircraft,
+    departureAirport: hcmc,
+    arrivalAirport: hanoi,
+    departureTime: "14:00",
+    arrivalTime: "15:30",
+    status: FlightStatus.SCHEDULED,
+    availableSeats: 140,
+    seatClasses: {
+      Economy: 110,
+      Business: 20,
+      "Premium Economy": 10,
+    },
+    duration: "1h 30m",
+    bookings: [],
+    baseClassPrice: {
+      Economy: 100,
+      Business: 200,
+      "Premium Economy": 150,
+    },
+  },
+  {
+    id: 3,
     flightNumber: "VN789",
     aircraft: {
       ...sampleAircraft,
-      id: 3,
-      aircraftCode: "B737-800",
-      model: "Boeing 737-800",
+      id: 2,
+      aircraftCode: "B787-VN02",
+      model: "B787",
       manufacturer: "Boeing",
-      capacity: 189,
+      capacity: 250,
+      seatClasses: {
+        Economy: 200,
+        Business: 30,
+        "Premium Economy": 20,
+      },
     },
     departureAirport: {
-      ...departureAirport,
-      id: 103,
-      name: "Phu Quoc International Airport",
-      iataCode: "PQC",
+      ...hanoi,
+      id: 3,
+      name: "Da Nang International Airport",
+      city: "Da Nang",
+      iataCode: "DAD",
     },
     arrivalAirport: {
-      ...arrivalAirport,
-      id: 203,
-      name: "Cam Ranh International Airport",
-      iataCode: "CXR",
+      ...hcmc,
+      id: 4,
+      name: "Can Tho International Airport",
+      city: "Can Tho",
+      iataCode: "VCA",
     },
-    departureTime: new Date("2024-07-17T10:30:00").toISOString(),
-    arrivalTime: new Date("2024-07-17T11:45:00").toISOString(),
+    departureTime: "10:30",
+    arrivalTime: "12:00",
     status: FlightStatus.SCHEDULED,
-    availableSeats: 100,
+    availableSeats: 200,
     seatClasses: {
-      Economy: 80,
+      Economy: 170,
+      Business: 20,
       "Premium Economy": 10,
-      Business: 10,
     },
-    duration: 75,
+    duration: "1h 30m",
     bookings: [],
+    baseClassPrice: {
+      Economy: 120,
+      Business: 250,
+      "Premium Economy": 180,
+    },
   },
 ];
 
-// Optional: Function to generate more random flight data
-export function generateRandomFlights(count: number = 5): Flight[] {
-  const flights: Flight[] = [];
-  const vietnameseCities = [
-    { name: "Ho Chi Minh City", code: "SGN" },
-    { name: "Hanoi", code: "HAN" },
-    { name: "Da Nang", code: "DAD" },
-    { name: "Nha Trang", code: "CXR" },
-    { name: "Phu Quoc", code: "PQC" },
-    { name: "Can Tho", code: "VCA" },
-  ];
-
-  for (let i = 0; i < count; i++) {
-    const departureCity =
-      vietnameseCities[Math.floor(Math.random() * vietnameseCities.length)];
-    const arrivalCity = vietnameseCities.filter(
-      (city) => city !== departureCity
-    )[Math.floor(Math.random() * (vietnameseCities.length - 1))];
-
-    const baseDate = new Date();
-    baseDate.setDate(baseDate.getDate() + Math.floor(Math.random() * 30));
-
-    const flight: Flight = {
-      id: 2000 + i,
-      flightNumber: `VN${Math.floor(Math.random() * 1000)}`,
-      aircraft: {
-        ...sampleAircraft,
-        id: 1000 + i,
-        aircraftCode: ["B787-9", "A350-900", "B737-800"][
-          Math.floor(Math.random() * 3)
-        ],
-        model: ["Boeing 787-9", "Airbus A350", "Boeing 737"][
-          Math.floor(Math.random() * 3)
-        ],
-      },
-      departureAirport: {
-        id: 10000 + i,
-        name: `${departureCity.name} Airport`,
-        city: departureCity.name,
-        country: "Vietnam",
-        iataCode: departureCity.code,
-      },
-      arrivalAirport: {
-        id: 20000 + i,
-        name: `${arrivalCity.name} Airport`,
-        city: arrivalCity.name,
-        country: "Vietnam",
-        iataCode: arrivalCity.code,
-      },
-      departureTime: new Date(
-        baseDate.getTime() + Math.random() * 86400000
-      ).toISOString(),
-      arrivalTime: new Date(
-        baseDate.getTime() + Math.random() * 86400000 + 2 * 60 * 60 * 1000
-      ).toISOString(),
-      status: FlightStatus.SCHEDULED,
-      availableSeats: Math.floor(Math.random() * 250),
-      seatClasses: {
-        Economy: Math.floor(Math.random() * 200),
-        "Premium Economy": Math.floor(Math.random() * 30),
-        Business: Math.floor(Math.random() * 30),
-      },
-      duration: Math.floor(Math.random() * 180),
-      bookings: [],
-    };
-
-    flights.push(flight);
-  }
-
-  return flights;
-}
+// Export a function to get flights (useful for simulating API calls)
+export const getFlights = () => {
+  return new Promise<Flight[]>((resolve) => {
+    setTimeout(() => {
+      resolve(sampleFlights);
+    }, 500);
+  });
+};

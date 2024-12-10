@@ -3,9 +3,9 @@
 import React from 'react';
 import { Card, CardHeader, CardBody, CardFooter, Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import Image from "next/image";
-import { FlightProps } from '@/interfaces/flightsample';
+import { Flight } from '@/interfaces/flight';
 
-export default function FlightDetailsCard(props: FlightProps) {
+export default function FlightDetailsCard(props: Flight) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
     return (
@@ -14,7 +14,7 @@ export default function FlightDetailsCard(props: FlightProps) {
                 className="bg-transparent text-blue-normal text-md font-semibold"
                 onPress={onOpen}
             >
-                Chi tiết hành trình
+                Flight Details
             </Button>
 
             <Modal
@@ -26,13 +26,14 @@ export default function FlightDetailsCard(props: FlightProps) {
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex flex-col gap-1">
-                                Chi tiết chuyến bay
+                                Flight Details
                             </ModalHeader>
                             <ModalBody>
                                 <div className='flex flex-col gap-4'>
                                     <div className="justify-between">
                                         <div className="flex flex-col mr-3">
-                                            <p className="text-md">Hạng: {props.type}</p>
+                                            <p className="text-md">Flight Number: {props.flightNumber}</p>
+                                            <p className="text-md">Aircraft: {props.aircraft?.model} ({props.aircraft?.manufacturer})</p>
                                         </div>
                                     </div>
                                     <Divider />
@@ -40,25 +41,32 @@ export default function FlightDetailsCard(props: FlightProps) {
                                         <div className="flex flex-col space-y-4">
                                             <div className="flex justify-between">
                                                 <div>
-                                                    <p className="font-bold">Khởi hành</p>
-                                                    <p className="text-lg">{props.departure_time}</p>
-                                                    <p>{props.departure_date}</p>
-                                                    <p>{props.departure_location}</p>
-                                                    <p>{props.departure_airport}</p>
+                                                    <p className="font-bold">Điểm đi</p>
+                                                    <p className="text-lg">{props.departureTime}</p>
+                                                    <p>{props.departureAirport?.city}, {props.departureAirport?.country}</p>
+                                                    <p>{props.departureAirport?.name}</p>
+                                                    <p>Mã sân bay: {props.departureAirport?.iataCode}</p>
                                                 </div>
                                                 <div className="text-center">
-                                                    <p className="font-bold">Thời gian bay</p>
+                                                    <p className="font-bold">Thời gian</p>
                                                     <p>{props.duration}</p>
+                                                    <p>Trạng thái: {props.status}</p>
                                                 </div>
                                                 <div className="text-right">
-                                                    <p className="font-bold">Đến</p>
-                                                    <p className="text-lg">{props.arrival_time}</p>
-                                                    <p>{props.arrival_date}</p>
-                                                    <p>{props.arrival_location}</p>
-                                                    <p>{props.arrival_airport}</p>
+                                                    <p className="font-bold">Điểm đến</p>
+                                                    <p className="text-lg">{props.arrivalTime}</p>
+                                                    <p>{props.arrivalAirport?.city}, {props.arrivalAirport?.country}</p>
+                                                    <p>{props.arrivalAirport?.name}</p>
+                                                    <p>Mã sân bay: {props.arrivalAirport?.iataCode}</p>
                                                 </div>
                                             </div>
                                             <Divider />
+                                            <div>
+                                                <p className="font-bold">Chỗ ngồi còn</p>
+                                                {Object.entries(props.seatClasses).map(([className, count]) => (
+                                                    <p key={className}>{className}: {count} seats</p>
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
