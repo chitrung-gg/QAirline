@@ -6,6 +6,7 @@ import Link from "next/link";
 import LocationCard from "@/components/Card/LocationCard";
 import NewsCard from "@/components/Card/NewsCard";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 const offers = [
   {
@@ -70,6 +71,8 @@ const news = [
 
 
 export default function Home() {
+  const router = useRouter();
+
   const [offerPage, setOfferPage] = React.useState(1);
   const [newsPage, setNewsPage] = React.useState(1);
   const [offerPerPage, setOfferPerPage] = React.useState(3);
@@ -120,7 +123,11 @@ export default function Home() {
       <div className="flex flex-col justify-center items-center min-h-[70vh] bg-cover bg-center" style={{ backgroundImage: 'url(/images/sky.jpg)' }}>
         <h1 className="max-w-4/5 my-5 text-center text-white text-4xl font-bold">An tâm với mỗi chuyến bay của bạn</h1>
         <div className="lg:w-4/5 rounded-lg my-5">
-          <FlightSearchCard />
+          <Button
+            onClick={() => router.push('/booking')}
+          >
+            Đặt vé ngay
+          </Button>
         </div>
       </div>
       <div className="flex flex-col justify-center items-center mt-3">

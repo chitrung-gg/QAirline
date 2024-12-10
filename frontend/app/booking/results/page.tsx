@@ -1,27 +1,62 @@
 "use client";
 
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardBody, Button } from "@nextui-org/react";
+import { useAppDispatch, useAppSelector } from '@/components/redux/hooks';
+import { setSearchParams, setSelectedFlight } from '@/components/redux/feature/booking/bookingSlice';
 import { Flight } from '@/interfaces/flight';
-import { FlightSearchParams } from '@/utils/services/flightservices';
+import { api } from '@/utils/api/config';
+import Loading from '@/components/Loading';
+ ;
 
 export default function FlightResultsPage() {
-    const location = useLocation();
-    const searchParams = location.state as FlightSearchParams;
-    const flights = location.state.flights as Flight[];
+    const router = useRouter();
+    const dispatch = useAppDispatch();
 
-    // Redirect to search page if no search params found\
-    if (!searchParams) {
-        window.location.href = '/booking/';
+    // Get search params and flights from Redux store
+    const searchParams = useAppSelector(state => state.booking.searchParams);
+    const [flights, setFlights] = React.useState<Flight[]>([]);
+    const [isLoading, setIsLoading] = React.useState(true);
+
+    useEffect(() => {
+        // If no search params, redirect to search page
+        if (!searchParams.departure || !searchParams.destination) {
+            router.push('/booking');
+            return;
+        }
+
+        // Fetch flights based on search parameters
+        const fetchFlights = async () => {
+            try {
+                const response = await api.get('/flight', {
+                    params: {
+                        departureAirport: searchParams.departure,
+                        arrivalAirport: searchParams.destination,
+                        departureDate: searchParams.departureDate,
+                    }
+                });
+                setFlights(response.data);
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Error fetching flights:', error);
+                setIsLoading(false);
+            }
+        };
+
+        fetchFlights();
+    }, [searchParams, router]);
+
+    const handleFlightSelect = (flight: Flight) => {
+        // Dispatch selected flight to Redux store
+        dispatch(setSelectedFlight(flight));
+        // Navigate to booking details page
+        router.push('/booking/details');
+    };
+
+    if (isLoading) {
+        return <Loading />;
     }
-
-    // Redirect to search page if no flights found
-    if (!flights) {
-        window.location.href = '/booking/';
-    }
-
-    // Render flight results
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -32,12 +67,12 @@ export default function FlightResultsPage() {
             {/* Search Parameters Summary */}
             <div className="mb-6 bg-gray-100 p-4 rounded">
                 <p>
-                    <strong>Điểm đi:</strong> {searchParams.departure} | 
-                    <strong> Điểm đến:</strong> {searchParams.destination} | 
-                    <strong> Ngày đi:</strong> {searchParams.departureDate?.toLocaleDateString()} |
+                    <strong>Điểm đi:</strong> {searchParams.departure} |
+                    <strong> Điểm đến:</strong> {searchParams.destination} |
+                    <strong> Ngày đi:</strong> {searchParams.departureDate} |
                     {searchParams.tripType === 'khu-hoi' && (
                         <span>
-                            <strong> Ngày về:</strong> {searchParams.returnDate?.toLocaleDateString()} |
+                            <strong> Ngày về:</strong> {searchParams.returnDate} |
                         </span>
                     )}
                     <strong> Hành khách:</strong> {searchParams.passengers}
@@ -62,7 +97,7 @@ export default function FlightResultsPage() {
                                         {flight.departureAirport?.name} → {flight.arrivalAirport?.name}
                                     </p>
                                     <p>
-                                        <strong>Giờ đi:</strong> {flight.departureTime} | 
+                                        <strong>Giờ đi:</strong> {flight.departureTime} |
                                         <strong> Giờ đến:</strong> {flight.arrivalTime}
                                     </p>
                                 </div>
@@ -73,9 +108,10 @@ export default function FlightResultsPage() {
                                     <p className="text-sm text-gray-500">
                                         Còn {flight.availableSeats} chỗ
                                     </p>
-                                    <Button 
-                                        color="primary" 
+                                    <Button
+                                        color="primary"
                                         className="mt-2"
+                                        onClick={() => handleFlightSelect(flight)}
                                     >
                                         Chọn chuyến bay
                                     </Button>
