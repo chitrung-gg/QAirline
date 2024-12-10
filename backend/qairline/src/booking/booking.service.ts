@@ -48,6 +48,11 @@ export class BookingService {
 				id: booking.flight.id
 			}
 		})
+		const promotion = await this.promotionRepository.findOne({
+			where: {
+				id: booking.promotion.id
+			}
+		})
 
 		const newBooking = await this.bookingRepository.create(booking)
 		newBooking.bookingCode = this.generateBookingCode(flight.aircraft.aircraftCode, flight.id)
@@ -62,6 +67,11 @@ export class BookingService {
 			newBooking.user = await this.userService.getUserById(user.id)
 		}
 
+		if (promotion) {
+			newBooking.totalPrice = await this.calculateFinalPrice(newBooking, promotion)
+		} else {
+			newBooking.totalPrice = newBooking.ticketPrice[newBooking.seatClass]
+		}
 
 		await this.bookingRepository.save(newBooking)
 
@@ -320,19 +330,42 @@ export class BookingService {
 			}
 		});
 		if (booking) {
-			return {
-				...booking,
-				// finalPrice: await this.calculateFinalPrice(booking.id)
-			}
+			return booking
 		}
 		throw new HttpException('Exception found in BookingService: getBookingById', HttpStatus.BAD_REQUEST)
+	}
+
+	async getBookingByUserId(id: number) {
+		const booking = await this.bookingRepository.findOne({
+			where: {
+				user: {
+					id: id
+				}
+			}
+		});
+		if (booking) {
+			return booking
+		}
+		throw new HttpException('Exception found in BookingService: getBookingByUserId', HttpStatus.BAD_REQUEST)
 	}
 	
 	async updateBooking(id: number, booking: UpdateBookingDto) {
 		await this.cacheManager.reset()
 		try {
-			await this.getBookingById(id)
-			await this.bookingRepository.update(id, booking)
+			const bookingEntity = await this.getBookingById(id)
+			if (booking.promotion && booking.promotion.id) {
+				const promotion = await this.promotionRepository.findOne({
+				  where: { id: booking.promotion.id },
+				});
+		  
+				bookingEntity.totalPrice = await this.calculateFinalPrice(bookingEntity, promotion);
+			} else {
+				bookingEntity.totalPrice = await this.calculateFinalPrice(bookingEntity, null);
+			}
+			await this.bookingRepository.update(id, {
+				...booking,
+				totalPrice: bookingEntity.totalPrice,
+			})
 		} catch (error) {
 			throw new HttpException('Exception found in BookingService: updateBooking', HttpStatus.BAD_REQUEST)
 		}
@@ -381,19 +414,18 @@ export class BookingService {
 		}
 	}
 
-	async calculateFinalPrice(bookingId: number): Promise<any> {
+	async calculateFinalPrice(booking: Booking, promotion: Promotion): Promise<any> {
 		// Fetch the booking by ID
-		const booking = await this.bookingRepository.findOne({
-		  where: { id: bookingId },
-		  relations: ['promotion'],
-		});
 	
 		if (!booking) {
-		  throw new Error('Booking not found');
+		  throw new HttpException('Booking not found', HttpStatus.NOT_ACCEPTABLE);
 		}
 	
+		if(!promotion) {
+			return booking.ticketPrice[booking.seatClass]
+		}
 		// Fetch the promotion (if any)
-		const promotion = booking.promotion;
+		// const promotion = booking.promotion;
 	
 		// Use worker thread to calculate the final price
 		return new Promise((resolve, reject) => {
@@ -402,6 +434,7 @@ export class BookingService {
 		  worker.postMessage({
 			ticketPrice: booking.ticketPrice,
 			promotion: promotion,
+			seatClass: booking.seatClass
 		  });
 	
 		  worker.on('message', (finalPrice) => {

@@ -17,6 +17,9 @@ export class PaymentService {
 
   async createPayment(payment: CreatePaymentDto) {
     await this.cacheManager.reset()
+    if (payment.paymentDate >= payment.refundDate) {
+        throw new HttpException('Please recheck paymentDate and refundDate', HttpStatus.NOT_ACCEPTABLE);
+    }
       const newPayment = await this.paymentRepository.create(payment)
       await this.paymentRepository.save(newPayment)
       return newPayment
@@ -42,6 +45,9 @@ export class PaymentService {
     await this.cacheManager.reset()
     try {
         await this.getPaymentById(id)
+        if (payment.paymentDate >= payment.refundDate) {
+            throw new HttpException('Please recheck paymentDate and refundDate', HttpStatus.NOT_ACCEPTABLE);
+        }
         await this.paymentRepository.update(id, payment)
     } catch (error) {
         throw new HttpException('Exception found in PaymentService: updatePayment', HttpStatus.BAD_REQUEST)

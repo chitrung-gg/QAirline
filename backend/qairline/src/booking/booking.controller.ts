@@ -73,6 +73,15 @@ export class BookingController {
     return this.bookingService.getBookingById(id);
   }
 
+  @Get('/user/:id')
+  @ApiOperation({ summary: 'Get booking by user ID' })
+  @ApiParam({ name: 'id', description: 'ID of the user who make booking', example: 1 })
+  @ApiResponse({ status: 200, description: 'Return the booking with the specified user ID.' })
+  @ApiResponse({ status: 404, description: 'Booking not found.' })
+  getBookingByUserId(@Param('id') id: number) {
+    return this.bookingService.getBookingByUserId(id);
+  }
+
   @Patch(':id')
   @ApiOperation({ summary: 'Update booking by ID' })
   @ApiParam({ name: 'id', description: 'ID of the booking', example: 1 })

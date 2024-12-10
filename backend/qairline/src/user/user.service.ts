@@ -161,10 +161,6 @@ export class UserService {
             throw new HttpException('Invalid or expired OTP', HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
-        if (user.status === "Active") {
-            throw new HttpException('Account already active', HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-
         const isValid = await this.verificationTokenService.validateOtp(
             user.id,
             token,
@@ -173,9 +169,7 @@ export class UserService {
         if (!isValid) {
             throw new HttpException('Invalid or expired OTP', HttpStatus.UNPROCESSABLE_ENTITY);
         }
-
-        user.status = 'Active';
-
+        
         await this.userRepository.save(user);
 
         return true;

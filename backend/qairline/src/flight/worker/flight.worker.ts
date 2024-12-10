@@ -19,4 +19,6 @@ parentPort?.on('message', (data) => {
     const processedFlights = processFlights(data.flights);
     parentPort?.postMessage({ processedFlights });
   }
+
+  parentPort?.close()
 });

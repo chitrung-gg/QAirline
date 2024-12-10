@@ -63,6 +63,10 @@ export class Booking {
     @ApiProperty({ description: 'Ticket price details', type: () => Object })
     @Column({ type: "jsonb" })
     ticketPrice?: Record<string, number>;
+
+    @ApiProperty({ description: 'Total payment after applying promotionn (if have)', example: 100 })
+    @Column({ type: "float", nullable: true})
+    totalPrice: number; // Amount paid
   
     @ApiProperty({ description: 'Seat number assigned to the passenger', example: 'A1' })
     @Column({ type: "varchar", length: 10 })

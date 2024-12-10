@@ -51,6 +51,10 @@ export class NewsService {
 
   async deleteNews(id: number) {
     await this.cacheManager.reset()
+    const news = await this.getNewsById(id)
+    if (!news.isPublished) {
+      throw new HttpException('News already published, not deletable', HttpStatus.NOT_ACCEPTABLE);
+    }
     const deleteResponse = await this.newsRepository.delete(id)
     if (!deleteResponse.affected) {
       throw new HttpException('Exception found in NewsService: deleteNews', HttpStatus.NOT_FOUND);

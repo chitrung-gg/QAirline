@@ -81,6 +81,6 @@ export class AuthenticationController {
     @ApiResponse({ status: 200, description: 'Tokens refreshed successfully.' })
     @ApiResponse({ status: 401, description: 'Unauthorized.' })
     refreshTokens(@Req() req: RequestWithUser) {
-        return this.authenticationService.updateRefreshToken(req.user.id, req.user.username, req.user.email)
+        return this.authenticationService.updateRefreshToken(req.user.id, req.user.username, req.user.email, req.user.role)
     }
 }
