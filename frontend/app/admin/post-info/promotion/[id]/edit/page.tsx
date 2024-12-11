@@ -27,6 +27,7 @@ export default function Page(props: { params: { id: string } }) {
     const [discountTypeValue, setDiscountTypeValue] = React.useState<discountType>(discountType.PERCENT);
     const [discountValue, setDiscountValue] = React.useState(0);
     const [isActiveValue, setIsActiveValue] = React.useState(false);
+    const [coverImageValue, setCoverImageValue] = React.useState("");
     const [initialData, setInitialData] = useState<Promotion | null>(null);
 
     const currentYear = new Date().getFullYear();
@@ -56,6 +57,7 @@ export default function Page(props: { params: { id: string } }) {
             setDiscountTypeValue(data.discountType);
             setDiscountValue(data.discount);
             setIsActiveValue(data.isActive);
+            setCoverImageValue(data.coverImage && data.coverImage !== "/images/sky.jpg" ? data.coverImage : "");
 
             const startZonedDateTime = parseZonedDateTime(data.startDate.slice(0, 19) + "[UTC]");
             const endZonedDateTime = parseZonedDateTime(data.endDate.slice(0, 19) + "[UTC]");
@@ -80,10 +82,16 @@ export default function Page(props: { params: { id: string } }) {
         }
     };
 
+    const validateURL = (url: string) => url.match(/^(https?:\/\/[^\s$.?#].[^\s]*)$/i);
+
+    const isLinkInvalid = React.useMemo(() => {
+        return coverImageValue && !validateURL(coverImageValue) ? true : false;
+    }, [coverImageValue]);
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault(); 
 
-        if (!codeValue || !descriptionValue || !discountValue || !dateRange.start || !dateRange.end) {
+        if (!codeValue || !descriptionValue || !discountValue || !dateRange.start || !dateRange.end || (coverImageValue && !validateURL(coverImageValue))) {
             onErrorOpen();
             return;
         }
@@ -101,6 +109,7 @@ export default function Page(props: { params: { id: string } }) {
             startDate: dateRange.start.toDate("UTC").toISOString(),
             endDate: dateRange.end.toDate("UTC").toISOString(),
             isActive: isActiveValue,
+            coverImage: coverImageValue ? coverImageValue : "/images/sky.jpg",
         };
 
         try {
@@ -248,6 +257,24 @@ export default function Page(props: { params: { id: string } }) {
                       }
                     }}
                   />
+                </div>
+
+                <div>
+                    <Input 
+                        labelPlacement="outside"
+                        placeholder="Link ảnh nền"
+                        size="lg" 
+                        radius="sm"
+                        type="text" 
+                        label="Ảnh nền" 
+                        variant="bordered" 
+                        className="py-3 font-semibold"
+                        value={coverImageValue}
+                        onChange={(e) => setCoverImageValue(e.target.value)}
+                        isInvalid={isLinkInvalid}
+                        color={isLinkInvalid ? "danger" : "default" }
+                        errorMessage="Vui lòng nhập đúng định dạng"
+                    />
                 </div>
 
                 {initialData && initialData.bookings && initialData.bookings.length > 0 && (

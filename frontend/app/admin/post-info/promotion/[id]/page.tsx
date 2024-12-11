@@ -178,6 +178,17 @@ export default function Page(props: { params: { id: string } }) {
                   </RadioGroup>
                 </div>
 
+                <div className="mt-4">
+                <label className="block text-sm font-medium text-gray-700">Ảnh bìa</label>
+                <div className="mt-2">
+                  <img
+                    src={data.coverImage || '/images/sky.jpg'}
+                    alt="Cover Image"
+                    className="max-w-[500px] max-h-[300px] w-full h-auto rounded-md"
+                  />
+                </div>
+              </div>
+
             </div>
             <div className="mt-6 flex justify-end gap-4 pb-5">
               <Link

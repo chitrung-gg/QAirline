@@ -24,6 +24,7 @@ export default function Page() {
     const [discountTypeValue, setDiscountTypeValue] = React.useState<discountType>(discountType.PERCENT);
     const [discountValue, setDiscountValue] = React.useState(1);
     const [isActiveValue, setIsActiveValue] = React.useState(false);
+    const [coverImageValue, setCoverImageValue] = React.useState("");
 
     const currentYear = new Date().getFullYear();
     const currentMonth = new Date().getMonth() + 1;
@@ -47,6 +48,11 @@ export default function Page() {
       setDateRange({ start, end });
     }, []);
     
+    const validateURL = (url: string) => url.match(/^(https?:\/\/[^\s$.?#].[^\s]*)$/i);
+
+    const isLinkInvalid = React.useMemo(() => {
+        return coverImageValue && !validateURL(coverImageValue) ? true : false;
+    }, [coverImageValue]);
 
     const handleDiscountTypeChange = (value: string) => {
       setDiscountTypeValue(value as discountType);
@@ -63,7 +69,7 @@ export default function Page() {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault(); 
 
-        if (!codeValue || !descriptionValue || !discountValue) {
+        if (!codeValue || !descriptionValue || !discountValue || (coverImageValue && !validateURL(coverImageValue))) {
             onErrorOpen();
             return; 
         }
@@ -76,6 +82,7 @@ export default function Page() {
             discount: discountValue,
             discountType: discountTypeValue,
             isActive: isActiveValue,
+            coverImage: coverImageValue ? coverImageValue : "/images/sky.jpg",
         };
         // Call API to create promotion
         try {
@@ -204,6 +211,24 @@ export default function Page() {
                       }
                     }}
                   />
+                </div>
+
+                <div>
+                    <Input 
+                        labelPlacement={"outside"}
+                        placeholder="Link ảnh nền"
+                        size="lg" 
+                        radius="sm"
+                        type="text" 
+                        label="Ảnh nền" 
+                        variant="bordered" 
+                        className="py-3 font-semibold"
+                        value={coverImageValue}
+                        onChange={(e) => setCoverImageValue(e.target.value)}
+                        isInvalid={isLinkInvalid}
+                        color={isLinkInvalid ? "danger" : "default" }
+                        errorMessage="Vui lòng nhập đúng định dạng"
+                    />
                 </div>
 
                 <div className="pb-3">

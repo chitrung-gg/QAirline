@@ -8,12 +8,12 @@ export interface User {
   phoneNumber?: string;
   firstName: string;
   lastName: string;
-  dob?: string | null;
-  gender: UserGender;
+  dob?: string;
+  gender?: UserGender;
   address?: string;
   passportNumber?: string;
   role: UserRole;
-  status?: UserStatus;
+  //status?: UserStatus; // no need
   bookings?: Booking[];
   accessToken?: string;
   refreshToken?: string;
@@ -25,14 +25,12 @@ export enum UserGender {
     OTHER = 'Other',
 }
 
-export enum UserRole {
+export enum UserRole { 
     ADMIN = 'Admin',
     USER = 'User',
-    STAFF = 'Staff',
-    OTHER = 'Other',
 }
 
-export enum UserStatus {
+export enum UserStatus { //no need
     ACTIVE = 'Active',
     INACTIVE = 'Inactive',
     BANNED = 'Banned',
@@ -40,9 +38,20 @@ export enum UserStatus {
 }
 
 export interface CreateUserDto {
-  username?: string;
-  email?: string;
-  password?: string;
+  username: string; 
+  email: string;
+  password: string;
+  phoneNumber?: string;
   firstName?: string;
-  lastName?: string;
+  lastName?: string; 
+  dob?: string; 
+  gender?: UserGender;
+  address?: string; 
+  passportNumber?: string; 
+  role: UserRole;
+  bookings?: Booking[];
+  accessToken?: string; 
+  refreshToken?: string; 
 }
+
+export interface UpdateUserDto extends Partial<CreateUserDto> {}

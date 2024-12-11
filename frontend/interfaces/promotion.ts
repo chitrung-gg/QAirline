@@ -10,6 +10,7 @@ export interface Promotion {
   discountType: discountType;
   bookings?: Booking[];
   isActive: boolean;
+  coverImage?: string;
 }
 
 export enum discountType {
@@ -26,6 +27,7 @@ export interface CreatePromotionDto {
   discountType: discountType;
   bookings?: Booking[];
   isActive: boolean;
+  coverImage?: string;
 }
 
 export interface UpdatePromotionDto extends Partial<CreatePromotionDto> {}

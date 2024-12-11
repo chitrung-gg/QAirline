@@ -11,10 +11,18 @@ import {
     NavbarMenuItem,
     Button,
     Link,
-    Divider
+    Divider,
+    Avatar,
+    Dropdown,
+    DropdownTrigger,
+    DropdownMenu,
+    DropdownItem
 } from "@nextui-org/react";
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import { ContextData, UserContext } from '../../app/UserContext';
+import { LiaUserCircleSolid } from "react-icons/lia";
+import { UserRole } from '@/interfaces/user';
 
 interface NavItem {
     label: string;
@@ -32,6 +40,26 @@ const navItems: NavItem[] = [
 export default function NavBar() {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const router = useRouter();
+    
+    const { user, logoutContext } = React.useContext(UserContext);
+    console.log('User:', user);
+
+    const logout = () => {
+        localStorage.removeItem("authToken");
+        router.push("/auth/login");
+    };
+
+    const handleLogout = async () => {
+        if (window.confirm('Bạn có muốn đăng xuất không?')) {
+            //const resLogout = await handleLogoutRequest();
+
+            localStorage.removeItem('authToken');
+
+            logoutContext()
+
+        };
+
+    }
 
     const renderAuthButton = () => (
         <div className="flex gap-4">
@@ -71,6 +99,26 @@ export default function NavBar() {
         //         </DropdownItem>
         //     </DropdownMenu>
         // </Dropdown>
+    );
+
+    const renderUserMenu = () => (
+        <div className="flex gap-4">
+            <Dropdown placement="bottom-end">
+                <DropdownTrigger>
+                    <LiaUserCircleSolid className="text-4xl"/>
+                </DropdownTrigger>
+                <DropdownMenu aria-label="Profile Actions" variant="flat">
+                    <DropdownItem key="profile" className="h-fit">
+                        <p className="font-semibold">{user.account.username}</p>
+                    </DropdownItem>
+                    <DropdownItem key="information" href={`/profile/${user.account.id}`} className='text-normal'>Thông tin</DropdownItem>
+                    <DropdownItem key="my_tickets" href={`/profile/${user.account.id}/tickets`} className='text-normal'>Vé của tôi</DropdownItem>
+                    <DropdownItem key="logout" className='font-semibold text-red-500 data-[hover=true]:text-red-500' onClick={handleLogout}>
+                        Đăng xuất
+                    </DropdownItem>
+                </DropdownMenu>
+            </Dropdown>
+        </div>
     );
 
     return (
@@ -114,12 +162,26 @@ export default function NavBar() {
                         </Link>
                     </NavbarItem>
                 ))}
+
+                {user && user.account.role === UserRole.ADMIN && (
+                    <NavbarItem key="/admin">
+                        <Link
+                            color="foreground"
+                            onClick={() => router.push("/admin")}
+                            className="text-lg font-medium hover:cursor-pointer hover:text-blue-normal transition-all"
+                        >
+                            Admin
+                        </Link>
+                    </NavbarItem>
+                )}
             </NavbarContent>
 
             {/* Render Auth Button */}
             <NavbarContent justify="end">
                 <NavbarItem>
-                    {renderAuthButton()}
+                    {/* {renderAuthButton()} */}
+                    {(user && user.isAuthenticated === false) ? renderAuthButton() : renderUserMenu()}
+                    {/* {renderUserMenu()} */}
                 </NavbarItem>
             </NavbarContent>
             
@@ -140,6 +202,19 @@ export default function NavBar() {
 
                     </NavbarMenuItem>
                 ))}
+
+                {user && user.account.role === UserRole.ADMIN && (
+                    <NavbarMenuItem key="/admin">
+                        <Link
+                            onClick={() => router.push("/admin")}
+                            size="lg"
+                            className="w-full font-semibold text-blue-normal"
+                        >
+                            Admin
+                        </Link>
+                        <Divider className="font-bold bg-black mt-2"/>
+                    </NavbarMenuItem>
+                )}
             </NavbarMenu>
         </Navbar>
     );
