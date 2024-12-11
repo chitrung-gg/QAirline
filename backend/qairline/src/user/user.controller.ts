@@ -33,7 +33,7 @@ export class UserController {
         return this.userService.getUserById(id);
     }
 
-    @UseGuards(JwtAuthenticationGuard)
+    // @UseGuards(JwtAuthenticationGuard)
     @Post()
     @ApiOperation({ summary: 'Create a new user' })
     @ApiBearerAuth()
@@ -71,14 +71,17 @@ export class UserController {
     }
 
     @SetMetadata(process.env.NO_ACCOUNT_GUARD_KEY, true)
-    @UseGuards(JwtAuthenticationGuard)
+    // @UseGuards(JwtAuthenticationGuard)
     @Post('verification')
     @ApiOperation({ summary: 'Generate email verification' })
     @ApiBearerAuth()
     @ApiResponse({ status: 200, description: 'Email verification generated successfully.' })
     @ApiResponse({ status: 401, description: 'Unauthorized.' })
     async generateEmailVerification(@Request() req: RequestWithUser) {
-        await this.userService.generateEmailVerification(req.user.id)
+        // if (!req.user || !req.user.email) {
+        //     throw new HttpException('User not authenticated', HttpStatus.UNAUTHORIZED);
+        // }
+        await this.userService.generateEmailVerification(req.body.email)
 
         return { status: 'success', message: 'Sending email in a moment' };
     }

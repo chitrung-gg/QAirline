@@ -22,6 +22,12 @@ export class UserService {
     
     async createUser(user: CreateUserDto) {
         await this.cacheManager.reset()
+        if (await this.userRepository.findOne({where: {username: user.username}})) {
+            throw new HttpException('Username already registered', HttpStatus.FORBIDDEN)
+        }
+        if (await this.userRepository.findOne({where: {email: user.email}})) {
+            throw new HttpException('Email already registered', HttpStatus.FORBIDDEN)
+        }
         const newUser = await this.userRepository.create(user);
         await this.userRepository.save(newUser);
         return newUser;
@@ -77,8 +83,8 @@ export class UserService {
         }
     }
 
-    async generateEmailVerification(userId: number) {
-        const user = await this.userRepository.findOne({ where: { id: userId } });
+    async generateEmailVerification(email: string) {
+        const user = await this.userRepository.findOne({ where: { email: email } });
         if (!user) {
           throw new HttpException('User not found', HttpStatus.NOT_FOUND);
         }
