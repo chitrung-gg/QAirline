@@ -15,7 +15,7 @@ export default function FlightResultsPage() {
     const dispatch = useAppDispatch();
 
     // Get search params and flights from Redux store
-    const searchParams = useAppSelector(state => state.booking.searchParams);
+    const searchParams = useAppSelector(state => state.bookingCreate.searchParams);
     const [flights, setFlights] = React.useState<Flight[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
 

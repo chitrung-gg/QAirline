@@ -1,19 +1,30 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import bookingReducer from "./feature/booking/bookingSlice";    
+import {
+  bookingSearchReducer,
+  bookingCreateReducer,
+} from "./feature/booking/bookingSlice";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["booking"], // Only persist booking slice
+  whitelist: ["bookingSearch", "bookingCreate"], // Persist both booking slices
 };
 
-const persistedReducer = persistReducer(persistConfig, bookingReducer);
+const persistedSearchReducer = persistReducer(
+  persistConfig,
+  bookingSearchReducer
+);
+const persistedCreateReducer = persistReducer(
+  persistConfig,
+  bookingCreateReducer
+);
 
 export const store = configureStore({
   reducer: {
-    booking: persistedReducer,
+    bookingSearch: persistedSearchReducer,
+    bookingCreate: persistedCreateReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

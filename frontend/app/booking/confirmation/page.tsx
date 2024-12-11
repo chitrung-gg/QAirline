@@ -15,9 +15,9 @@ export default function BookingConfirmationPage() {
     const dispatch = useAppDispatch();
 
     // Get booking details from Redux store
-    const selectedFlight = useAppSelector(state => state.booking.selectedFlight);
-    const passengerInfo = useAppSelector(state => state.booking.passengerInfo);
-    const bookingConfirmation = useAppSelector(state => state.booking.bookingConfirmation);
+    const selectedFlight = useAppSelector(state => state.bookingCreate.selectedFlight);
+    const passengerInfo = useAppSelector(state => state.bookingCreate.passengerInfo);
+    const bookingConfirmation = useAppSelector(state => state.bookingCreate.bookingConfirmation);
 
     // Redirect if no booking details
     useEffect(() => {
