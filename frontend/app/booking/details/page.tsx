@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
     Button,
@@ -18,7 +18,8 @@ import ImageSection from '@/components/ImageSection';
 import PolicyCard from '@/components/Card/PolicyCard';
 import PaymentCard from '@/components/Card/PaymentCard';
 import { api } from '@/utils/api/config';
-import PassengerForm from '@/components/Form';
+import PassengerForm from '@/components/Form/Form';
+import { PromotionCodeForm } from '@/components/Form/OfferForm';
 
 export default function BookingDetailsPage() {
     const router = useRouter();
@@ -27,8 +28,9 @@ export default function BookingDetailsPage() {
     // Get selected flight from Redux store
     const selectedFlight = useAppSelector(state => state.bookingCreate.selectedFlight);
     const savedPassengerInfo = useAppSelector(state => state.bookingCreate.passengerInfo);
-
+    const promotionCode = useAppSelector(state => state.bookingCreate.promotionCode);
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+    const [discountAmount, setDiscountAmount] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [passengerInfo, setLocalPassengerInfo] = useState(savedPassengerInfo || {
         fullName: '',
@@ -36,6 +38,15 @@ export default function BookingDetailsPage() {
         passportNumber: '',
         email: ''
     });
+
+    // Calculate total price
+    const basePrice: number = useMemo(() => {
+        const price = selectedFlight?.baseClassPrice;
+        return typeof price === 'number' ? price : 0;
+    }, [selectedFlight]);
+    const totalPrice = useMemo(() => {
+        return Math.max(basePrice - (discountAmount || 0), 0);
+    }, [basePrice, discountAmount]);
 
     // If no flight is selected, don't render anything
     if (!selectedFlight) return null;
@@ -54,7 +65,8 @@ export default function BookingDetailsPage() {
                 passengerName: passengerInfo.fullName,
                 passengerDob: passengerInfo.dateOfBirth,
                 passengerEmail: passengerInfo.email,
-                passportNumber: passengerInfo.passportNumber
+                passportNumber: passengerInfo.passportNumber,
+                price: totalPrice,
             };
 
             const response = await api.post('/booking', bookingData);
@@ -73,6 +85,11 @@ export default function BookingDetailsPage() {
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const handleDiscountApplied = (discountAmount: number) => {
+        setDiscountAmount(discountAmount);
+        alert(`Mã giảm giá đã được áp dụng. Giảm ${discountAmount} VNĐ`);
     };
 
     return (
@@ -99,6 +116,15 @@ export default function BookingDetailsPage() {
                         />
                     </div>
 
+                    {/* Promotion Code Section */}
+                    <div className="flex flex-col gap-4">
+                        <h2 className="text-xl font-bold text-blue-normal pl-1">Mã Giảm Giá</h2>
+                        <PromotionCodeForm
+                            basePrice={basePrice}
+                            onDiscountApplied={handleDiscountApplied}
+                        />
+                    </div>
+
                     <div>
                         <PaymentCard />
                     </div>
@@ -108,6 +134,9 @@ export default function BookingDetailsPage() {
                     </div>
 
                     <div className="flex justify-end">
+                        <div className="text-lg font-bold">
+                            Tổng tiền: {totalPrice.toLocaleString()} VNĐ
+                        </div>
                         <Button
                             className='bg-blue-normal font-semibold text-white'
                             onClick={onOpen}

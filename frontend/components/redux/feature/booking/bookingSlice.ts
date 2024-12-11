@@ -32,6 +32,8 @@ export interface BookingCreateState {
     bookingId: string;
     status: string;
   };
+  promotionCode?: string;
+  discountAmount?: number;
 }
 
 const initialSearchState: BookingSearchState = {
@@ -143,6 +145,16 @@ export const bookingCreateSlice = createSlice({
       state.bookingConfirmation = action.payload;
     },
     resetBooking: () => initialCreateState,
+    setPromotionCode: (
+      state,
+      action: PayloadAction<{
+        code: string;
+        discountAmount: number;
+      }>
+    ) => {
+      state.promotionCode = action.payload.code;
+      state.discountAmount = action.payload.discountAmount;
+    },
   },
 });
 
@@ -155,6 +167,7 @@ export const {
   setPassengerInfo,
   setBookingConfirmation,
   resetBooking,
+  setPromotionCode,
 } = bookingCreateSlice.actions;
 
 export const bookingSearchReducer = bookingSearchSlice.reducer;

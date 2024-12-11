@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Input, Button, Card, CardBody, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure } from "@nextui-org/react";
 import { fetchBookingByCode, cancelBooking,} from '@/components/redux/feature/booking/bookingSlice';
 import { RootState, AppDispatch } from '@/components/redux/store';
-import PassengerForm from '@/components/Form';
+import PassengerForm from '@/components/Form/Form';
 import { setPassengerInfo } from '@/components/redux/feature/booking/bookingSlice';
 import ImageSection from '@/components/ImageSection';
 
