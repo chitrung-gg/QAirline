@@ -85,14 +85,9 @@ export class UserService {
 
     async generateEmailVerificationForRegister(email: string) {
         const user = await this.userRepository.findOne({ where: { email: email } });
-        if (!user) {
-          throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+        if (user) {
+          throw new HttpException('User already registered', HttpStatus.FOUND);
         }
-    
-        console.log('User found')
-        // if (user.status === "Active") {
-        //   throw new HttpException('Account already active', HttpStatus.UNPROCESSABLE_ENTITY);
-        // }
     
         const otp = await this.verificationTokenService.generateOtp(user.id);
     
@@ -161,9 +156,10 @@ export class UserService {
     
     async generateEmailVerificationForPassword(email: string) {
         const user = await this.userRepository.findOne({ where: { email: email } });
-        if (user) {
-            console.log('User found')
-            
+
+        if (!user) {
+            throw new HttpException('User found', HttpStatus.NOT_FOUND);
+        } else {
             const otp = await this.verificationTokenService.generateOtp(user.id);
 
             /* Uncomment for send email */
@@ -227,8 +223,7 @@ export class UserService {
             //             </body>
             //             </html>`
             // });
-        } else {
-            throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+            
 
         }
 
