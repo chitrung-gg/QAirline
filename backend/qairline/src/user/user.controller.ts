@@ -24,13 +24,23 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthenticationGuard)
-    @Get(':id')
+    @Post('id')
     @ApiOperation({ summary: 'Get user with specified id' })
     @ApiBearerAuth()
     @ApiResponse({ status: 200, description: 'Return user with this id.' })
     @ApiResponse({ status: 401, description: 'Unauthorized.' })
     async getUserById(@Param('id') id: number){
         return this.userService.getUserById(id);
+    }
+
+    @UseGuards(JwtAuthenticationGuard)
+    @Post('email')
+    @ApiOperation({ summary: 'Get user with specified email' })
+    @ApiBearerAuth()
+    @ApiResponse({ status: 200, description: 'Return user with this email.' })
+    @ApiResponse({ status: 401, description: 'Unauthorized.' })
+    async getUserByEmail(@Param('email') email: string){
+        return this.userService.getUserByEmail(email);
     }
 
     // @UseGuards(JwtAuthenticationGuard)
@@ -77,13 +87,27 @@ export class UserController {
     @ApiBearerAuth()
     @ApiResponse({ status: 200, description: 'Email verification generated successfully.' })
     @ApiResponse({ status: 401, description: 'Unauthorized.' })
-    async generateEmailVerification(@Request() req: RequestWithUser) {
+    async generateEmailVerificationForRegister(@Request() req: RequestWithUser) {
         // if (!req.user || !req.user.email) {
         //     throw new HttpException('User not authenticated', HttpStatus.UNAUTHORIZED);
         // }
-        await this.userService.generateEmailVerification(req.body.email)
-
+        await this.userService.generateEmailVerificationForRegister(req.body.email)
         return { status: 'success', message: 'Sending email in a moment' };
+    }
+
+    @SetMetadata(process.env.NO_ACCOUNT_GUARD_KEY, true)
+    // @UseGuards(JwtAuthenticationGuard)
+    @Post('forget')
+    @ApiOperation({ summary: 'Generate verification to change password' })
+    @ApiBearerAuth()
+    @ApiResponse({ status: 200, description: 'OTP verification generated successfully.' })
+    @ApiResponse({ status: 401, description: 'Unauthorized.' })
+    async generateEmailVerificationForPassword(@Request() req: RequestWithUser) {
+        // if (!req.user || !req.user.email) {
+        //     throw new HttpException('User not authenticated', HttpStatus.UNAUTHORIZED);
+        // }
+        await this.userService.generateEmailVerificationForPassword(req.body.email)
+        return { status: 'success', message: 'Sending verification in a moment' };
     }
 
     @SetMetadata(process.env.NO_ACCOUNT_GUARD_KEY, true)

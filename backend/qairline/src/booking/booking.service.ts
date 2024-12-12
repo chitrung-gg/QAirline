@@ -336,7 +336,7 @@ export class BookingService {
 	}
 
 	async getBookingByUserId(id: number) {
-		const booking = await this.bookingRepository.findOne({
+		const booking = await this.bookingRepository.find({
 			where: {
 				user: {
 					id: id
@@ -345,6 +345,9 @@ export class BookingService {
 		});
 		if (booking) {
 			return booking
+		} else {
+			return []
+			throw new HttpException('No booking with this userId found', HttpStatus.NOT_FOUND)
 		}
 		throw new HttpException('Exception found in BookingService: getBookingByUserId', HttpStatus.BAD_REQUEST)
 	}
