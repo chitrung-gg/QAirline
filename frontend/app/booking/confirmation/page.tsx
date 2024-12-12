@@ -5,10 +5,15 @@ import { useRouter } from 'next/navigation';
 import {
     Card,
     CardBody,
-    Button
+    Button,
+    CardHeader,
+    Chip,
+    Divider
 } from "@nextui-org/react";
 import { useAppSelector, useAppDispatch } from '@/components/redux/hooks';
 import { resetBooking } from '@/components/redux/feature/booking/bookingSlice';
+import ImageSection from '@/components/ImageSection';
+import { TicketIcon, PrinterIcon, PlusIcon } from 'lucide-react';
 
 export default function BookingConfirmationPage() {
     const router = useRouter();
@@ -38,56 +43,102 @@ export default function BookingConfirmationPage() {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-2xl">
-            <Card>
-                <CardBody className="space-y-6">
-                    <div className="text-center">
-                        <h1 className="text-3xl font-bold text-green-600 mb-4">
-                            Đặt vé thành công
-                        </h1>
-                        <p className="text-gray-600">
+        <>
+            <ImageSection />
+            <div className="container mx-auto px-4 py-8 max-w-6xl">
+                <Card
+                    className="w-full shadow-lg"
+                    radius="lg"
+                >
+                    <CardHeader className="flex justify-between items-center p-6 bg-gradient-to-r from-green-50 to-green-100">
+                        <div className="flex items-center space-x-3">
+                            <TicketIcon className="text-green-600" size={32} />
+                            <h1 className="text-2xl md:text-3xl font-bold text-green-700">
+                                Đặt vé thành công
+                            </h1>
+                        </div>
+                        <Chip
+                            color="success"
+                            variant="flat"
+                            className="text-sm font-medium"
+                        >
                             Mã đặt chỗ: {bookingConfirmation.bookingId}
-                        </p>
-                    </div>
+                        </Chip>
+                    </CardHeader>
 
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <h2 className="font-semibold mb-2">Thông tin chuyến bay</h2>
-                            <p>Số hiệu: {selectedFlight.flightNumber}</p>
-                            <p>
-                                {selectedFlight.departureAirport?.name} → {selectedFlight.arrivalAirport?.name}
-                            </p>
-                            <p>Ngày: {selectedFlight.departureTime}</p>
+                    <Divider />
+
+                    <CardBody className="p-6 space-y-6">
+                        <div className="grid md:grid-cols-2 gap-6">
+                            <div className="space-y-4">
+                                <h2 className="text-xl font-semibold text-gray-700 border-b pb-2">
+                                    Thông tin chuyến bay
+                                </h2>
+                                <div className="space-y-2 text-gray-600">
+                                    <p className="flex justify-between">
+                                        <span className="font-medium">Số hiệu:</span>
+                                        <span>{selectedFlight.flightNumber}</span>
+                                    </p>
+                                    <p className="flex justify-between">
+                                        <span className="font-medium">Tuyến bay:</span>
+                                        <span>{selectedFlight.departureAirport?.name} → {selectedFlight.arrivalAirport?.name}</span>
+                                    </p>
+                                    <p className="flex justify-between">
+                                        <span className="font-medium">Ngày:</span>
+                                        <span>{selectedFlight.departureTime}</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <h2 className="text-xl font-semibold text-gray-700 border-b pb-2">
+                                    Thông tin hành khách
+                                </h2>
+                                <div className="space-y-2 text-gray-600">
+                                    <p className="flex justify-between">
+                                        <span className="font-medium">Tên:</span>
+                                        <span>{passengerInfo.fullName}</span>
+                                    </p>
+                                    <p className="flex justify-between">
+                                        <span className="font-medium">Ngày sinh:</span>
+                                        <span>{passengerInfo.dateOfBirth}</span>
+                                    </p>
+                                    <p className="flex justify-between">
+                                        <span className="font-medium">Email:</span>
+                                        <span>{passengerInfo.email}</span>
+                                    </p>
+                                    <p className="flex justify-between">
+                                        <span className="font-medium">Số hộ chiếu:</span>
+                                        <span>{passengerInfo.passportNumber}</span>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
 
-                        <div>
-                            <h2 className="font-semibold mb-2">Thông tin hành khách</h2>
-                            <p>
-                                Tên: {passengerInfo.fullName}
-                            </p>
-                            <p> Ngày sinh: {passengerInfo.dateOfBirth} </p>
-                            <p>Email: {passengerInfo.email}</p>
-                            <p>Số hộ chiếu: {passengerInfo.passportNumber}</p>
-                        </div>
-                    </div>
+                        <Divider />
 
-                    <div className="flex justify-between">
-                        <Button
-                            color="primary"
-                            variant="bordered"
-                            onClick={() => window.print()}
-                        >
-                            In vé
-                        </Button>
-                        <Button
-                            color="primary"
-                            onClick={handleNewBooking}
-                        >
-                            Đặt vé mới
-                        </Button>
-                    </div>
-                </CardBody>
-            </Card>
-        </div>
+                        <div className="flex flex-col sm:flex-row justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+                            <Button
+                                color="primary"
+                                variant="bordered"
+                                startContent={<PrinterIcon size={20} />}
+                                onClick={() => window.print()}
+                                className="w-full sm:w-auto"
+                            >
+                                In vé
+                            </Button>
+                            <Button
+                                color="success"
+                                onClick={handleNewBooking}
+                                startContent={<PlusIcon size={20} />}
+                                className="w-full sm:w-auto"
+                            >
+                                Đặt vé mới
+                            </Button>
+                        </div>
+                    </CardBody>
+                </Card>
+            </div>
+        </>
     );
 }

@@ -80,7 +80,7 @@ export const PromotionCodeForm: React.FC<PromotionCodeFormProps> = ({
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
                     placeholder="Nhập mã giảm giá"
-                    className="flex-grow"
+                    className="flex-1"
                     color={error ? 'danger' : 'default'}
                     errorMessage={error}
                 />

@@ -16,6 +16,9 @@ import { useAppDispatch } from '@/components/redux/hooks';
 import { setSearchParams } from '@/components/redux/feature/booking/bookingSlice';
 import { Airport } from '@/interfaces/airport'; // Adjust import path as needed
 import { api } from '@/utils/api/config';
+import ImageSection from '@/components/ImageSection';
+import { Calendar, Users } from 'lucide-react';
+import { FaPlaneArrival, FaPlaneDeparture } from 'react-icons/fa';
 
 export default function BookingPage() {
     const router = useRouter();
@@ -88,107 +91,119 @@ export default function BookingPage() {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-6 text-center">
-                Đặt vé máy bay
-            </h1>
+        <div>
+            <ImageSection />
+            <div className='min-h-96 place-content-center'>
+                <div className="container max-w-7xl mx-auto px-6 py-8">
+                    <h1 className="text-3xl font-bold mb-6 text-center text-primary">
+                        Đặt vé máy bay
+                    </h1>
 
-            <Card className="max-w-2xl mx-auto">
-                <CardBody>
-                    <div className="grid grid-cols-2 gap-4 mobile:grid-cols-1">
-                        <div>
-                            <label className="block mb-2">Điểm đi</label>
-                            <Autocomplete
-                                name="departure"
-                                placeholder="Nhập điểm đi"
-                                items={getAirportOptions()}
-                                onSelectionChange={(key) => {
-                                    const selected = airports.find(a => a.id === Number(key));
-                                    handleAirportSelect('departure', selected?.name || '');
-                                }}
-                            >
-                                {(item) => (
-                                    <AutocompleteItem key={item.key}>
-                                        {item.label}
-                                    </AutocompleteItem>
-                                )}
-                            </Autocomplete>
-                        </div>
-                        <div>
-                            <label className="block mb-2">Điểm đến</label>
-                            <Autocomplete
-                                name="destination"
-                                placeholder="Nhập điểm đến"
-                                items={getAirportOptions()}
-                                onSelectionChange={(key) => {
-                                    const selected = airports.find(a => a.id === Number(key));
-                                    handleAirportSelect('destination', selected?.name || '');
-                                }}
-                            >
-                                {(item) => (
-                                    <AutocompleteItem key={item.key}>
-                                        {item.label}
-                                    </AutocompleteItem>
-                                )}
-                            </Autocomplete>
-                        </div>
-                        <div>
-                            <label className="block mb-2">Ngày đi</label>
-                            <Input
-                                type="date"
-                                name="departureDate"
-                                value={searchForm.departureDate}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                        <div>
-                            <label className="block mb-2">Loại chuyến bay</label>
-                            <Select
-                                name="tripType"
-                                value={searchForm.tripType}
-                                onChange={handleInputChange}
-                            >
-                                <SelectItem key="mot-chieu" value="mot-chieu">
-                                    Một chiều
-                                </SelectItem>
-                                <SelectItem key="khu-hoi" value="khu-hoi">
-                                    Khứ hồi
-                                </SelectItem>
-                            </Select>
-                        </div>
-                        {searchForm.tripType === 'khu-hoi' && (
-                            <div>
-                                <label className="block mb-2">Ngày về</label>
+                    <Card className="w-full" shadow="md">
+                        <CardBody>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-4">
+                                {/* Departure Airport */}
+                                <Autocomplete
+                                    label="Điểm đi"
+                                    placeholder="Chọn điểm đi"
+                                    items={getAirportOptions()}
+                                    startContent={<FaPlaneDeparture className="text-default-400 text-xl" />}
+                                    onSelectionChange={(key) => {
+                                        const selected = airports.find((a) => a.id === Number(key));
+                                        handleAirportSelect("destination", selected?.name || "");
+                                    }}
+                                    className="w-full"
+                                >
+                                    {(item) => (
+                                        <AutocompleteItem key={item.key}>
+                                            {item.label}
+                                        </AutocompleteItem>
+                                    )}
+                                </Autocomplete>
+
+                                {/* Destination Airport */}
+                                <Autocomplete
+                                    label="Điểm đến"
+                                    placeholder="Chọn điểm đến"
+                                    items={getAirportOptions()}
+                                    startContent={<FaPlaneArrival className="text-default-400 text-xl" />}
+                                    onSelectionChange={(key) => {
+                                        const selected = airports.find((a) => a.id === Number(key));
+                                        handleAirportSelect("destination", selected?.name || "");
+                                    }}
+                                    className="w-full"
+                                >
+                                    {(item) => (
+                                        <AutocompleteItem key={item.key}>
+                                            {item.label}
+                                        </AutocompleteItem>
+                                    )}
+                                </Autocomplete>
+
+                                {/* Trip Type */}
+                                <Select
+                                    name='tripType'
+                                    label="Loại chuyến bay"
+                                    value={searchForm.tripType}
+                                    onChange={handleInputChange}
+                                    className="w-full"
+                                >
+                                    <SelectItem key="mot-chieu" value="mot-chieu">
+                                        Một chiều
+                                    </SelectItem>
+                                    <SelectItem key="khu-hoi" value="khu-hoi">
+                                        Khứ hồi
+                                    </SelectItem>
+                                </Select>
+
+                                {/* Departure Date */}
                                 <Input
                                     type="date"
-                                    name="returnDate"
-                                    value={searchForm.returnDate}
+                                    label="Ngày đi"
+                                    placeholder="Chọn ngày đi"
+                                    value={searchForm.departureDate}
                                     onChange={handleInputChange}
+                                    className="w-full"
+                                />
+
+                                {/* Return Date (conditional) */}
+                                {searchForm.tripType === 'khu-hoi' && (
+                                    <Input
+                                        type="date"
+                                        label="Ngày về"
+                                        placeholder="Chọn ngày về"
+                                        value={searchForm.returnDate}
+                                        onChange={handleInputChange}
+                                        className="w-full"
+                                    />
+                                )}
+
+                                {/* Passengers */}
+                                <Input
+                                    type="number"
+                                    label="Số hành khách"
+                                    placeholder="Nhập số hành khách"
+                                    startContent={<Users className="text-default-400" />}
+                                    min={1}
+                                    max={10}
+                                    value={searchForm.passengers.toString()}
+                                    onChange={handleInputChange}
+                                    className="w-full"
                                 />
                             </div>
-                        )}
-                        <div>
-                            <label className="block mb-2">Số hành khách</label>
-                            <Input
-                                type="number"
-                                name="passengers"
-                                min={1}
-                                max={10}
-                                value={searchForm.passengers.toString()}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                    </div>
 
-                    <Button
-                        color="primary"
-                        className="w-full mt-6"
-                        onClick={handleSearch}
-                    >
-                        Tìm kiếm chuyến bay
-                    </Button>
-                </CardBody>
-            </Card>
+                            <Button
+                                color="primary"
+                                className="mt-6"
+                                size="lg"
+                                onClick={handleSearch}
+                            >
+                                Tìm kiếm chuyến bay
+                            </Button>
+                        </CardBody>
+                    </Card>
+                </div>
+            </div>
         </div>
     );
 }

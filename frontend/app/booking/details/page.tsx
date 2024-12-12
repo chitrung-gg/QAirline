@@ -133,8 +133,8 @@ export default function BookingDetailsPage() {
                         <PolicyCard />
                     </div>
 
-                    <div className="flex justify-end">
-                        <div className="text-lg font-bold">
+                    <div className="flex justify-between">
+                        <div className="text-lg font-bold text-blue-normal">
                             Tổng tiền: {totalPrice.toLocaleString()} VNĐ
                         </div>
                         <Button
