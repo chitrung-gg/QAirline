@@ -61,6 +61,7 @@ export class UserService {
             return user
         } else {
             console.log('Exception found in UserService: getByEmail')
+            // return null
             // throw new HttpException('User with this email not exists', HttpStatus.NOT_FOUND)
         }
     }

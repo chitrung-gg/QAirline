@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Req, Request, SetMetadata, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, Patch, Post, Req, Request, SetMetadata, UseGuards, UseInterceptors } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { JwtAuthenticationGuard } from "src/authentication/guard/jwtAuthentication.guard";
 import { CreateUserDto } from "./dto/createUser.dto";
@@ -25,22 +25,31 @@ export class UserController {
 
     @UseGuards(JwtAuthenticationGuard)
     @Post('id')
+    @HttpCode(200)
     @ApiOperation({ summary: 'Get user with specified id' })
     @ApiBearerAuth()
     @ApiResponse({ status: 200, description: 'Return user with this id.' })
     @ApiResponse({ status: 401, description: 'Unauthorized.' })
-    async getUserById(@Param('id') id: number){
-        return this.userService.getUserById(id);
+    async getUserById(@Body('id') id: number){
+        const user = await this.userService.getUserById(id)
+        if (!user) {
+            throw new HttpException('User with specified id not found', HttpStatus.BAD_REQUEST)
+        }
+        return user
     }
 
-    @UseGuards(JwtAuthenticationGuard)
+    // @UseGuards(JwtAuthenticationGuard)
     @Post('email')
     @ApiOperation({ summary: 'Get user with specified email' })
-    @ApiBearerAuth()
+    @HttpCode(200)
     @ApiResponse({ status: 200, description: 'Return user with this email.' })
     @ApiResponse({ status: 401, description: 'Unauthorized.' })
-    async getUserByEmail(@Param('email') email: string){
-        return this.userService.getUserByEmail(email);
+    async getUserByEmail(@Body('email') email: string){
+        const user = await this.userService.getUserByEmail(email)
+        if (!user) {
+            throw new HttpException('User with specified email not found', HttpStatus.BAD_REQUEST)
+        }
+        return user
     }
 
     // @UseGuards(JwtAuthenticationGuard)

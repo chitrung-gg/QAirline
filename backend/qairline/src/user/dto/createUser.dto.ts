@@ -13,6 +13,7 @@ export class CreateUserDto {
 
     @ApiProperty({ description: 'Password of the user', example: 'password123' })
     @IsString()
+    @MinLength(6)
     password: string
 
     @ApiProperty({ description: 'Phone number of the user', example: '+1234567890' })
