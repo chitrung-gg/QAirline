@@ -2,8 +2,22 @@
 import {Card, CardHeader, CardBody, CardFooter, Input, Link, Image, Button} from "@nextui-org/react";
 import React from "react";
 import { HiEye, HiEyeSlash } from "react-icons/hi2";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { UserRole } from "@/interfaces/user";
+import { UserContext } from "@/app/UserContext";
 
 export default function RegisterPage() {
+    const { user } = React.useContext(UserContext);
+
+    const router = useRouter();
+
+    React.useEffect(() => {
+        if (user && user.isAuthenticated === true) {
+            router.push('/')
+        }
+    }, [user, router]);
+
     const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
     const togglePasswordVisibility = () => setIsPasswordVisible(!isPasswordVisible);
     const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = React.useState(false);
@@ -12,7 +26,7 @@ export default function RegisterPage() {
     const [emailValue, setEmailValue] = React.useState("");
     const [passwordValue, setPasswordValue] = React.useState("");
     const [confirmPasswordValue, setConfirmPasswordValue] = React.useState("");
-    const [fullNameValue, setFullNameValue] = React.useState(""); 
+    const [usernameValue, setUsernameValue] = React.useState(""); 
     const [phoneValue, setPhoneValue] = React.useState("");
 
     const [loading, setLoading] = React.useState(false);
@@ -25,12 +39,19 @@ export default function RegisterPage() {
         return validateEmail(emailValue) ? false : true;
     }, [emailValue]);
 
+    const validateVietnamesePhone = (phone: string) => {
+        if (phone === "") return true;
+        const vietnamesePhoneRegex = /^(0[3|5|7|8|9])+([0-9]{8})\b$/;
+        return vietnamesePhoneRegex.test(phone);
+    };
+
     const isConfirmPasswordInvalid = passwordValue !== confirmPasswordValue && confirmPasswordValue !== "";
+    const isPasswordTooShort = passwordValue.length > 0 && passwordValue.length < 6;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (isEmailInvalid || passwordValue === "" || confirmPasswordValue === "" || passwordValue !== confirmPasswordValue) {
+        if (isEmailInvalid || !usernameValue || !phoneValue || !validateVietnamesePhone(phoneValue) || passwordValue === "" || confirmPasswordValue === "" || passwordValue !== confirmPasswordValue || isPasswordTooShort) {
             // TODO: Alert user to check their input
             alert("Vui lòng kiểm tra thông tin đăng ký.");
             return;
@@ -39,24 +60,32 @@ export default function RegisterPage() {
         setLoading(true);
 
         try {
-            alert('Đăng ký');
-            // TODO: Call API to register
-            // const response = await axios.post('', {
-            //     fullName: fullNameValue,
-            //     phone: phoneValue,
-            //     email: emailValue,
-            //     password: passwordValue,
-            // });
+            const data = {
+                email: emailValue,
+                password: passwordValue,
+                username: usernameValue,
+                phoneNumber: phoneValue,
+                role: UserRole.USER
+            };
+            console.log('Data:', data);
+            const response = await axios.post("http://localhost:5000/authentication/signup", {
+                username: usernameValue,
+                phoneNumber: phoneValue,
+                email: emailValue,
+                password: passwordValue,
+                role: UserRole.USER
+            });
 
-            // if (response.status === 200) {
-            //     alert('Đăng ký thành công!');
-            //     TODO: Redirect user to login
-            //     window.location.href = '/auth/login';
-            // }
+    
+            if (response.status === 201) {
+                alert("Đăng ký thành công!");
+                router.push('/auth/login'); // Chuyển hướng đến trang login
+            } else {
+                alert("Đăng ký thất bại, vui lòng thử lại.");
+            }
         } catch (error) {
-            console.error('Đăng ký thất bại:', error);
-            // TODO: Alert user that register failed
-            alert('Đăng ký thất bại, vui lòng thử lại.');
+            console.error("Đăng ký thất bại:", error);
+            alert("Đăng ký thất bại, vui lòng thử lại.");
         } finally {
             setLoading(false); 
         }
@@ -64,7 +93,7 @@ export default function RegisterPage() {
     
     return (
         <div className="flex justify-center items-center min-h-screen bg-cover bg-center" style={{ backgroundImage: 'url(/images/sky.jpg)' }}>
-            <form>
+            <form className="p-5">
                 <Card className="max-w-sm">
                     <CardHeader className="flex flex-col">
                         <div className="flex flex-row items-center">
@@ -80,45 +109,57 @@ export default function RegisterPage() {
                     </CardHeader>
                     <CardBody className="flex flex-col px-10 py-1">
                         <Input 
+                            isRequired
                             labelPlacement={"outside"}
-                            placeholder="Họ và tên"
+                            placeholder="Tên người dùng"
                             size="lg" 
                             radius="sm"
                             type="text" 
-                            label="Họ và tên" 
+                            label="Tên người dùng" 
                             variant="bordered" 
-                            value={fullNameValue}
-                            onChange={(e) => setFullNameValue(e.target.value)}
+                            value={usernameValue}
+                            onChange={(e) => setUsernameValue(e.target.value)}
                             className="mb-5"
                         />
+                        
                         <Input 
+                            isRequired
                             labelPlacement={"outside"}
                             placeholder="Số điện thoại"
                             size="lg" 
                             radius="sm"
-                            type="number" 
+                            type="text" 
                             label="SĐT" 
                             variant="bordered" 
                             value={phoneValue}
                             onChange={(e) => setPhoneValue(e.target.value)}
                             className="mb-5"
-                        />
-                        <Input 
-                            labelPlacement={"outside"}
-                            placeholder="Email"
-                            value={emailValue}
-                            size="lg" 
-                            radius="sm"
-                            type="email" 
-                            label="Email của bạn" 
-                            variant="bordered" 
-                            isInvalid={isEmailInvalid}
-                            color={isEmailInvalid ? "danger" : "default" }
+                            isInvalid={!validateVietnamesePhone(phoneValue)}
+                            color={validateVietnamesePhone(phoneValue) ? "default" : "danger"}
                             errorMessage="Vui lòng nhập đúng định dạng"
-                            onChange={(e) => setEmailValue(e.target.value)}
-                            className="mb-5"
                         />
+                        <div className="flex items-center mb-5">
+                            <Input 
+                                isRequired
+                                labelPlacement={"outside"}
+                                placeholder="Email"
+                                value={emailValue}
+                                size="lg" 
+                                radius="sm"
+                                type="email" 
+                                label="Email của bạn" 
+                                variant="bordered" 
+                                isInvalid={isEmailInvalid}
+                                color={isEmailInvalid ? "danger" : "default" }
+                                errorMessage="Vui lòng nhập đúng định dạng"
+                                onChange={(e) => setEmailValue(e.target.value)}
+                                className="mr-2"
+                            />
+                            
+                        </div>
+                        
                         <Input 
+                            isRequired
                             labelPlacement={"outside"}
                             placeholder="Mật khẩu"
                             size="lg" 
@@ -138,8 +179,13 @@ export default function RegisterPage() {
                             type={isPasswordVisible ? "text" : "password"}
                             value={passwordValue}
                             onChange={(e) => setPasswordValue(e.target.value)}
+                            isInvalid={isPasswordTooShort}
+                            color={isPasswordTooShort ? "danger" : "default"}
+                            errorMessage="Mật khẩu phải có ít nhất 6 ký tự"
                         />
+
                         <Input 
+                            isRequired
                             labelPlacement={"outside"}
                             placeholder="Nhập lại mật khẩu"
                             size="lg" 
@@ -168,7 +214,7 @@ export default function RegisterPage() {
                             type="submit"
                             radius="sm" 
                             className="bg-blue-normal text-white font-medium text-base mt-2"
-                            disabled={loading}
+                            isDisabled={loading}
                             onClick={handleSubmit}
                         >
                             {loading ? "Đang đăng ký..." : "Đăng ký"}

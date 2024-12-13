@@ -10,12 +10,13 @@ export default function  Layout({ children }: { children: React.ReactNode }) {
   const { user } = React.useContext(UserContext);
 
   const [isUserLoaded, setIsUserLoaded] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    if (user && user.isAuthenticated) {
+    if (user && user.isLoading === false) {
       setIsUserLoaded(true);
     }
-  }, [user]);
+  }, [user, router]);
 
   React.useEffect(() => {
     if (isUserLoaded) {
@@ -24,6 +25,10 @@ export default function  Layout({ children }: { children: React.ReactNode }) {
       }
     }
   }, [user, router, isUserLoaded]);
+
+  // if (isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <div className="flex min-h-[80vh] max-h-screen flex-col container mx-auto md:flex-row md:overflow-hidden">

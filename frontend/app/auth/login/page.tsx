@@ -2,8 +2,25 @@
 import {Card, CardHeader, CardBody, CardFooter, Input, Link, Image, Button} from "@nextui-org/react";
 import React from "react";
 import { HiEye, HiEyeSlash } from "react-icons/hi2";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { UserContext, ContextData } from "@/app/UserContext";
+import { revalidatePath } from "next/cache";
 
 export default function LoginPage() {
+    const { loginContext } = React.useContext(UserContext);
+    const { user } = React.useContext(UserContext);
+
+    const router = useRouter();
+
+    //console.log('User:', user);
+
+    React.useEffect(() => {
+        if (user && user.isAuthenticated === true) {
+            router.push('/')
+        }
+    }, [user, router]);
+
     const [isVisible, setIsVisible] = React.useState(false);
 
     const [emailValue, setEmailValue] = React.useState("");
@@ -33,17 +50,36 @@ export default function LoginPage() {
         setLoading(true); 
 
         try {
-            alert('Đăng nhập');
-            // TODO: Call API to login
-            // const response = await axios.post('', {
-            //     email: emailValue,
-            //     password: passwordValue
-            // });
+            const response = await axios.post('http://localhost:5000/authentication/login', {
+                email: emailValue,
+                password: passwordValue,
+            });
 
-            // if (response.status === 200) {
-            // TODO: Redirect user to dashboard
-            //     alert('Đăng nhập thành công!');
-            // }
+            console.log('Đăng nhập thành công:', response);
+
+            localStorage.setItem("authToken", response.data.user.accessToken);
+            const user = response.data.user;
+
+
+            let userData = {
+                isAuthenticated: true,
+                //isLoading: false,
+                account: {
+                    id: user.id,
+                    username: user.username,
+                    role: user.role
+                },
+                accessToken: user.accessToken,
+                refreshToken: user.refreshToken
+            };
+
+            loginContext(userData);
+
+            console.log(localStorage.getItem("authToken"));
+                
+            revalidatePath('/');
+            router.push("/");
+                //window.location.reload();
         } catch (error) {
             console.error('Đăng nhập thất bại:', error);
             // TODO: Alert user that login failed
@@ -55,7 +91,7 @@ export default function LoginPage() {
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-cover bg-center" style={{ backgroundImage: 'url(/images/sky.jpg)' }}>
-            <form>
+            <form className="p-5">
                 <Card className="max-w-sm">
                     <CardHeader className="flex flex-col">
                         <div className="flex flex-row items-center">
@@ -124,6 +160,12 @@ export default function LoginPage() {
                                     Đăng ký ngay
                                 </Link>
                             </span>
+                        </div>
+                        <div className="flex items-center">
+                            
+                            <Link href="/auth/forgot-pass" className="ml-1 text-sm text-blue-normal hover:underline">
+                                Quên mật khẩu?
+                            </Link>
                         </div>
                     </CardFooter>
                 </Card>

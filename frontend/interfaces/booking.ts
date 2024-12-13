@@ -5,14 +5,15 @@ import { User } from "./user";
 export interface Booking {
   id: number;
   user?: User;
-  flight?: Flight;
+  flight: Flight;
   passengerName: string;
   passengerDob: string;
   passportNumber: string;
   bookingCode?: string;
   promotion?: Promotion;
   ticketPrice: Record<string, number>;
-  seatNumber: string;
+  totalPrice: number;
+  seatNumber?: string; // no need
   seatClass: string;
   bookingDate: string;
   bookingStatus?: BookingStatus;
@@ -28,7 +29,7 @@ export enum BookingStatus {
 
 export enum PaymentStatus {
     PAID = 'Paid',
-    PENDING = 'Pending',
+    PENDING = 'Pending', // no need
     UNPAID = 'Unpaid',
 }
 

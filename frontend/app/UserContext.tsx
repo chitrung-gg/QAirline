@@ -26,6 +26,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
 
     const defaultUser = {
+        isLoading: true,
         isAuthenticated: false,
         account: {}
     }
@@ -42,6 +43,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     // }
 
     const [user, setUser] = useState({
+        isLoading: true,
         isAuthenticated: false,
         account: {}
     });
@@ -49,13 +51,14 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     //const [contextData, setContextData] = useState<ContextData>(defaultContextData);
 
     const loginContext = (userData: ContextData) => {
-        setUser({ ...userData})
+        setUser({ ...userData, isLoading: false });
         //setContextData(userData);
     };
 
     const logoutContext = () => {
 
         setUser(() => ({
+            isLoading: false,
             isAuthenticated: false,
             account: {}
         }));
@@ -75,6 +78,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
             if (response.status === 201) {
                 console.log('User authenticated');
                 setUser({
+                    isLoading: false,   
                     isAuthenticated: true,
                     account: {
                         id: response.data.id,
@@ -86,6 +90,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
             } else {
                 console.log('User not authenticated ');
                 setUser(() => ({
+                    isLoading: false,
                     isAuthenticated: false,
                     account: {}
                 }));
@@ -95,6 +100,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         } catch (error) {
             console.error('Error fetching user account:', error);
             setUser(() => ({
+                isLoading: false,
                 isAuthenticated: false,
                 account: {}
             }));
@@ -107,6 +113,12 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
         if (token && !user.isAuthenticated) {
             console.log('Token exists, fetch:', token);
             fetchUserContext();
+        } else {
+            setUser(() => ({
+                isLoading: false,
+                isAuthenticated: false,
+                account: {}
+            }));
         }
     }, [token]);
 

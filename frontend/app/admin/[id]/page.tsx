@@ -37,8 +37,11 @@ export default function Page(props: { params: { id: string } }) {
 
     React.useEffect(() => {
         const fetchData = async () => {
+            console.log('ID:', id);
             if (!id) return;  
-            const res = await axios.get(`http://localhost:5000/user/${id}`, {
+            const res = await axios.post(`http://localhost:5000/user/id`, {
+                id: id
+            }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }
