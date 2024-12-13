@@ -1,5 +1,4 @@
 import { CreateFlightDto, Flight, UpdateFlightDto } from "@/interfaces/flight";
-import axios from "axios";
 import { api } from "../api/config";
 import { isRouteErrorResponse } from "react-router-dom";
 
@@ -14,7 +13,7 @@ export interface FlightSearchParams {
 export const flightService = {
   create: async (data: CreateFlightDto) => {
     try {
-      const response = await axios.post(`${api}/flight`, data);
+      const response = await api.post(`/flight`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -23,7 +22,7 @@ export const flightService = {
 
   getAll: async () => {
     try {
-      const response = await axios.get(`${api}/flight`);
+      const response = await api.get(`/flight`);
       return response.data;
     } catch (error) {
       throw error;
@@ -32,7 +31,7 @@ export const flightService = {
 
   getById: async (id: number) => {
     try {
-      const response = await axios.get(`${api}/flight/${id}`);
+      const response = await api.get(`/flight/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -41,7 +40,7 @@ export const flightService = {
 
   getAircraftById: async (id: number) => {
     try {
-      const response = await axios.get(`${api}/flight/${id}/aircraft`);
+      const response = await api.get(`/flight/${id}/aircraft`);
       return response.data;
     } catch (error) {
       throw error;
@@ -50,7 +49,7 @@ export const flightService = {
 
   update: async (id: number, data: UpdateFlightDto) => {
     try {
-      const response = await axios.patch(`${api}/flight/${id}`, data);
+      const response = await api.patch(`/flight/${id}`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -59,7 +58,7 @@ export const flightService = {
 
   delete: async (id: number) => {
     try {
-      const response = await axios.delete(`${api}/flight/${id}`);
+      const response = await api.delete(`/flight/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -68,7 +67,7 @@ export const flightService = {
 
   searchFlights: async (params: FlightSearchParams): Promise<Flight[]> => {
     try {
-      const response = await axios.get(`${api}/flight/`, {
+      const response = await api.get(`/flight/`, {
         params: {
           isRoundTrip: params.isRoundTrip,
           departureAirport: params.departure,

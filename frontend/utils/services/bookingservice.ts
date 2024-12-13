@@ -1,12 +1,11 @@
 import { CreateBookingDto, UpdateBookingDto } from "@/interfaces/booking";
-import axios from "axios";
-import { API_BASE_URL } from "../api/config";
+import { api } from "../api/config";
 
 // Booking Service
 export const bookingService = {
   create: async (data: CreateBookingDto) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/booking`, data);
+      const response = await api.post(`/booking`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -15,7 +14,7 @@ export const bookingService = {
 
   getAll: async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/booking`);
+      const response = await api.get(`/booking`);
       return response.data;
     } catch (error) {
       throw error;
@@ -24,7 +23,7 @@ export const bookingService = {
 
   getById: async (id: number) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/booking/${id}`);
+      const response = await api.get(`/booking/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -33,7 +32,7 @@ export const bookingService = {
 
   update: async (id: number, data: UpdateBookingDto) => {
     try {
-      const response = await axios.patch(`${API_BASE_URL}/booking/${id}`, data);
+      const response = await api.patch(`/booking/${id}`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -42,7 +41,7 @@ export const bookingService = {
 
   delete: async (id: number) => {
     try {
-      const response = await axios.delete(`${API_BASE_URL}/booking/${id}`);
+      const response = await api.delete(`/booking/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -51,7 +50,7 @@ export const bookingService = {
 
   changeStatus: async (id: number, status: string) => { 
     try {
-      const response = await axios.patch(`${API_BASE_URL}/booking/${id}/status`, { status });
+      const response = await api.patch(`/booking/${id}/status`, { status });
       return response.data;
     } catch (error) {
       throw error;

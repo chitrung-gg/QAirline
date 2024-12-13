@@ -1,12 +1,11 @@
 import { CreatePromotionDto, UpdatePromotionDto } from "@/interfaces/promotion";
-import axios from "axios";
-import { API_BASE_URL } from "../api/config";
+import { api } from "../api/config";
 
 // Promotion Service
 export const promotionService = {
   create: async (data: CreatePromotionDto) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/promotion`, data);
+      const response = await api.post(`/promotion`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -15,7 +14,7 @@ export const promotionService = {
 
   getAll: async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/promotion`);
+      const response = await api.get(`/promotion`);
       return response.data;
     } catch (error) {
       throw error;
@@ -24,7 +23,7 @@ export const promotionService = {
 
   getById: async (id: number) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/promotion/${id}`);
+      const response = await api.get(`/promotion/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -33,8 +32,8 @@ export const promotionService = {
 
   update: async (id: number, data: UpdatePromotionDto) => {
     try {
-      const response = await axios.patch(
-        `${API_BASE_URL}/promotion/${id}`,
+      const response = await api.patch(
+        `/promotion/${id}`,
         data
       );
       return response.data;
@@ -45,7 +44,7 @@ export const promotionService = {
 
   delete: async (id: number) => {
     try {
-      const response = await axios.delete(`${API_BASE_URL}/promotion/${id}`);
+      const response = await api.delete(`/promotion/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -54,7 +53,7 @@ export const promotionService = {
 
   getByName: async (name: string) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/promotion/${name}`);
+      const response = await api.get(`/promotion/${name}`);
       return response.data;
     } catch (error) {
       throw error;
