@@ -3,109 +3,29 @@ import ImageSection from "@/components/ImageSection";
 import NewsCard from "@/components/Card/NewsCard";
 import React from "react";
 import { Pagination } from "@nextui-org/react";
-
-const news = [
-    {
-        id: 1,
-        image: '/images/sky.jpg',
-        title: 'Thông báo về việc mở rộng đường bay',
-    },
-    {
-        id: 2,
-        image: '/images/sky.jpg',
-        title: 'Tiếp tục mở rộng đường bay',
-    },
-    {
-        id: 3,
-        image: '/images/sky.jpg',
-        title: 'Mở rộng đường bay',
-    },
-    {
-        id: 4,
-        image: '/images/sky.jpg',
-        title: 'Quyết định mở rộng đường bay',
-    },
-    {
-        id: 5,
-        image: '/images/sky.jpg',
-        title: 'Mở rộng đường bay mới',
-    },
-    {
-        id: 6,
-        image: '/images/sky.jpg',
-        title: 'Thông báo mở rộng đường bay',
-    },
-    {
-        id: 7,
-        image: '/images/sky.jpg',
-        title: 'Thông báo mở rộng đường bay',
-    },
-    {
-        id: 8,
-        image: '/images/sky.jpg',
-        title: 'Thông báo mở rộng đường bay',
-    },
-    {
-        id: 9,
-        image: '/images/sky.jpg',
-        title: 'Thông báo mở rộng đường bay',
-    },
-    {
-        id: 10,
-        image: '/images/sky.jpg',
-        title: 'Thông báo mở rộng đường bay',
-    },
-    {
-        id: 11,
-        image: '/images/sky.jpg',
-        title: 'Thông báo mở rộng đường bay',
-    },
-    {
-        id: 12,
-        image: '/images/sky.jpg',
-        title: 'Thông báo mở rộng đường bay',
-    },
-    {
-        id: 13,
-        image: '/images/sky.jpg',
-        title: 'Thông báo mở rộng đường bay',
-    },
-    {
-        id: 14,
-        image: '/images/sky.jpg',
-        title: 'Thông báo mở rộng đường bay',
-    },
-    {
-        id: 15,
-        image: '/images/sky.jpg',
-        title: 'Thông báo mở rộng đường bay',
-    },
-    {
-        id: 16,
-        image: '/images/sky.jpg',
-        title: 'Thông báo mở rộng đường bay',
-    },
-    {
-        id: 17,
-        image: '/images/sky.jpg',
-        title: 'Thông báo mở rộng đường bay',
-    },
-    {
-        id: 18,
-        image: '/images/sky.jpg',
-        title: 'Thông báo mở rộng đường bay',
-    },
-    {
-        id: 19,
-        image: '/images/sky.jpg',
-        title: 'Thông báo mở rộng đường bay',
-    },
-];
+import { News } from "@/interfaces/news";
+import { api } from "@/utils/api/config";
 
 export default function NewsPage() {
     const [page, setPage] = React.useState(1);
     const [newsPerPage, setNewsPerPage] = React.useState(3);
     const [isClient, setIsClient] = React.useState(false);
+    const [news, setNews] = React.useState<News[]>([]);
+    
+    const fetchNews = async () => {
+        try {
+            const response = await api.get(`/news`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    React.useEffect(() => {
+        fetchNews().then((data) => {
+            setNews(data);
+        });
+    }, []);
 
     React.useEffect(() => {
         setIsClient(true); 
@@ -153,31 +73,31 @@ export default function NewsPage() {
                             {/* sm screen */}
                             {isClient && window.innerWidth <= 769 && (
                                 <div className="sm:col-span-1">
-                                    <NewsCard {...newItem} link={`/news/${newItem.id}`} />
+                                    <NewsCard {...newItem} />
                                 </div>
                             )}
 
                             {/* md screen */}
                             {isClient && window.innerWidth >= 769 && window.innerWidth <= 1024 && index === 0 && (
                                 <div className="md:col-span-2">
-                                    <NewsCard {...newItem} link={`/news/${newItem.id}`} />
+                                    <NewsCard {...newItem} />
                                 </div>
                             )}
                             {isClient && window.innerWidth >= 769 && window.innerWidth <= 1024 && index !== 0 && index <= 4 && (
                                 <div className="md:col-span-1">
-                                    <NewsCard {...newItem} link={`/news/${newItem.id}`} />
+                                    <NewsCard {...newItem} />
                                 </div>
                             )}
 
                             {/* lg screen */}
                             {isClient && window.innerWidth > 1024 && index === 0 && (
                                 <div className="lg:col-span-2">
-                                    <NewsCard {...newItem} link={`/news/${newItem.id}`} />
+                                    <NewsCard {...newItem} />
                                 </div>
                             )}
                             {isClient && window.innerWidth > 1024 && index !== 0 && index < 5 && (
                                 <div className="lg:col-span-1">
-                                    <NewsCard {...newItem} link={`/news/${newItem.id}`} />
+                                    <NewsCard {...newItem} />
                                 </div>
                             )}
                         </React.Fragment>

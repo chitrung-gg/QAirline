@@ -204,12 +204,15 @@ const BookingSearchPage: React.FC = () => {
                                     input: "text-black",
                                     inputWrapper: "bg-white/20 hover:bg-white/30 focus:bg-white/30"
                                 }}
+                                value={bookingCode}
+                                onChange={(e) => setBookingCode(e.target.value)}
                             />
                             <Button
                                 size='lg'
                                 color="primary"
                                 variant="solid"
                                 className="w-full md:w-auto"
+                                onClick={handleSearch}
                             >
                                 Tra Cứu
                             </Button>

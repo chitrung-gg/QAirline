@@ -31,7 +31,7 @@ const navItems: NavItem[] = [
     { label: "Giới thiệu", href: "/about" },
     { label: "Ưu đãi", href: "/offers" },
     { label: "Đặt vé", href: "/booking" },
-    { label: "Thông tin hành trình", href: "/search-flight" },
+    { label: "Thông tin hành trình", href: "/booking/search-flight" },
     { label: "Hỗ trợ", href: "/support" }
 ];
 

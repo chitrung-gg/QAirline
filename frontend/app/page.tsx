@@ -5,69 +5,39 @@ import { Button, Pagination} from "@nextui-org/react";
 import Link from "next/link";
 import LocationCard from "@/components/Card/LocationCard";
 import NewsCard from "@/components/Card/NewsCard";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { api } from "@/utils/api/config";
+import { Promotion } from "@/interfaces/promotion";
+import { News } from "@/interfaces/news";
+import { Destination } from "@/interfaces/destination";
 
-const offers = [
-  {
-      image: '/images/sky.jpg',
-      title: 'Giảm 300k cho vé bay từ 2.000.000Đ cho người lớn',
-      promoCode: 'WANDER15',
-      expiryDate: '11/4/2025'
-  },
-  {
-      image: '/images/sky.jpg',
-      title: 'Giảm 300k cho vé bay từ 2.000.000Đ cho người lớn',
-      promoCode: 'WANDER15',
-      expiryDate: '11/4/2025'
-  },
-  {
-      image: '/images/sky.jpg',
-      title: 'Giảm 300k cho vé bay từ 2.000.000Đ cho người lớn',
-      promoCode: 'WANDER15',
-      expiryDate: '11/4/2025'
-  },
-  {
-      image: '/images/sky.jpg',
-      title: 'Giảm 300k cho vé bay từ 2.000.000Đ cho người lớn',
-      promoCode: 'WANDER15',
-      expiryDate: '11/4/2025'
-  },
-  {
-      image: '/images/sky.jpg',
-      title: 'Giảm 300k cho vé bay từ 2.000.000Đ cho người lớn',
-      promoCode: 'WANDER15',
-      expiryDate: '11/4/2025'
-  },
-];
+const fetchDestinations = async () => {
+  try {
+    const response = await api.get(`/destination`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 
-const news = [
-  {
-    id: 1,
-    title: "Ngày mai hãng bay nghỉ",
-    image: "/images/Qairline.png",
-  },
-  {
-    id: 2,
-    title: "Ngày mai hãng bay nghỉ",
-    image: "/images/Qairline.png",
-  },
-  {
-    id: 3,
-    title: "Ngày mai hãng bay nghỉ",
-    image: "/images/Qairline.png",
-  },
-  {
-    id: 4,
-    title: "Ngày mai hãng bay nghỉ",
-    image: "/images/Qairline.png",
-  },
-  {
-    id: 5,
-    title: "Ngày mai hãng bay nghỉ",
-    image: "/images/Qairline.png",
-  },
-];
+const fetchNews = async () => {
+  try {
+    const response = await api.get(`/news`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+const fetchOffers = async () => {
+  try {
+    const response = await api.get(`/promotion`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 
 
 export default function Home() {
@@ -77,6 +47,24 @@ export default function Home() {
   const [newsPage, setNewsPage] = React.useState(1);
   const [offerPerPage, setOfferPerPage] = React.useState(3);
   const [newsPerPage, setNewsPerPage] = React.useState(3);
+
+  const [offers, setOffers] = React.useState<Promotion[]>([]);
+  const [news, setNews] = React.useState<News[]>([]);
+  const [destinations, setDestinations] = React.useState<Destination[]>([]);
+
+  useEffect(() => {
+    fetchOffers().then((data) => {
+      setOffers(data);
+    });
+
+    fetchDestinations().then((data) => {
+      setDestinations(data);
+    });
+
+    fetchNews().then((data) => {
+      setNews(data);
+    });
+  }, []);
 
   const updateItemsPerPage = () => {
     if (window.innerWidth <= 768) { //sm screen
@@ -158,13 +146,19 @@ export default function Home() {
           </div>
         </div>
       </div>
+
       <div className="flex flex-col justify-center items-center">
         <div className="w-full md:w-4/5 px-8 py-6">
           <div className="flex flex-row items-center justify-center md:justify-between pb-6">
             <p className="text-3xl font-semibold">Điểm đến phổ biến</p>
           </div>
-          <LocationCard />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {destinations.map((destination, index) => (
+              <LocationCard key={index} {...destination} />
+            ))}
         </div>
+        </div>
+        
       </div>
       <div className="flex flex-col justify-center items-center mb-3">
         <div className="w-full md:w-4/5 px-8 py-6">
@@ -188,8 +182,8 @@ export default function Home() {
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {newsItems.map((newItem, index) => (
-              <NewsCard key={index} {...newItem} link={`/news/${newItem.id}`} />
+            {newsItems.map((news, index) => (
+              <NewsCard key={index} {...news} />
             ))}
           </div>
         </div>

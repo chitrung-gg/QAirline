@@ -17,8 +17,9 @@ export enum AircraftStatus {
 }
 
 export interface CreateAircraftDto {
+  aircraftCode: string;
+  manufacturer: string;
   model?: string;
-  airline?: string;
   capacity?: number;
 }
 
