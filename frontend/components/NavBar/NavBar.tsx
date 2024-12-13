@@ -44,10 +44,6 @@ export default function NavBar() {
     const { user, logoutContext } = React.useContext(UserContext);
     console.log('User:', user);
 
-    const logout = () => {
-        localStorage.removeItem("authToken");
-        router.push("/auth/login");
-    };
 
     const handleLogout = async () => {
         if (window.confirm('Bạn có muốn đăng xuất không?')) {
@@ -180,7 +176,7 @@ export default function NavBar() {
             <NavbarContent justify="end">
                 <NavbarItem>
                     {/* {renderAuthButton()} */}
-                    {(user && user.isAuthenticated === false) ? renderAuthButton() : renderUserMenu()}
+                    {(user && user.isLoading === false && user.isAuthenticated === false) ? renderAuthButton() : renderUserMenu()}
                     {/* {renderUserMenu()} */}
                 </NavbarItem>
             </NavbarContent>

@@ -111,9 +111,12 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         if (token && !user.isAuthenticated) {
-            console.log('Token exists, fetch:', token);
+            console.log('Token exists, fetch user context');
             fetchUserContext();
+        } else if (token && user.isAuthenticated) {
+            console.log('Token exists, user authenticated:', user);
         } else {
+            console.log('No token, set user to default');
             setUser(() => ({
                 isLoading: false,
                 isAuthenticated: false,

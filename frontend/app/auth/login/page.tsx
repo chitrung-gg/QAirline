@@ -5,7 +5,6 @@ import { HiEye, HiEyeSlash } from "react-icons/hi2";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { UserContext, ContextData } from "@/app/UserContext";
-import { revalidatePath } from "next/cache";
 
 export default function LoginPage() {
     const { loginContext } = React.useContext(UserContext);
@@ -75,9 +74,8 @@ export default function LoginPage() {
 
             loginContext(userData);
 
-            console.log(localStorage.getItem("authToken"));
+            //console.log(localStorage.getItem("authToken"));
                 
-            revalidatePath('/');
             router.push("/");
                 //window.location.reload();
         } catch (error) {
