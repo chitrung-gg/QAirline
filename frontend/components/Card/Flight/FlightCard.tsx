@@ -5,13 +5,18 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import FlightDetailsCard from "./FlightDetailsCard";
 import { Flight } from "@/interfaces/flight";
+import { setSelectedFlight } from "@/components/redux/feature/booking/bookingSlice";
+import { useAppDispatch } from "@/components/redux/hooks";
 
 export default function FlightCard(props: Flight) {
     const router = useRouter();
+    const dispatch = useAppDispatch();
 
-    const handleBookNow = () => {
-        localStorage.setItem('selectedFlight', JSON.stringify(props));
-        router.push(`/booking/confirmation?flightId=${props.id}&departure=${props.departureAirport?.city}&arrival=${props.arrivalAirport?.city}`);
+    const handleFlightSelect = () => {
+        // Dispatch selected flight to Redux store
+        dispatch(setSelectedFlight(props));
+        // Navigate to booking details page
+        router.push('/booking/details');
     };
 
     return (
@@ -59,7 +64,7 @@ export default function FlightCard(props: Flight) {
                             <p className="text-lg font-bold">Chỗ ngồi còn: {props.availableSeats}</p>
                             <Button
                                 className="mt-2 bg-blue-normal text-white font-semibold"
-                                onPress={handleBookNow}
+                                onPress={handleFlightSelect} // Thay đổi từ handleBookNow sang handleFlightSelect
                             >
                                 Đặt vé
                             </Button>
