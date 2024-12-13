@@ -19,11 +19,11 @@ export class VerificationService {
     private cacheManager: Cache
   ) {}
   
-  async generateOtp(userId: number, size: number = 6): Promise<string> {
+  async generateOtp(email: string, size: number = 6): Promise<string> {
     this.cacheManager.reset()
     const user = await this.userRepository.findOne({
       where: {
-        id: userId
+        email: email
       }
     });
     const now = new Date();
@@ -58,11 +58,31 @@ export class VerificationService {
     return otp;
   }
 
-  async validateOtp(userId: number, token: string): Promise<boolean> {
+  async validateOtp(email: string, otp: string) {
     this.cacheManager.reset()
     const user = await this.userRepository.findOne({
       where: {
-        id: userId
+        email: email
+      }
+    });
+
+    const validToken = await this.verificationRepository.findOne({
+      where: { user: user, expiresAt: MoreThan(new Date().toISOString()) },
+    });
+
+    if (validToken && (await bcrypt.compare(otp, validToken.token))) {
+      await this.verificationRepository.remove(validToken);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  async validateOtpWithToken(email: string, token: string): Promise<boolean> {
+    this.cacheManager.reset()
+    const user = await this.userRepository.findOne({
+      where: {
+        email: email
       }
     });
 

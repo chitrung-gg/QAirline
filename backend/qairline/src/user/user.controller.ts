@@ -67,6 +67,19 @@ export class UserController {
         throw new HttpException('Cannot create user', HttpStatus.BAD_REQUEST)
     }
 
+    @Patch('change')
+    @ApiOperation({ summary: 'Update user by ID' })
+    @ApiParam({ name: 'id', description: 'ID of the user', example: 1 })
+    @ApiResponse({ status: 200, description: 'The user has been successfully updated.' })
+    @ApiResponse({ status: 404, description: 'User not found.' })
+    async changePasswordWhenVerified(@Body() credential: Record<string, string>) {
+        if (!credential.isVerified) {
+            throw new HttpException('Not verified to change password', HttpStatus.UNAUTHORIZED)
+        }
+        
+        return this.userService.changePasswordWhenVerified(credential.email, credential.password);
+    }
+
     @UseGuards(JwtAuthenticationGuard)
     @Patch(':id')
     @ApiOperation({ summary: 'Update user by ID' })
@@ -78,7 +91,10 @@ export class UserController {
     async updateUser(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
         return this.userService.updateUser(id, updateUserDto);
     }
+
+    
   
+
     @UseGuards(JwtAuthenticationGuard)
     @Delete(':id') 
     @ApiOperation({ summary: 'Delete User by ID' })
@@ -108,7 +124,7 @@ export class UserController {
     // @UseGuards(JwtAuthenticationGuard)
     @Post('forget')
     @ApiOperation({ summary: 'Generate verification to change password' })
-    @ApiBearerAuth()
+    // @ApiBearerAuth()
     @ApiResponse({ status: 200, description: 'OTP verification generated successfully.' })
     @ApiResponse({ status: 401, description: 'Unauthorized.' })
     async generateEmailVerificationForPassword(@Request() req: RequestWithUser) {
@@ -117,6 +133,21 @@ export class UserController {
         // }
         await this.userService.generateEmailVerificationForPassword(req.body.email)
         return { status: 'success', message: 'Sending verification in a moment' };
+    }
+
+    @SetMetadata(process.env.NO_ACCOUNT_GUARD_KEY, true)
+    @Post('forget/verify')
+    @ApiOperation({ summary: 'Verify email with OTP when forget password' })
+    @ApiParam({ name: 'otp', description: 'One-time password for email verification', example: '123456' })
+    @HttpCode(200)
+    @ApiResponse({ status: 200, description: 'Email verified successfully.' })
+    @ApiResponse({ status: 401, description: 'Unauthorized.' })
+    async verifyOtp(@Request() req: RequestWithUser) {
+        const isVerified = await this.userService.verifyGeneratedEmailVerificationForPassword(req.body.email, req.body.otp)
+        return {
+            status: 'Success',
+            isVerified: isVerified
+        }
     }
 
     @SetMetadata(process.env.NO_ACCOUNT_GUARD_KEY, true)
@@ -132,4 +163,8 @@ export class UserController {
 
         return { status: result ? 'success' : 'failure', message: null };
     }
+
+    
+
+
 }
