@@ -104,6 +104,7 @@ export default function BookingPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-4">
                                 {/* Departure Airport */}
                                 <Autocomplete
+                                    name='departure'
                                     label="Điểm đi"
                                     placeholder="Chọn điểm đi"
                                     items={getAirportOptions()}
@@ -123,6 +124,7 @@ export default function BookingPage() {
 
                                 {/* Destination Airport */}
                                 <Autocomplete
+                                    name='destination'
                                     label="Điểm đến"
                                     placeholder="Chọn điểm đến"
                                     items={getAirportOptions()}
@@ -158,6 +160,7 @@ export default function BookingPage() {
 
                                 {/* Departure Date */}
                                 <Input
+                                    name='departureDate'
                                     type="date"
                                     label="Ngày đi"
                                     placeholder="Chọn ngày đi"
@@ -169,6 +172,7 @@ export default function BookingPage() {
                                 {/* Return Date (conditional) */}
                                 {searchForm.tripType === 'khu-hoi' && (
                                     <Input
+                                        name='returnDate'
                                         type="date"
                                         label="Ngày về"
                                         placeholder="Chọn ngày về"
@@ -180,6 +184,7 @@ export default function BookingPage() {
 
                                 {/* Passengers */}
                                 <Input
+                                    name='passengers'
                                     type="number"
                                     label="Số hành khách"
                                     placeholder="Nhập số hành khách"
