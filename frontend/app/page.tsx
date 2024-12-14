@@ -14,7 +14,7 @@ import { Destination } from "@/interfaces/destination";
 
 const fetchDestinations = async () => {
   try {
-    const response = await api.get(`/destination`);
+    const response = await api.get(`http://localhost:5000/destination`);
     return response.data;
   } catch (error) {
     throw error;
@@ -23,7 +23,7 @@ const fetchDestinations = async () => {
 
 const fetchNews = async () => {
   try {
-    const response = await api.get(`/news`);
+    const response = await api.get(`http://localhost:5000/news`);
     return response.data;
   } catch (error) {
     throw error;
@@ -32,7 +32,7 @@ const fetchNews = async () => {
 
 const fetchOffers = async () => {
   try {
-    const response = await api.get(`/promotion`);
+    const response = await api.get(`http://localhost:5000/promotion`);
     return response.data;
   } catch (error) {
     throw error;

@@ -1,16 +1,30 @@
 export interface News {
     id: number;
-    title: string;
-    content: string;
+    title: string; 
+    content: string; 
+    category: newsCategory; 
+    coverImage?: string; 
+    isPublished: boolean; 
+    createdAt: string; 
+    updatedAt: string;
+  }
+
+  export enum newsCategory {
+    UPDATES = 'Updates',
+    ANNOUNCEMENTS = 'Announcements',
+    TIPS = 'Tips',
+  }
+  
+  export interface CreateNewsDto {
+    title: string; 
+    content: string; 
+    category: newsCategory; 
     coverImage?: string;
-    date: string;
-}
-
-export interface CreateNewsDto {
-    title: string;
-    content: string;
-    image: string;
-    date: string;
-}
-
-export interface UpdateNewsDto extends Partial<CreateNewsDto> {}
+    isPublished: boolean; 
+    createdAt: string;
+    updatedAt: string;
+  }
+  
+  export interface UpdateNewsDto extends Partial<CreateNewsDto> {
+  }
+  

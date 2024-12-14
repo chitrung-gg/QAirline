@@ -52,7 +52,8 @@ export const sampleFlights: Flight[] = [
       Business: 20,
       "Premium Economy": 10,
     },
-    duration: "1h 30m",
+    //duration: "1h 30m",
+    duration: 1000,
     bookings: [],
     baseClassPrice: {
       Economy: 100,
@@ -75,7 +76,8 @@ export const sampleFlights: Flight[] = [
       Business: 20,
       "Premium Economy": 10,
     },
-    duration: "1h 30m",
+    //duration: "1h 30m",
+    duration: 1000,
     bookings: [],
     baseClassPrice: {
       Economy: 100,
@@ -122,7 +124,8 @@ export const sampleFlights: Flight[] = [
       Business: 20,
       "Premium Economy": 10,
     },
-    duration: "1h 30m",
+    //duration: "1h 30m",
+    duration: 1000,
     bookings: [],
     baseClassPrice: {
       Economy: 120,
