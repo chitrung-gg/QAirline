@@ -41,6 +41,9 @@ export class FlightService {
 
     async createFlight(flight: CreateFlightDto) {
         await this.cacheManager.reset()
+        if (flight.departureTime >= flight.arrivalTime) {
+            throw new HttpException('Please check again the departureTime and arrivalTime', HttpStatus.NOT_ACCEPTABLE);
+        }
         const newFlight = await this.flightRepository.create(flight)
         this.setDuration(newFlight.departureTime, newFlight.arrivalTime)
         // flight.seatClasses = {
@@ -152,7 +155,9 @@ export class FlightService {
         await this.cacheManager.reset()
         try {
             await this.getFlightById(id)
-
+            if (flight.departureTime >= flight.arrivalTime) {
+                throw new HttpException('Please check again the departureTime and arrivalTime', HttpStatus.NOT_ACCEPTABLE);
+            }
             await this.flightRepository.update(id, {
                 ...flight,
                 duration: await this.setDuration(flight.departureTime, flight.arrivalTime)
@@ -164,6 +169,10 @@ export class FlightService {
 
     async deleteFlight(id: number) {
         await this.cacheManager.reset()
+        const flight = await this.getFlightById(id)
+        if (flight.status != 'Cancelled') {
+            throw new HttpException('Flight not cancelled, please set its status to Cancelled', HttpStatus.NOT_ACCEPTABLE);
+        }
         const deleteResponse = await this.flightRepository.delete(id)
         if (!deleteResponse.affected) {
             throw new HttpException('Exception found in FlightService: deleteFlight', HttpStatus.NOT_FOUND);

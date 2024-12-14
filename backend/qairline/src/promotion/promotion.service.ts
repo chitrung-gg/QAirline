@@ -17,9 +17,14 @@ export class PromotionService {
 
   async createPromotion(promotion: CreatePromotionDto) {
     await this.cacheManager.reset()
-      const newPromotion = await this.promotionRepository.create(promotion)
-      await this.promotionRepository.save(newPromotion)
-      return newPromotion
+    
+    if (promotion.startDate > promotion.endDate) {
+        throw new HttpException('Please check again the information startDate and endDate again', HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    const newPromotion = await this.promotionRepository.create(promotion)
+    await this.promotionRepository.save(newPromotion)
+    return newPromotion
   }
 
   async getAllPromotions() {
@@ -30,7 +35,8 @@ export class PromotionService {
       const promotion = this.promotionRepository.findOne({
           where: {
               id: id
-          }
+          },
+          relations: ['booking']
       })
       if (promotion) {
           return promotion
@@ -42,6 +48,9 @@ export class PromotionService {
     await this.cacheManager.reset()
     try {
         await this.getPromotionById(id)
+        if (promotion.startDate > promotion.endDate) {
+            throw new HttpException('Please check again the information startDate and endDate again', HttpStatus.NOT_ACCEPTABLE);
+        }
         await this.promotionRepository.update(id, promotion)
     } catch (error) {
         throw new HttpException('Exception found in PromotionService: updatePromotion', HttpStatus.BAD_REQUEST)
@@ -50,6 +59,16 @@ export class PromotionService {
 
   async deletePromotion(id: number) {
     await this.cacheManager.reset()
+    const promotion = await this.promotionRepository.findOne({
+        where: {
+            id: id
+        },
+        relations: ['booking']
+    })
+
+    if (promotion.bookings.length) {
+        throw new HttpException('Promotion already in used by some bookings', HttpStatus.NOT_ACCEPTABLE);
+    }
       const deletePromotionResponse = await this.promotionRepository.delete(id)
       if (!deletePromotionResponse.affected) {
           throw new HttpException('Exception found in PromotionService: deletePromotion', HttpStatus.BAD_REQUEST)

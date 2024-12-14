@@ -24,10 +24,6 @@ export class AccountGuard implements CanActivate {
         const request = context.switchToHttp().getRequest();
         const user: User = request.user;
 
-        if (user.status !== 'Active') {
-            throw new UnauthorizedException(`Account ${user.status}`);
-        }
-
         // NOTE
         return false
     }

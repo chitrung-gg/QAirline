@@ -26,13 +26,13 @@ export class User {
     @Column({ type: "varchar", length: 20, nullable: true })
     phoneNumber: string;
 
-    @ApiProperty({ description: 'First name of the user', example: 'John' })
-    @Column({ type: "varchar", length: 50 })
-    firstName: string; 
+    @ApiProperty({ description: 'First name of the user', example: 'John', nullable: true })
+    @Column({ type: "varchar", length: 50, nullable: true })
+    firstName?: string; 
   
-    @ApiProperty({ description: 'Last name of the user', example: 'Doe' })
-    @Column({ type: "varchar", length: 50 })
-    lastName: string; 
+    @ApiProperty({ description: 'Last name of the user', example: 'Doe', nullable: true })
+    @Column({ type: "varchar", length: 50, nullable: true })
+    lastName?: string; 
 
     @ApiProperty({ description: 'Date of birth of the user', example: '1990-01-01T00:00:00Z', nullable: true })
     @Column({
@@ -47,38 +47,31 @@ export class User {
         },
       },
     })
-    dob: string | null = null;
+    dob?: string | null = null;
 
-    @ApiProperty({ description: 'Gender of the user', enum: ["Male", "Female", "Other"] })
+    @ApiProperty({ description: 'Gender of the user', enum: ["Male", "Female", "Other"], nullable: true })
     @Column({
       type: "enum",
-      enum: ["Male", "Female", "Other"]
+      enum: ["Male", "Female", "Other"],
+      nullable: true
     })
-    gender: "Male" | "Female" | "Other"; // Giới tính
+    gender?: "Male" | "Female" | "Other"; // Giới tính
 
     @ApiProperty({ description: 'Address of the user', example: '123 Main St', nullable: true })
     @Column({ type: "varchar", length: 255, nullable: true })
-    address: string; // Địa chỉ
+    address?: string; // Địa chỉ
 
     @ApiProperty({ description: 'Passport number of the user', example: 'A12345678', nullable: true })
     @Column({ type: "varchar", length: 20, nullable: true })
-    passportNumber: string; // Số hộ chiếu
+    passportNumber?: string; // Số hộ chiếu
 
-    @ApiProperty({ description: 'Role of the user', enum: ['Admin', 'User', 'Staff', 'Other'], default: 'User' })
+    @ApiProperty({ description: 'Role of the user', enum: ['Admin', 'User'], default: 'User' })
     @Column({
       type: "enum",
-      enum: ['Admin', 'User', 'Staff', 'Other'],
+      enum: ['Admin', 'User'],
       default: 'User'
     })
-    role: 'Admin' | 'User' | 'Staff' | 'Other';
-    
-    @ApiProperty({ description: 'Status of the user account', enum: ['Active', 'Inactive', 'Banned', 'Other'], default: 'Inactive' })
-    @Column({
-      type: "enum",
-      enum: ['Active', 'Inactive', 'Banned', 'Other'],
-      default: 'Inactive'
-    })
-    status?: 'Active' | 'Inactive' | 'Banned' | 'Other'; // Trạng thái tài khoản (Active, Inactive, Banned)
+    role?: 'Admin' | 'User';
     
     @ApiProperty({ description: 'Bookings associated with the user', type: () => [Booking] })
     @OneToMany(() => Booking, (booking) => booking.user)

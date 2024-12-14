@@ -17,6 +17,10 @@ export class Promotion {
     @Column({ type: "text" })
     description: string; // Description of the promotion (e.g., "20% off on selected flights")
 
+    @ApiProperty({ description: 'Cover image URL of the news article', example: 'http://example.com/image.jpg', nullable: true })
+    @Column({ type: "varchar", length: 255, nullable: true })
+    coverImage?: string; // Đường dẫn ảnh bìa (nếu có)
+    
     @ApiProperty({ description: 'Start date for the promotion', example: '2023-06-01T00:00:00Z' })
     @Column({
       type: 'timestamptz',

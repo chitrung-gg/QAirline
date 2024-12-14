@@ -22,41 +22,47 @@ export class SignUpDto {
     phoneNumber: string;
 
     @ApiProperty({ description: 'First name of the user', example: 'John' })
+    @IsOptional()
     @IsString()
-    firstName: string;
+    firstName?: string;
 
     @ApiProperty({ description: 'Last name of the user', example: 'Doe' })
+    @IsOptional()
     @IsString()
-    lastName: string;
+    lastName?: string;
 
     @ApiProperty({ description: 'Date of birth of the user', example: '1990-01-01T00:00:00Z' })
+    @IsOptional()
     @IsISO8601()
-    dob: string;
+    dob?: string;
 
     @ApiProperty({ description: 'Gender of the user', enum: ["Male", "Female", "Other"] })
+    @IsOptional()
     @IsString()
     @IsIn(["Male", "Female", "Other"])
-    gender: "Male" | "Female" | "Other";
+    gender?: "Male" | "Female" | "Other";
 
     @ApiProperty({ description: 'Address of the user', example: '123 Main St' })
+    @IsOptional()
     @IsString()
-    address: string;
+    address?: string;
 
     @ApiProperty({ description: 'Passport number of the user', example: 'A12345678' })
+    @IsOptional()
     @IsString()
-    passportNumber: string;
+    passportNumber?: string;
 
     @ApiProperty({ description: 'Role of the user', enum: ['Admin', 'User', 'Staff', 'Other'], required: false })
     @IsString()
     @IsOptional()
-    @IsIn(['Admin', 'User', 'Staff', 'Other'])
-    role?: 'Admin' | 'User' | 'Staff' | 'Other';
+    @IsIn(['Admin', 'User'])
+    role?: 'Admin' | 'User';
     
     @ApiProperty({ description: 'Status of the user account', enum: ['Active', 'Inactive', 'Banned', 'Other'], required: false })
     @IsString()
     @IsOptional()
-    @IsIn(['Active', 'Inactive', 'Banned', 'Other'])
-    status?: 'Active' | 'Inactive' | 'Banned' | 'Other';
+    @IsIn(['Active', 'Inactive'])
+    status?: 'Active' | 'Inactive';
 
     @ApiProperty({ description: 'Bookings associated with the user', type: () => [Booking], required: false })
     @IsArray()

@@ -7,6 +7,7 @@ import RequestWithUser from 'src/authentication/interface/requestWithUser.interf
 import { JwtAuthenticationGuard } from 'src/authentication/guard/jwtAuthentication.guard';
 import { JwtService } from '@nestjs/jwt';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { AuthenticationService } from 'src/authentication/authentication.service';
 
 @ApiTags('booking')
 @Controller('booking')
@@ -14,6 +15,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiBearerAuth } 
 export class BookingController {
   constructor(
     private readonly bookingService: BookingService,
+    private readonly authenticationService: AuthenticationService,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -24,25 +26,7 @@ export class BookingController {
   @ApiResponse({ status: 400, description: 'Invalid input.' })
   async createBooking(@Body() createBookingDto: CreateBookingDto, @Req() req: RequestWithUser) {
     const token = req.headers['authorization']?.split(' ')[1];
-
-    let user: { 
-      id?: string, 
-      username?: string, 
-      email?: string }
-    
-    if (token) {
-      try {
-        const decodedToken = this.jwtService.verify(token, {secret: process.env.JWT_ACCESS_TOKEN_SECRET});
-        user = {
-          id: decodedToken?.id,
-          username: decodedToken?.username,
-          email: decodedToken?.email
-        }
-      } catch (error) {
-        console.log('Invalid or expired token', error);
-      }
-    }
-
+    const user = this.authenticationService.decodeToken(token)
     return this.bookingService.createBooking(createBookingDto, user);
   }
 
@@ -87,6 +71,15 @@ export class BookingController {
   @ApiResponse({ status: 404, description: 'Booking not found.' })
   getBookingById(@Param('id') id: number) {
     return this.bookingService.getBookingById(id);
+  }
+
+  @Get('/user/:id')
+  @ApiOperation({ summary: 'Get booking by user ID' })
+  @ApiParam({ name: 'id', description: 'ID of the user who make booking', example: 1 })
+  @ApiResponse({ status: 200, description: 'Return the booking with the specified user ID.' })
+  @ApiResponse({ status: 404, description: 'Booking not found.' })
+  getBookingByUserId(@Param('id') id: number) {
+    return this.bookingService.getBookingByUserId(id);
   }
 
   @Patch(':id')

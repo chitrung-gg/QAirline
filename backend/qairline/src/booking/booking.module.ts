@@ -9,9 +9,10 @@ import { Payment } from 'src/payment/entity/payment.entity';
 import { UserModule } from 'src/user/user.module';
 import { User } from 'src/user/entity/user.entity';
 import { EmailModule } from 'src/email/email.module';
+import { AuthenticationModule } from 'src/authentication/authentication.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Booking, Flight, Promotion, Payment, User]), UserModule, EmailModule],
+  imports: [TypeOrmModule.forFeature([Booking, Flight, Promotion, Payment, User]), UserModule, EmailModule, AuthenticationModule],
   controllers: [BookingController],
   providers: [BookingService],
 })

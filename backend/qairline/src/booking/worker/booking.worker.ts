@@ -1,6 +1,6 @@
 import { parentPort } from 'worker_threads';
 
-const calculateFinalPrice = (ticketPrice: Record<string, number>, promotion: any) => {
+const calculateFinalPrice = (ticketPrice: Record<string, number>, promotion: any, seatClass: string) => {
   let finalPrice = { ...ticketPrice };
 
   // Apply promotion discount
@@ -20,12 +20,14 @@ const calculateFinalPrice = (ticketPrice: Record<string, number>, promotion: any
     }
   }
 
-  return finalPrice;
+  return finalPrice[seatClass];
 };
 
 parentPort?.on('message', (data) => {
-  if (data.ticketPrice && data.promotion) {
-    const result = calculateFinalPrice(data.ticketPrice, data.promotion);
+  if (data.ticketPrice && data.promotion && data.seatClass) {
+    const result = calculateFinalPrice(data.ticketPrice, data.promotion, data.seatClass);
     parentPort?.postMessage(result);
   }
+
+  parentPort?.close()
 });

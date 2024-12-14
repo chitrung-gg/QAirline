@@ -55,6 +55,31 @@ export class AuthenticationService {
     //     }
     // }
 
+    async decodeToken(token: string) {
+        let user: { 
+            id?: string, 
+            username?: string, 
+            email?: string , 
+            role?: string
+        }
+        
+        if (token) {
+            try {
+                const decodedToken = this.jwtService.verify(token, {secret: process.env.JWT_ACCESS_TOKEN_SECRET});
+                user = {
+                    id: decodedToken?.id,
+                    username: decodedToken?.username,
+                    email: decodedToken?.email, 
+                    role: decodedToken?.role
+                }
+            } catch (error) {
+                console.log('Invalid or expired token', error);
+            }
+        }
+
+        return user
+      }
+
     async signup(signUpData: SignUpDto) {
         // console.log(signUpData.email)
         const emailInUse = await this.userService.getUserByEmail(signUpData.email)
@@ -90,9 +115,14 @@ export class AuthenticationService {
         //     access_token: this.jwtService.sign(payload),
         // };
 
-        const tokens = await this.getTokens(userInDb.id, userInDb.username, userInDb.email)
-        await this.updateRefreshToken(userInDb.id, userInDb.username, userInDb.email)
-        return tokens
+        const tokens = await this.getTokens(userInDb.id, userInDb.username, userInDb.email, userInDb.role)
+        await this.updateRefreshToken(userInDb.id, userInDb.username, userInDb.email, userInDb.role)
+        return {
+            ...tokens,
+            id: userInDb.id,
+            username: userInDb.username,
+            role: userInDb.role
+        }
     }
 
     async validateUser(email: string, password: string) {
@@ -117,13 +147,14 @@ export class AuthenticationService {
         return this.userService.updateUser(id, {refreshToken: null})
     }
 
-    async getTokens(id: number, username: string, email: string) {
+    async getTokens(id: number, username: string, email: string, role: string) {
         const [accessToken, refreshToken] = await Promise.all([
           this.jwtService.sign(
             {
               id,
               username,
-              email
+              email, 
+              role
             },
             {
               secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
@@ -134,7 +165,8 @@ export class AuthenticationService {
             {
               id,
               username,
-              email
+              email, 
+              role
             },
             {
               secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
@@ -158,13 +190,13 @@ export class AuthenticationService {
         if (!refreshTokenMatches) {
             throw new HttpException('Access Denied', HttpStatus.FORBIDDEN)
         }   
-        const tokens = await this.getTokens(user.id, user.username, user.email);
-        await this.updateRefreshToken(user.id, user.username, user.email);
+        const tokens = await this.getTokens(user.id, user.username, user.email, user.role);
+        await this.updateRefreshToken(user.id, user.username, user.email, user.role);
         return tokens;
     }
 
 
-    async updateRefreshToken(id: number, username: string, email: string) {
+    async updateRefreshToken(id: number, username: string, email: string, role: string) {
         const token = this.jwtService.sign({
             id,
             username,
@@ -176,6 +208,6 @@ export class AuthenticationService {
         await this.userService.updateUser(id, {
             refreshToken: token
         });
-        return await this.getTokens(id, username, email)
+        return await this.getTokens(id, username, email, role)
     }
 }

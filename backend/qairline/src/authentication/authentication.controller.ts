@@ -24,12 +24,15 @@ export class AuthenticationController {
     ) {}
     
     @UseGuards(JwtAuthenticationGuard)
-    @Get()
+    @Post()
     @ApiOperation({ summary: 'Authenticate user' })
     @ApiBearerAuth()
     @ApiResponse({ status: 200, description: 'User authenticated successfully.' })
     @ApiResponse({ status: 401, description: 'Unauthorized.' })
-    authenticate() {}
+    authenticate(@Req() req: RequestWithUser) {
+        const token = req.headers['authorization']?.split(' ')[1];
+        return this.authenticationService.decodeToken(token)
+    }
 
     @Post('signup')
     @ApiOperation({ summary: 'Sign up a new user' })
@@ -78,6 +81,6 @@ export class AuthenticationController {
     @ApiResponse({ status: 200, description: 'Tokens refreshed successfully.' })
     @ApiResponse({ status: 401, description: 'Unauthorized.' })
     refreshTokens(@Req() req: RequestWithUser) {
-        return this.authenticationService.updateRefreshToken(req.user.id, req.user.username, req.user.email)
+        return this.authenticationService.updateRefreshToken(req.user.id, req.user.username, req.user.email, req.user.role)
     }
 }

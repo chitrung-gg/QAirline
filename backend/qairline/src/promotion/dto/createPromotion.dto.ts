@@ -11,6 +11,10 @@ export class CreatePromotionDto {
     @IsString()
     description: string; // Description of the promotion (e.g., "20% off on selected flights")
 
+    @ApiProperty({ description: 'Cover image URL of the news article', example: 'http://example.com/image.jpg', nullable: true })
+    @IsString()
+    coverImage?: string; // Đường dẫn ảnh bìa (nếu có)
+
     @ApiProperty({ description: 'Start date for the promotion', example: '2023-06-01T00:00:00Z' })
     @IsISO8601()
     startDate: string; // Start date for the promotion (ISO date format)
