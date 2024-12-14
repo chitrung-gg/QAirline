@@ -37,6 +37,7 @@ export interface CreateFlightDto {
   seatClasses: Record<string, number>;
   bookings?: Booking[];
   duration?: number;
+  baseClassPrice?: Record<string, number>;
 }
 
 export interface UpdateFlightDto extends Partial<CreateFlightDto> {}

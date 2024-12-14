@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { UserContext, ContextData } from "@/app/UserContext";
 
-export default function LoginPage() {
+export default function Page() {
     const { user } = React.useContext(UserContext);
 
     const router = useRouter();
@@ -22,9 +22,8 @@ export default function LoginPage() {
     const [confirmPasswordValue, setConfirmPasswordValue] = React.useState("");
     const [otpValue, setOtpValue] = React.useState("");
     const [otpSent, setOtpSent] = React.useState(false);  
-    const [cooldown, setCooldown] = React.useState(false);
     const [otpVerified, setOtpVerified] = React.useState(false);
-    const [isEmailChecked, setIsEmailCheckedValue] = React.useState(false);
+    const [storedEmail, setStoredEmail] = React.useState<string | null>(null);
 
     const [loading, setLoading] = React.useState(false);
 
@@ -32,6 +31,25 @@ export default function LoginPage() {
     const togglePasswordVisibility = () => setIsPasswordVisible(!isPasswordVisible);
     const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = React.useState(false);
     const toggleConfirmPasswordVisibility = () => setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
+
+    const [cooldown, setCooldown] = React.useState(false);  
+    const [countdown, setCountdown] = React.useState(60);   
+
+    React.useEffect(() => {
+        let intervalId: NodeJS.Timeout | null = null;
+
+        if (cooldown && countdown > 0) {
+            intervalId = setInterval(() => {
+                setCountdown((prev) => prev - 1);
+            }, 1000);
+        } else if (countdown === 0) {
+            setCooldown(false);  
+        }
+
+        return () => {
+            if (intervalId) clearInterval(intervalId);
+        };
+    }, [cooldown, countdown]);
 
     const validateEmail = (emailValue: String) => emailValue.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
 
@@ -45,7 +63,6 @@ export default function LoginPage() {
     const isPasswordTooShort = passwordValue.length > 0 && passwordValue.length < 6;
 
     const checkEmailExists = async () => {
-        setLoading(true);
         try {
             const response = await axios.post("http://localhost:5000/user/email", { email: emailValue });
             if (response.status === 200) {
@@ -53,16 +70,9 @@ export default function LoginPage() {
             }
             return false; // Nếu email chưa tồn tại
         } catch (error) {
-            if (axios.isAxiosError(error) && error.response?.status === 400) {
-                alert("Email chưa tồn tại.");
-                return false;
-            } else {
-                alert("Lỗi khi kiểm tra email.");
-                return false;
-            }
-        } finally {
-            setLoading(false);
-        }
+            //alert("Email chưa tồn tại.");
+            return false;
+        } 
     };
 
     const sendOtp = async () => {
@@ -78,51 +88,48 @@ export default function LoginPage() {
             return;
         }
 
-        setLoading(true);
         try {
             const response = await axios.post("http://localhost:5000/user/forget", { email: emailValue });
-            console.log(response);
-            //if (response.status === 200 || response.status === 201) {
-                setOtpSent(true);
-                setCooldown(true);
-                setTimeout(() => setCooldown(false), 60000);  // 60s cooldown
-                alert("OTP đã được gửi vào email của bạn.");
-            //} else {
-            //     alert("Gửi OTP thất bại.");
-            // }
+            setStoredEmail(emailValue);
+            setOtpSent(true);
+            setCooldown(true); 
+            setCountdown(60);
+            setOtpVerified(false);
+            alert("OTP đã được gửi vào email của bạn.");
         } catch (error) {
             alert("Có lỗi khi gửi OTP.");
-        } finally {
-            setLoading(false);
-        }
+        } 
     };
 
     const verifyOtp = async () => {
-        setLoading(true);
+        if (emailValue !== storedEmail) {
+            alert("Email đã bị thay đổi. Vui lòng gửi OTP lại.");
+            return;
+        }
         try {
             const response = await axios.post(`http://localhost:5000/user/forget/verify`, 
                 { 
                     email: emailValue, 
                     otp: otpValue 
                 });
-            //if (response.status === 200 || response.status === 201) {
-                setOtpVerified(true);
-                alert("OTP xác thực thành công!");
-            // } else {
-            //     alert("OTP không chính xác.");
-            // }
+
+            setOtpVerified(true);
+            alert("OTP xác thực thành công!");
         } catch (error) {
             alert("Xác thực OTP thất bại.");
-        } finally {
-            setLoading(false);
-        }
+        } 
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault(); 
 
         if (!otpVerified) {
-            alert("Vui lòng xác thực OTP trước khi đăng ký.");
+            alert("Vui lòng xác thực OTP trước khi đổi mật khẩu.");
+            return;
+        }
+
+        if (emailValue !== storedEmail) {
+            alert("Email đã bị thay đổi. Vui lòng gửi OTP lại.");
             return;
         }
 
@@ -141,16 +148,8 @@ export default function LoginPage() {
                 password: passwordValue,
             });
 
-
-            //if (response.status === 201 || response.status === 200) {
-                alert("Đổi mk thành công");
-                
-                router.push("/auth/login");
-                //window.location.reload();
-            //} else {
-            //     alert('Đổi mk thất bại, vui lòng thử lại.');
-            //     console.error('Đổi mk thất bại:', response);
-            // }
+            alert("Đổi mk thành công");
+            router.push("/auth/login");
         } catch (error) {
             console.error('Đổi mk thất bại:', error);
             alert('Đổi mk thất bại, vui lòng thử lại.');
@@ -192,8 +191,8 @@ export default function LoginPage() {
                                 onChange={(e) => setEmailValue(e.target.value)}
                                 className="mr-2"
                             />
-                            <Button size="md" type="button" radius="sm" className="bg-blue-normal text-white font-medium text-base" onClick={sendOtp} isDisabled={cooldown || otpSent}>
-                                {cooldown ? "Chờ 60s..." : "Gửi OTP"}
+                            <Button size="md" type="button" radius="sm" className="bg-blue-normal text-white font-medium text-base mt-4" onClick={sendOtp} isDisabled={cooldown}>
+                                {cooldown ? `Chờ ${countdown}s...` : "Gửi OTP"}
                             </Button>
                         </div>
 
@@ -212,7 +211,7 @@ export default function LoginPage() {
                                     className="mr-2"
                                     maxLength={6}
                                 />
-                                <Button size="md" type="button" radius="sm" className="bg-blue-normal text-white font-medium text-base mt-2" onClick={verifyOtp} isDisabled={!otpSent || otpVerified}>
+                                <Button size="md" type="button" radius="sm" className="bg-blue-normal text-white font-medium text-base mt-7 px-7" onClick={verifyOtp} isDisabled={!otpSent || otpVerified}>
                                     {otpVerified ? "OTP đã xác thực" : "Xác thực OTP"}
                                 </Button>
                             </div>

@@ -41,6 +41,7 @@ export default function Page() {
     const [statusValue, setStatusValue] = React.useState(FlightStatus.SCHEDULED);
     const [availableSeatsValue, setAvailableSeatsValue] = React.useState(0);
     const [durationValue, setDurationValue] = React.useState(0);
+    const [baseClassPrice, setBaseClassPrice] = React.useState<{ [key: string]: number }>({});
 
     const [seatClasses, setSeatClasses] = React.useState<{ [key: string]: number }>({});
 
@@ -132,7 +133,7 @@ export default function Page() {
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault(); 
 
-        console.log(flightNumberValue, aircraftValue, departureAirport, arrivalAirport, departureTimeValue, arrivalTimeValue, statusValue, availableSeatsValue, seatClasses, durationValue);
+        //console.log(flightNumberValue, aircraftValue, departureAirport, arrivalAirport, departureTimeValue, arrivalTimeValue, statusValue, availableSeatsValue, seatClasses, durationValue);
 
         if (!flightNumberValue || !aircraftValue || !departureAirport || !arrivalAirport || !departureTimeValue || !arrivalTimeValue || !statusValue || !availableSeatsValue || !seatClasses || !durationValue) {
             onErrorOpen();
@@ -150,6 +151,7 @@ export default function Page() {
             availableSeats: availableSeatsValue,
             seatClasses: seatClasses,
             duration: durationValue,
+            baseClassPrice: baseClassPrice,
         };
         // Call API to create promotion
         try {
@@ -250,7 +252,7 @@ export default function Page() {
                 </div>
 
                 {aircraftValue && Object.keys(aircraftValue.seatClasses).map((seatClass) => (
-                    <div key={seatClass}>
+                    <div key={seatClass} className="flex flex-row gap-3">
                         <Input
                             label={`Số ghế lớp ${seatClass}`}
                             labelPlacement="outside"
@@ -266,6 +268,22 @@ export default function Page() {
                                 ...prev,
                                 [seatClass]: Math.min(Number(e.target.value), aircraftValue.seatClasses[seatClass]),
                             }))}
+                        />
+                        <Input
+                            label={`Giá tiền lớp ${seatClass}`}
+                            labelPlacement="outside"
+                            size="lg"
+                            radius="sm"
+                            variant="bordered"
+                            className="py-3 font-semibold"
+                            type="number"
+                            value={baseClassPrice[seatClass]?.toString() || ""}
+                            onChange={(e) => setBaseClassPrice(prev => ({
+                                ...prev,
+                                [seatClass]: Math.max(Number(e.target.value), 1000),
+                            }))}
+                            min={1000}
+                            placeholder="Nhập giá"
                         />
                     </div>
                 ))}

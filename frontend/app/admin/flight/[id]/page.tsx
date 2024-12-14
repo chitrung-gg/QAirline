@@ -124,7 +124,7 @@ export default function Page(props: { params: { id: string } }) {
                 </div>
 
                 {Object.keys(flightData.aircraft.seatClasses).map((seatClass) => (
-                    <div key={seatClass}>
+                    <div key={seatClass} className="flex flex-row gap-3">
                         <Input
                             label={`Số ghế lớp ${seatClass}`}
                             labelPlacement="outside"
@@ -134,6 +134,17 @@ export default function Page(props: { params: { id: string } }) {
                             className="py-3 font-semibold"
                             type="number"
                             value={flightData.aircraft.seatClasses[seatClass].toString()}
+                            isReadOnly
+                        />
+                        <Input
+                            label={`Giá tiền lớp ${seatClass}`}
+                            labelPlacement="outside"
+                            size="lg"
+                            radius="sm"
+                            variant="bordered"
+                            className="py-3 font-semibold"
+                            type="number"
+                            value={flightData.baseClassPrice?.[seatClass]?.toString() || ''}
                             isReadOnly
                         />
                     </div>

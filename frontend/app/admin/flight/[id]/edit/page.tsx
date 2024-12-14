@@ -47,6 +47,7 @@ export default function Page(props: { params: { id: string } }) {
     const [durationValue, setDurationValue] = React.useState(0);
 
     const [seatClasses, setSeatClasses] = React.useState<{ [key: string]: number }>({});
+    const [baseClassPrice, setBaseClassPrice] = React.useState<{ [key: string]: number }>({});
 
     const [dateRange, setDateRange] = React.useState({
         start: new CalendarDateTime(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate(), 0, 0),
@@ -76,6 +77,7 @@ export default function Page(props: { params: { id: string } }) {
             setAvailableSeatsValue(data.availableSeats);
             setSeatClasses(data.seatClasses);
             setDurationValue(data.duration);
+            setBaseClassPrice(data.baseClassPrice);
 
             const startZonedDateTime = parseZonedDateTime(data.departureTime.slice(0, 19) + "[UTC]");
             const endZonedDateTime = parseZonedDateTime(data.arrivalTime.slice(0, 19) + "[UTC]");
@@ -180,6 +182,7 @@ export default function Page(props: { params: { id: string } }) {
             availableSeats: availableSeatsValue,
             seatClasses: seatClasses,
             duration: durationValue,
+            baseClassPrice: baseClassPrice,
         };
 
         try {
@@ -300,7 +303,7 @@ export default function Page(props: { params: { id: string } }) {
                 </div>
 
                 {aircraftValue && Object.keys(aircraftValue.seatClasses).map((seatClass) => (
-                    <div key={seatClass}>
+                    <div key={seatClass} className="flex flex-row gap-3">
                         <Input
                             label={`Số ghế lớp ${seatClass}`}
                             labelPlacement="outside"
@@ -316,6 +319,22 @@ export default function Page(props: { params: { id: string } }) {
                                 ...prev,
                                 [seatClass]: Math.min(Number(e.target.value), aircraftValue.seatClasses[seatClass]),
                             }))}
+                        />
+                        <Input
+                            label={`Giá tiền lớp ${seatClass}`}
+                            labelPlacement="outside"
+                            size="lg"
+                            radius="sm"
+                            variant="bordered"
+                            className="py-3 font-semibold"
+                            type="number"
+                            value={baseClassPrice[seatClass].toString() || ''}
+                            onChange={(e) => setBaseClassPrice(prev => ({
+                                ...prev,
+                                [seatClass]: Math.max(Number(e.target.value), 1000),
+                            }))}
+                            min={1000}
+                            placeholder="Nhập giá"
                         />
                     </div>
                 ))}
