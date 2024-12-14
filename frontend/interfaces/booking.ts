@@ -8,6 +8,7 @@ export interface Booking {
   flight: Flight;
   passengerName: string;
   passengerDob: string;
+  passengerEmail: string;
   passportNumber: string;
   bookingCode?: string;
   promotion?: Promotion;

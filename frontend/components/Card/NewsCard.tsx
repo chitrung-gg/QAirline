@@ -1,5 +1,6 @@
 "use client"
 
+import { News } from "@/interfaces/news";
 import {Card, CardHeader, CardBody, CardFooter, Image, Button, image} from "@nextui-org/react";
 import Link from "next/link";
 
@@ -10,7 +11,7 @@ interface NewsProps {
   link: string
 }
 
-export default function NewsCard(prop: NewsProps) {
+export default function NewsCard(prop: News) {
     return (
         <div className="">
             <Card shadow="sm" className="rounded-lg" >
@@ -20,15 +21,15 @@ export default function NewsCard(prop: NewsProps) {
                   width="100%"
                   alt={prop.title}
                   className="w-full object-cover h-[140px]"
-                  src={prop.image}
+                  src={prop.coverImage || "/images/Qairline.png"}
                 />
               </CardBody>
               <CardFooter className="flex flex-col justify-between">
-                <Link href={prop.link} className="w-full text-left col-span-4">
+                <Link href={`/news/`} className="w-full text-left col-span-4">
                     <span className="text-base">{prop.title}</span>
                 </Link>
                 <div className="w-full text-left col-span-4 mt-1">
-                    <a href={prop.link} className="text-blue-normal">Xem thêm</a>
+                    <a href={`/news/`} className="text-blue-normal">Xem thêm</a>
                 </div>
                 
               </CardFooter>

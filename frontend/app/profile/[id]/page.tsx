@@ -345,12 +345,6 @@ export default function Page(props: { params: { id: string } }) {
 
                     </div>
                     <div className="mt-6 flex justify-end gap-4 pb-5">
-                        <Link
-                            href="/admin/airport"
-                            className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
-                        >
-                            Quay lại
-                        </Link>
                         <Button type="submit" className="bg-blue-normal text-white">Cập nhật thông tin</Button>
                     </div>
                     </form>

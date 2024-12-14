@@ -4,15 +4,19 @@ import { Card, CardHeader, CardBody, CardFooter, Divider, Button } from "@nextui
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import FlightDetailsCard from "./FlightDetailsCard";
-import { clearDiscountInfoFromLocalStorage, FlightProps } from "@/interfaces/flightsample";
+import { Flight } from "@/interfaces/flight";
+import { setSelectedFlight } from "@/components/redux/feature/booking/bookingSlice";
+import { useAppDispatch } from "@/components/redux/hooks";
 
-export default function FlightCard(props: FlightProps) {
+export default function FlightCard(props: Flight) {
     const router = useRouter();
+    const dispatch = useAppDispatch();
 
-    const handleBookNow = () => {
-        localStorage.setItem('selectedFlight', JSON.stringify(props));
-        clearDiscountInfoFromLocalStorage();
-        router.push(`/booking/details?flightId=${props.id}&departure=${props.departure_location}&arrival=${props.arrival_location}`);
+    const handleFlightSelect = () => {
+        // Dispatch selected flight to Redux store
+        dispatch(setSelectedFlight(props));
+        // Navigate to booking details page
+        router.push('/booking/details');
     };
 
     return (
@@ -31,7 +35,7 @@ export default function FlightCard(props: FlightProps) {
                     </div>
                 </div>
                 <div className="flex flex-col mr-3">
-                    <p className="text-md">Hạng: {props.type}</p>
+                    <p className="text-md">Mã chuyến bay: {props.flightNumber}</p>
                 </div>
             </CardHeader>
             <Divider className="bg-transparent" />
@@ -39,30 +43,30 @@ export default function FlightCard(props: FlightProps) {
                 <div className="flex mobile:flex-col items-center flex-row">
                     <div className="w-4/5 flex items-center justify-between mx-2">
                         <div className="flex-1 flex flex-col items-start w-[25%]">
-                            <p className="text-lg font-bold">{props.departure_time}</p>
-                            <p>{props.departure_date}</p>
-                            <p>{props.departure_location}</p>
-                            <p>{props.departure_airport}</p>
+                            <p className="text-lg font-bold">{props.departureTime}</p>
+                            <p>{props.departureAirport?.city}</p>
+                            <p>{props.departureAirport?.name}</p>
+                            <p>{props.departureAirport?.iataCode}</p>
                         </div>
                         <div className="mx-4 flex flex-col items-center w-[50%]">
                             <div className="border-t border-blue-normal w-full my-2"></div>
                             <p>{props.duration}</p>
                         </div>
                         <div className="flex-1 flex flex-col items-end text-right w-[25%]">
-                            <p className="text-lg font-bold">{props.arrival_time}</p>
-                            <p>{props.arrival_date}</p>
-                            <p>{props.arrival_location}</p>
-                            <p>{props.arrival_airport}</p>
+                            <p className="text-lg font-bold">{props.arrivalTime}</p>
+                            <p>{props.arrivalAirport?.city}</p>
+                            <p>{props.arrivalAirport?.name}</p>
+                            <p>{props.arrivalAirport?.iataCode}</p>
                         </div>
                     </div>
                     <div className="md:w-1/5 flex items-center justify-between mx-2">
                         <div className="flex-1 flex flex-col items-center">
-                            <p className="text-lg font-bold">{props.price.toLocaleString()} VNĐ</p>
+                            <p className="text-lg font-bold">Chỗ ngồi còn: {props.availableSeats}</p>
                             <Button
                                 className="mt-2 bg-blue-normal text-white font-semibold"
-                                onPress={handleBookNow}
+                                onPress={handleFlightSelect} // Thay đổi từ handleBookNow sang handleFlightSelect
                             >
-                                Đặt vé ngay
+                                Đặt vé
                             </Button>
                         </div>
                     </div>

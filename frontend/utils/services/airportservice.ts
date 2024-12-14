@@ -1,11 +1,10 @@
 import { CreateAirportDto, UpdateAirportDto } from "@/interfaces/airport";
-import { API_BASE_URL } from "../api/config";
-import axios from "axios";
+import { api } from "../api/config";
 
 export const airportService = {
   create: async (data: CreateAirportDto) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/airport`, data);
+      const response = await api.post(`/airport`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -14,7 +13,7 @@ export const airportService = {
 
   getAll: async () => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/airport`);
+      const response = await api.get(`/airport`);
       return response.data;
     } catch (error) {
       throw error;
@@ -23,7 +22,7 @@ export const airportService = {
 
   getById: async (id: number) => {
     try {
-      const response = await axios.get(`${API_BASE_URL}/airport/${id}`);
+      const response = await api.get(`/airport/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -32,7 +31,7 @@ export const airportService = {
 
   update: async (id: number, data: UpdateAirportDto) => {
     try {
-      const response = await axios.patch(`${API_BASE_URL}/airport/${id}`, data);
+      const response = await api.patch(`/airport/${id}`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -41,7 +40,7 @@ export const airportService = {
 
   delete: async (id: number) => {
     try {
-      const response = await axios.delete(`${API_BASE_URL}/airport/${id}`);
+      const response = await api.delete(`/airport/${id}`);
       return response.data;
     } catch (error) {
       throw error;

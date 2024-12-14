@@ -15,6 +15,7 @@ export interface Flight {
   seatClasses: Record<string, number>;
   bookings?: Booking[];
   duration?: number; //minutes
+  baseClassPrice?: Record<string, number>;
 }
 
 export enum FlightStatus {

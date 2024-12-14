@@ -1,82 +1,47 @@
 "use client"
 
-import { useState, useEffect } from 'react';
-import ImageSection from "@/components/ImageSection";
-import OfferCard from "@/components/Card/OfferCard";
-import { promotionService } from '@/utils/services/promotionservice';
 import { Promotion } from "@/interfaces/promotion";
+import { Card, CardBody, CardFooter, Image, Button } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
-export default function OffersPage() {
-  const [offers, setOffers] = useState<Promotion[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchOffers = async () => {
-      try {
-        setIsLoading(true);
-        const promotions = await promotionService.getAll();
-
-        // Transform promotions to match OfferCard props
-        const transformedOffers = promotions.map((promo: Promotion) => ({
-          image: '/images/sky.jpg', // Default image, replace with actual image logic if needed
-          title: promo.description,
-          promoCode: promo.code,
-          expiryDate: promo.endDate
-        }));
-
-        setOffers(transformedOffers);
-        setIsLoading(false);
-      } catch (err) {
-        setError('Failed to fetch offers');
-        setIsLoading(false);
-        console.error(err);
-      }
-    };
-
-    fetchOffers();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p>Loading offers...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-red-500">{error}</p>
-      </div>
-    );
-  }
-
+export default function OfferCard(prop: Promotion) {
+  const router = useRouter();
   return (
-    <div className="min-h-screen bg-gray-50">
-      <ImageSection />
-
-      {/* Offers Grid */}
-      <div className="max-w-7xl mx-auto px-8 py-12
-            mobile:px-4
-            desktop:py-12">
-        <div className="flex items-center justify-start mobile:justify-center tablet:justify-center pb-12">
-          <p className="text-3xl font-bold font-robotoflex capitalize text-blue-normal">Ưu đãi</p>
+    <Card shadow="sm" className="rounded-lg" >
+      <CardBody className="overflow-visible p-0">
+        <Image
+          radius="none"
+          width="100%"
+          alt="offer"
+          className="w-full object-cover h-[240px]"
+          src="/images/sky.jpg"
+        />
+      </CardBody>
+      <CardFooter className="flex flex-col justify-between">
+        <div className="w-full text-left col-span-4">
+          <span className="font-bold mobile:text-base text-lg desktop:text-xl">{prop.description}</span>
         </div>
-
-        {offers.length === 0 ? (
-          <div className="text-center text-gray-500">
-            Không có ưu đãi nào hiện tại
+        <div className="flex flex-col md:flex-row justify-between w-full gap-6 mt-2 mb-2">
+          <div className="flex flex-col justify-between w-3/5 text-left">
+            <div className="flex flex-col mt-2">
+              <div className="">
+                <span className="font-medium rounded-lg border-dashed border-2 border-blue-normal px-2 py-1 
+                  mobile:text-base 
+                  tablet:text-base
+                  text-lg">{prop.code}</span>
+              </div>
+              <div className="mt-5">
+                <span className="font-medium bg-secondary-light-hover px-2 py-1 rounded-lg mobile:text-xs text-sm">HSD: {prop.endDate}</span>
+              </div>
+            </div>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 desktop:grid-cols-2 laptop:grid-cols-2 gap-8">
-            {offers.map((offer, index) => (
-              <OfferCard key={index} {...offer} />
-            ))}
+          <div className="w-2/5 flex items-end md:justify-end mr-1">
+            <Button className="text-base mobile:text-sm font-medium text-white bg-blue-normal " radius='sm' onPress={() => router.push("/")}>
+              Đặt vé ngay
+            </Button>
           </div>
-        )}
-      </div>
-    </div>
-  )
+        </div>
+      </CardFooter>
+    </Card>
+  );
 }

@@ -1,10 +1,16 @@
-import * as React from "react";
-import { NextUIProvider } from "@nextui-org/react";
+"use client";
 
-export default function Provider({ children }: { children: React.ReactNode }) {
+import React from 'react';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from '../components/redux/store';
+
+export function Providers({ children }: { children: React.ReactNode }) {
     return (
-        <NextUIProvider>
-            {children}
-        </NextUIProvider>
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                {children}
+            </PersistGate>
+        </Provider>
     );
 }

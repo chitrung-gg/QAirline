@@ -33,7 +33,7 @@ const navItems: NavItem[] = [
     { label: "Giới thiệu", href: "/about" },
     { label: "Ưu đãi", href: "/offers" },
     { label: "Đặt vé", href: "/booking" },
-    { label: "Thông tin hành trình", href: "/search-flight" },
+    { label: "Thông tin hành trình", href: "/booking/search-flight" },
     { label: "Hỗ trợ", href: "/support" }
 ];
 
@@ -73,28 +73,6 @@ export default function NavBar() {
                 Đăng kí
             </Link>
         </div>
-        // <Dropdown placement="bottom-end">
-        //     <DropdownTrigger>
-        //         <Avatar
-        //             isBordered
-        //             as="button"
-        //             className="transition-transform"
-        //             name="Jason Hughes"
-        //             size="sm"
-        //             src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-        //         />
-        //     </DropdownTrigger>
-        //     <DropdownMenu aria-label="Profile Actions" variant="flat">
-        //         <DropdownItem key="profile" className="h-fit">
-        //             <p className="font-semibold">Nguyễn Văn A</p>
-        //         </DropdownItem>
-        //         <DropdownItem key="information">Thông tin</DropdownItem>
-        //         <DropdownItem key="my_tickets">Vé của tôi</DropdownItem>
-        //         <DropdownItem key="logout" className='font-semibold text-red-500'>
-        //             Đăng xuất
-        //         </DropdownItem>
-        //     </DropdownMenu>
-        // </Dropdown>
     );
 
     const renderUserMenu = () => (

@@ -1,12 +1,11 @@
 import { CreateUserDto } from "@/interfaces/user";
-import { API_BASE_URL } from "../api/config";
-import axios from "axios";
+import { api } from "../api/config";
 
 // User Service
 export const userService = {
   create: async (data: CreateUserDto) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/user`, data);
+      const response = await api.post(`/user`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -23,7 +22,7 @@ export const userService = {
           }
         : {};
 
-      const response = await axios.get(`${API_BASE_URL}/user`, config);
+      const response = await api.get(`/user`, config);
       return response.data;
     } catch (error) {
       throw error;

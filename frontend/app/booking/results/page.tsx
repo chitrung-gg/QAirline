@@ -1,107 +1,154 @@
 "use client";
 
-import FlightCard from "@/components/Card/Flight/FlightCard";
-import FlightSearchCard from "@/components/Card/Search/FlightSearchCard";
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import {
+    Card,
+    CardBody,
+    Chip,
+    Breadcrumbs,
+    BreadcrumbItem,
+    Skeleton
+} from "@nextui-org/react";
+import FlightCard from '@/components/Card/Flight/FlightCard';
+import { useAppDispatch, useAppSelector } from '@/components/redux/hooks';
+import { Flight } from '@/interfaces/flight';
+import { api } from '@/utils/api/config';
+import { Calendar, MapPin, Users } from 'lucide-react';
 
-const sampleFlightData = [
-    {
-        id: 1,
-        departure_location: "Hà Nội",
-        departure_time: "07:00",
-        departure_airport: "Nội Bài (HAN)",
-        arrival_location: "Hồ Chí Minh",
-        arrival_time: "09:00",
-        arrival_airport: "Tân Sơn Nhất (SGN)",
-        departure_date:"20/12/2023",
-        arrival_date:"21/12/2023",
-        price: 2500000,
-        duration: "2h 00m",
-        type: "Phổ thông",
-        baggage: "20kg",
-        meal: "Bữa sáng nhẹ",
-        wifi: true,
-        entertainment: false
-    },
-    {
-        id: 2,
-        departure_location: "Đà Nẵng",
-        departure_time: "13:30",
-        departure_airport: "Đà Nẵng (DAD)",
-        arrival_location: "Nha Trang",
-        arrival_time: "14:45",
-        arrival_airport: "Cam Ranh (CXR)",
-        departure_date:"20/12/2023",
-        arrival_date:"21/12/2023",
-        price: 1800000,
-        duration: "1h 15m",
-        type: "Thương gia",
-        baggage: "30kg",
-        meal: "Bữa trưa đầy đủ",
-        wifi: true,
-        entertainment: true
-    },
-    {
-        id: 3,
-        departure_location: "Hồ Chí Minh",
-        departure_time: "20:15",
-        departure_airport: "Tân Sơn Nhất (SGN)",
-        arrival_location: "Phú Quốc",
-        arrival_time: "21:30",
-        arrival_airport: "Phú Quốc (PQC)",
-        departure_date:"20/12/2023",
-        arrival_date:"21/12/2023",
-        price: 2200000,
-        duration: "1h 15m",
-        type: "Tiết kiệm",
-        baggage: "15kg",
-        meal: "Không",
-        wifi: false,
-        entertainment: false
-    },
-    {
-        id: 4,
-        departure_location: "Hải Phòng",
-        departure_time: "06:45",
-        departure_airport: "Cát Bi (HPH)",
-        arrival_location: "Buôn Ma Thuột",
-        arrival_time: "08:30",
-        arrival_airport: "Buôn Ma Thuột (BMV)",
-        departure_date:"20/12/2023",
-        arrival_date:"21/12/2023",
-        price: 3000000,
-        duration: "1h 45m",
-        type: "Thương gia",
-        baggage: "40kg",
-        meal: "Bữa sáng cao cấp",
-        wifi: true,
-        entertainment: true
-    }
-];
+export default function FlightResultsPage() {
+    const router = useRouter();
+    const dispatch = useAppDispatch();
 
-export default function BookingResults() {
-    return (
-        <div className="mx-auto max-w-6xl ">
-            <FlightSearchCard />
-            <div className="gap-4 flex flex-col items-center justify-center py-8 px-8
-            desktop:py-16">
-                {sampleFlightData.map((flight) => (
-                    <FlightCard
-                        key={flight.id}
-                        departure_location={flight.departure_location}
-                        departure_time={flight.departure_time}
-                        departure_airport={flight.departure_airport}
-                        arrival_location={flight.arrival_location}
-                        arrival_time={flight.arrival_time}
-                        arrival_airport={flight.arrival_airport}
-                        departure_date={flight.departure_date}
-                        arrival_date={flight.arrival_date}
-                        price={flight.price}
-                        duration={flight.duration}
-                        type={flight.type}
-                        id={flight.id}
-                    />
+    // Get search params and flights from Redux store
+    const searchParams = useAppSelector(state => state.bookingCreate.searchParams);
+    const [flights, setFlights] = React.useState<Flight[]>([]);
+    const [isLoading, setIsLoading] = React.useState(true);
+
+    useEffect(() => {
+        // If no search params, redirect to search page
+        if (!searchParams.departure || !searchParams.destination) {
+            router.push('/booking');
+            return;
+        }
+
+        // Fetch flights based on search parameters
+        const fetchFlights = async () => {
+            try {
+                const response = await api.get('/flight', {
+                    params: {
+                        departureAirport: searchParams.departure,
+                        arrivalAirport: searchParams.destination,
+                        departureDate: searchParams.departureDate,
+                    }
+                });
+                setFlights(response.data);
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Error fetching flights:', error);
+                setIsLoading(false);
+            }
+        };
+
+        fetchFlights();
+    }, [searchParams, router]);
+
+    if (isLoading) {
+        return (
+            <div className="container mx-auto px-4 py-8">
+                {[...Array(3)].map((_, index) => (
+                    <Card key={index} className="mb-4">
+                        <CardBody>
+                            <div className="flex items-center space-x-4">
+                                <Skeleton className="h-20 w-20 rounded-full" />
+                                <div className="w-full space-y-3">
+                                    <Skeleton className="h-4 w-3/4 rounded-lg" />
+                                    <Skeleton className="h-4 w-1/2 rounded-lg" />
+                                </div>
+                            </div>
+                        </CardBody>
+                    </Card>
                 ))}
             </div>
+        );
+    }
+
+    return (
+        <div className="container mx-auto px-4 py-8">
+            {/* Breadcrumbs */}
+            <Breadcrumbs
+                className="mb-6"
+                variant="light"
+                color="primary"
+            >
+                <BreadcrumbItem href="/booking">Tìm kiếm</BreadcrumbItem>
+                <BreadcrumbItem>Kết quả chuyến bay</BreadcrumbItem>
+            </Breadcrumbs>
+
+            {/* Search Summary */}
+            <Card
+                className="mb-8 bg-white/80 backdrop-blur-sm"
+                shadow="sm"
+            >
+                <CardBody>
+                    <div className="flex flex-wrap gap-4 justify-between items-center">
+                        <div className="flex flex-wrap gap-3">
+                            <Chip
+                                color="primary"
+                                variant="flat"
+                                startContent={<MapPin size={16} />}
+                            >
+                                Đi: {searchParams.departure}
+                            </Chip>
+                            <Chip
+                                color="secondary"
+                                variant="flat"
+                                startContent={<MapPin size={16} />}
+                            >
+                                Đến: {searchParams.destination}
+                            </Chip>
+                            <Chip
+                                color="success"
+                                variant="flat"
+                                startContent={<Calendar size={16} />}
+                            >
+                                Ngày đi: {searchParams.departureDate}
+                            </Chip>
+                            {searchParams.returnDate && (
+                                <Chip
+                                    color="warning"
+                                    variant="flat"
+                                    startContent={<Calendar size={16} />}
+                                >
+                                    Ngày về: {searchParams.returnDate}
+                                </Chip>
+                            )}
+                        </div>
+                        <Chip
+                            color="default"
+                            variant="dot"
+                            startContent={<Users size={16} />}
+                        >
+                            Hành khách: {searchParams.passengers}
+                        </Chip>
+                    </div>
+                </CardBody>
+            </Card>
+
+            {/* Flights List */}
+            {flights.length === 0 ? (
+                <Card>
+                    <CardBody className="text-center">
+                        <p className="text-gray-500">Không tìm thấy chuyến bay nào phù hợp</p>
+                    </CardBody>
+                </Card>
+            ) : (
+                <div className="grid grid-cols-1 gap-4">
+                    {flights.map((flight: Flight) => (
+                        <FlightCard key={flight.id} {...flight} />
+                    ))}
+                </div>
+            )}
         </div>
-    )
+    );
 }

@@ -3,33 +3,29 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardBody, Divider } from "@nextui-org/react";
 import Image from "next/image";
-import { FlightProps, getDiscountInfoFromLocalStorage } from '@/interfaces/flightsample';
+import { Flight } from '@/interfaces/flight';
 
-export default function FlightPreviewCard({
-    type,
-    departure_time,
-    departure_date,
-    departure_location,
-    departure_airport,
-    arrival_time,
-    arrival_date,
-    arrival_location,
-    arrival_airport,
-    price,
-    duration,
-    discount
-}: FlightProps) {
-    const [currentPrice, setCurrentPrice] = useState(price);
+interface FlightPreviewCardProps extends Partial<Flight> {
+    getDiscountInfo?: () => { discountedPrice?: number; code?: string };
+}
+
+export default function FlightPreviewCard(prop: Flight) {
+    const [currentPrice, setCurrentPrice] = useState<number | undefined>(undefined);
     const [appliedDiscount, setAppliedDiscount] = useState<string | undefined>(undefined);
 
-    useEffect(() => {
-        // Check for stored discount info on component mount
-        const storedDiscount = getDiscountInfoFromLocalStorage();
-        if (storedDiscount) {
-            setCurrentPrice(storedDiscount.discountedPrice || price);
-            setAppliedDiscount(storedDiscount.code);
-        }
-    }, [price]);
+    // useEffect(() => {
+    //     // Check for stored discount info on component mount
+    //     if (getDiscountInfo) {
+    //         const storedDiscount = getDiscountInfo();
+    //         if (storedDiscount) {
+    //             setCurrentPrice(storedDiscount.discountedPrice);
+    //             setAppliedDiscount(storedDiscount.code);
+    //         }
+    //     }
+    // }, [getDiscountInfo]);
+
+    // Determine the default price based on the first seat class
+    const defaultPrice = prop.baseClassPrice && Object.values(prop.baseClassPrice)[0];
 
     return (
         <Card className="w-full">
@@ -44,10 +40,16 @@ export default function FlightPreviewCard({
                     />
                     <div className="flex flex-col justify-center items-center">
                         <p className="text-md">QAirline</p>
+                        {prop.flightNumber && <p className="text-sm text-gray-500">{prop.flightNumber}</p>}
                     </div>
                 </div>
                 <div className="flex flex-col mr-3">
-                    <p className="text-md">Hạng: {type}</p>
+                    {status && <p className="text-md">Trạng thái: {status}</p>}
+                    {prop.availableSeats !== undefined && (
+                        <p className="text-sm text-gray-500">
+                            Ghế trống: {prop.availableSeats}
+                        </p>
+                    )}
                 </div>
             </CardHeader>
             <Divider />
@@ -56,21 +58,19 @@ export default function FlightPreviewCard({
                     <div className="flex justify-between">
                         <div>
                             <p className="font-bold">Khởi hành</p>
-                            <p className="text-lg">{departure_time}</p>
-                            <p>{departure_date}</p>
-                            <p>{departure_location}</p>
-                            <p>{departure_airport}</p>
+                            <p className="text-lg">{prop.departureTime}</p>
+                            <p>{prop.departureAirport?.name || 'Không xác định'}</p>
+                            <p>{prop.departureAirport?.iataCode}</p>
                         </div>
                         <div className="text-center">
                             <p className="font-bold">Thời gian bay</p>
-                            <p>{duration}</p>
+                            <p>{prop.duration || 'Chưa xác định'}</p>
                         </div>
                         <div className="text-right">
                             <p className="font-bold">Đến</p>
-                            <p className="text-lg">{arrival_time}</p>
-                            <p>{arrival_date}</p>
-                            <p>{arrival_location}</p>
-                            <p>{arrival_airport}</p>
+                            <p className="text-lg">{prop.arrivalTime}</p>
+                            <p>{prop.arrivalAirport?.name || 'Không xác định'}</p>
+                            <p>{prop.arrivalAirport?.iataCode}</p>
                         </div>
                     </div>
                     <Divider />
@@ -83,11 +83,15 @@ export default function FlightPreviewCard({
                                 </p>
                             )}
                             <p className="text-xl font-bold">
-                                {currentPrice.toLocaleString()} VNĐ
+                                {currentPrice
+                                    ? `${currentPrice.toLocaleString()} VNĐ`
+                                    : defaultPrice
+                                        ? `${defaultPrice.toLocaleString()} VNĐ`
+                                        : 'Chưa xác định'}
                             </p>
-                            {appliedDiscount && (
+                            {(currentPrice && defaultPrice && currentPrice !== defaultPrice) && (
                                 <p className="text-sm line-through text-gray-400">
-                                    {price.toLocaleString()} VNĐ
+                                    {defaultPrice.toLocaleString()} VNĐ
                                 </p>
                             )}
                         </div>
