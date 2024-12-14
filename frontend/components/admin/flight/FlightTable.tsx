@@ -205,8 +205,8 @@ export default function FlightTable({ flights }: FlightTableProps ) {
               </Button>
             </DropdownTrigger>
             <DropdownMenu>
-              <DropdownItem href={`/admin/flight/${flight.id}`}>Chi tiết</DropdownItem>
-              <DropdownItem href={`/admin/flight/${flight.id}/edit`}>Chỉnh sửa</DropdownItem>
+              <DropdownItem as={Link} href={`/admin/flight/${flight.id}`}>Chi tiết</DropdownItem>
+              <DropdownItem as={Link} href={`/admin/flight/${flight.id}/edit`}>Chỉnh sửa</DropdownItem>
             </DropdownMenu>
           </Dropdown>
         );
