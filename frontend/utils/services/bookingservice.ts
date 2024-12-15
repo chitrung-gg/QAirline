@@ -5,7 +5,7 @@ import { api } from "../api/config";
 export const bookingService = {
   create: async (data: CreateBookingDto) => {
     try {
-      const response = await api.post(`/booking`, data);
+      const response = await api.post(`http://localhost:5000/booking`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -14,7 +14,7 @@ export const bookingService = {
 
   getAll: async () => {
     try {
-      const response = await api.get(`/booking`);
+      const response = await api.get(`http://localhost:5000/booking`);
       return response.data;
     } catch (error) {
       throw error;
@@ -23,7 +23,7 @@ export const bookingService = {
 
   getById: async (id: number) => {
     try {
-      const response = await api.get(`/booking/${id}`);
+      const response = await api.get(`http://localhost:5000/booking/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -32,7 +32,10 @@ export const bookingService = {
 
   update: async (id: number, data: UpdateBookingDto) => {
     try {
-      const response = await api.patch(`/booking/${id}`, data);
+      const response = await api.patch(
+        `http://localhost:5000/booking/${id}`,
+        data
+      );
       return response.data;
     } catch (error) {
       throw error;
@@ -41,7 +44,7 @@ export const bookingService = {
 
   delete: async (id: number) => {
     try {
-      const response = await api.delete(`/booking/${id}`);
+      const response = await api.delete(`http://localhost:5000/booking/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -50,7 +53,10 @@ export const bookingService = {
 
   changeStatus: async (id: number, status: string) => { 
     try {
-      const response = await api.patch(`/booking/${id}/status`, { status });
+      const response = await api.patch(
+        `http://localhost:5000/booking/${id}/status`,
+        { status }
+      );
       return response.data;
     } catch (error) {
       throw error;

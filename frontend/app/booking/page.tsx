@@ -35,17 +35,17 @@ export default function BookingPage() {
         tripType: 'mot-chieu' as 'mot-chieu' | 'khu-hoi'
     });
 
+    const fetchAirports = async () => {
+        try {
+            const response = await api.get<Airport[]>('http://localhost:5000/airport'); // Adjust API endpoint
+            setAirports(response.data);
+        } catch (error) {
+            console.error('Error fetching airports:', error);
+        }
+    };
+
     // Fetch airports on component mount
     useEffect(() => {
-        const fetchAirports = async () => {
-            try {
-                const response = await api.get<Airport[]>('/airport'); // Adjust API endpoint
-                setAirports(response.data);
-            } catch (error) {
-                console.error('Error fetching airports:', error);
-            }
-        };
-
         fetchAirports();
     }, []);
 

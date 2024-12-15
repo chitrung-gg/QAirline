@@ -25,30 +25,30 @@ export default function FlightResultsPage() {
     const [flights, setFlights] = React.useState<Flight[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
 
-    useEffect(() => {
-        // If no search params, redirect to search page
-        if (!searchParams.departure || !searchParams.destination) {
-            router.push('/booking');
-            return;
+    // Fetch flights based on search parameters
+    const fetchFlights = async () => {
+        try {
+            const response = await api.get('http://localhost:5000/flight', {
+                params: {
+                    departureAirport: searchParams.departure,
+                    arrivalAirport: searchParams.destination,
+                    departureDate: searchParams.departureDate,
+                }
+            });
+            setFlights(response.data);
+            setIsLoading(false);
+        } catch (error) {
+            console.error('Error fetching flights:', error);
+            setIsLoading(false);
         }
+    };
 
-        // Fetch flights based on search parameters
-        const fetchFlights = async () => {
-            try {
-                const response = await api.get('/flight', {
-                    params: {
-                        departureAirport: searchParams.departure,
-                        arrivalAirport: searchParams.destination,
-                        departureDate: searchParams.departureDate,
-                    }
-                });
-                setFlights(response.data);
-                setIsLoading(false);
-            } catch (error) {
-                console.error('Error fetching flights:', error);
-                setIsLoading(false);
-            }
-        };
+    useEffect(() => {
+        // If no search params, redirect to search page uncomment this block to use
+        // if (!searchParams.departure || !searchParams.destination) {
+        //     router.push('/booking');
+        //     return;
+        // }
 
         fetchFlights();
     }, [searchParams, router]);

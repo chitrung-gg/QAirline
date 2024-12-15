@@ -5,7 +5,7 @@ import { api } from "../api/config";
 export const aircraftService = {
   create: async (data: CreateAircraftDto) => {
     try {
-      const response = await api.post(`/aircraft`, data);
+      const response = await api.post(`http://localhost:5000/aircraft`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -14,7 +14,7 @@ export const aircraftService = {
 
   getAll: async () => {
     try {
-      const response = await api.get(`/aircraft`);
+      const response = await api.get(`http://localhost:5000/aircraft`);
       return response.data;
     } catch (error) {
       throw error;
@@ -23,7 +23,7 @@ export const aircraftService = {
 
   getById: async (id: number) => {
     try {
-      const response = await api.get(`/aircraft/${id}`);
+      const response = await api.get(`http://localhost:5000/aircraft/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -33,7 +33,7 @@ export const aircraftService = {
   update: async (id: number, data: UpdateAircraftDto) => {
     try {
       const response = await api.patch(
-        `/aircraft/${id}`,
+        `http://localhost:5000/aircraft/${id}`,
         data
       );
       return response.data;
@@ -44,7 +44,7 @@ export const aircraftService = {
 
   delete: async (id: number) => {
     try {
-      const response = await api.delete(`/aircraft/${id}`);
+      const response = await api.delete(`http://localhost:5000/aircraft/${id}`);
       return response.data;
     } catch (error) {
       throw error;

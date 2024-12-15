@@ -5,7 +5,7 @@ import { api } from "../api/config";
 export const promotionService = {
   create: async (data: CreatePromotionDto) => {
     try {
-      const response = await api.post(`/promotion`, data);
+      const response = await api.post(`http://localhost:5000/promotion`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -14,7 +14,7 @@ export const promotionService = {
 
   getAll: async () => {
     try {
-      const response = await api.get(`/promotion`);
+      const response = await api.get(`http://localhost:5000/promotion`);
       return response.data;
     } catch (error) {
       throw error;
@@ -23,7 +23,7 @@ export const promotionService = {
 
   getById: async (id: number) => {
     try {
-      const response = await api.get(`/promotion/${id}`);
+      const response = await api.get(`http://localhost:5000/promotion/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -33,7 +33,7 @@ export const promotionService = {
   update: async (id: number, data: UpdatePromotionDto) => {
     try {
       const response = await api.patch(
-        `/promotion/${id}`,
+        `http://localhost:5000/promotion/${id}`,
         data
       );
       return response.data;
@@ -44,7 +44,9 @@ export const promotionService = {
 
   delete: async (id: number) => {
     try {
-      const response = await api.delete(`/promotion/${id}`);
+      const response = await api.delete(
+        `http://localhost:5000/promotion/${id}`
+      );
       return response.data;
     } catch (error) {
       throw error;
@@ -53,7 +55,7 @@ export const promotionService = {
 
   getByName: async (name: string) => {
     try {
-      const response = await api.get(`/promotion/${name}`);
+      const response = await api.get(`http://localhost:5000/promotion/${name}`);
       return response.data;
     } catch (error) {
       throw error;

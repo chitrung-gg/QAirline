@@ -49,7 +49,10 @@ export const flightService = {
 
   update: async (id: number, data: UpdateFlightDto) => {
     try {
-      const response = await api.patch(`/flight/${id}`, data);
+      const response = await api.patch(
+        `http://localhost:5000/flight/${id}`,
+        data
+      );
       return response.data;
     } catch (error) {
       throw error;
@@ -58,7 +61,7 @@ export const flightService = {
 
   delete: async (id: number) => {
     try {
-      const response = await api.delete(`/flight/${id}`);
+      const response = await api.delete(`http://localhost:5000/flight/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -67,7 +70,7 @@ export const flightService = {
 
   searchFlights: async (params: FlightSearchParams): Promise<Flight[]> => {
     try {
-      const response = await api.get(`/flight/`, {
+      const response = await api.get(`http://localhost:5000/flight/`, {
         params: {
           isRoundTrip: params.isRoundTrip,
           departureAirport: params.departure,

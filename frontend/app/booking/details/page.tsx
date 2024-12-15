@@ -69,7 +69,7 @@ export default function BookingDetailsPage() {
                 price: totalPrice,
             };
 
-            const response = await api.post('/booking', bookingData);
+            const response = await api.post('http://localhost:5000/booking', bookingData);
 
             // Save booking confirmation to Redux store
             dispatch(setBookingConfirmation({

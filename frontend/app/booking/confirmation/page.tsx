@@ -24,12 +24,12 @@ export default function BookingConfirmationPage() {
     const passengerInfo = useAppSelector(state => state.bookingCreate.passengerInfo);
     const bookingConfirmation = useAppSelector(state => state.bookingCreate.bookingConfirmation);
 
-    // Redirect if no booking details
-    useEffect(() => {
-        if (!selectedFlight || !passengerInfo || !bookingConfirmation) {
-            router.push('/booking');
-        }
-    }, [selectedFlight, passengerInfo, bookingConfirmation, router]);
+    // Redirect if no booking details uncomment to use
+    // useEffect(() => {
+    //     if (!selectedFlight || !passengerInfo || !bookingConfirmation) {
+    //         router.push('/booking');
+    //     }
+    // }, [selectedFlight, passengerInfo, bookingConfirmation, router]);
 
     const handleNewBooking = () => {
         // Reset booking state and go to search page

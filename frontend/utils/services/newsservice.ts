@@ -4,7 +4,7 @@ import { api } from "../api/config";
 export const newsService = {
     create: async (data: CreateNewsDto) => {
         try {
-            const response = await api.post(`/news`, data);
+            const response = await api.post(`http://localhost:5000/news`, data);
             return response.data;
         } catch (error) {
             throw error;
@@ -12,7 +12,7 @@ export const newsService = {
     },
     getAll: async () => {
         try {
-            const response = await api.get(`/news`);
+            const response = await api.get(`http://localhost:5000/news`);
             return response.data;
         } catch (error) {
             throw error;
@@ -20,7 +20,7 @@ export const newsService = {
     },
     getById: async (id: number) => {
         try {
-            const response = await api.get(`/news/${id}`);
+            const response = await api.get(`http://localhost:5000/news/${id}`);
             return response.data;
         } catch (error) {
             throw error;
@@ -28,7 +28,10 @@ export const newsService = {
     },
     update: async (id: number, data: UpdateNewsDto) => {
         try {
-            const response = await api.patch(`/news/${id}`, data);
+            const response = await api.patch(
+              `http://localhost:5000/news/${id}`,
+              data
+            );
             return response.data;
         } catch (error) {
             throw error;
@@ -36,7 +39,9 @@ export const newsService = {
     },
     delete: async (id: number) => {
         try {
-            const response = await api.delete(`/news/${id}`);
+            const response = await api.delete(
+              `http://localhost:5000/news/${id}`
+            );
             return response.data;
         } catch (error) {
             throw error;

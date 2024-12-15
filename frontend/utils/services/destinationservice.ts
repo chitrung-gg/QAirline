@@ -4,7 +4,10 @@ import { api } from "../api/config";
 export const destinationService = {
     create: async (data: CreateDestinationDto) => {
         try {
-            const response = await api.post(`/destination`, data);
+            const response = await api.post(
+              `http://localhost:5000/destination`,
+              data
+            );
             return response.data;
         } catch (error) {
             throw error;
@@ -12,7 +15,7 @@ export const destinationService = {
     },
     getAll: async () => {
         try {
-            const response = await api.get(`/destination`);
+            const response = await api.get(`http://localhost:5000/destination`);
             return response.data;
         } catch (error) {
             throw error;
@@ -20,7 +23,9 @@ export const destinationService = {
     },
     getById: async (id: number) => {
         try {
-            const response = await api.get(`/destination/${id}`);
+            const response = await api.get(
+              `http://localhost:5000/destination/${id}`
+            );
             return response.data;
         } catch (error) {
             throw error;
@@ -28,7 +33,10 @@ export const destinationService = {
     },
     update: async (id: number, data: UpdateDestinationDto) => {
         try {
-            const response = await api.patch(`/destination/${id}`, data);
+            const response = await api.patch(
+              `http://localhost:5000/destination/${id}`,
+              data
+            );
             return response.data;
         } catch (error) {
             throw error;
@@ -36,7 +44,9 @@ export const destinationService = {
     },
     delete: async (id: number) => {
         try {
-            const response = await api.delete(`/destination/${id}`);
+            const response = await api.delete(
+              `http://localhost:5000/destination/${id}`
+            );
             return response.data;
         } catch (error) {
             throw error;

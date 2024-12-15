@@ -58,7 +58,9 @@ export const fetchBookingByCode = createAsyncThunk(
   "booking/fetchByCode",
   async (bookingCode: string, { rejectWithValue }) => {
     try {
-      const response = await api.get<Booking>(`/booking/${bookingCode}`);
+      const response = await api.get<Booking>(
+        `http://localhost:5000/booking/${bookingCode}`
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue("Không tìm thấy booking");
@@ -71,7 +73,7 @@ export const cancelBooking = createAsyncThunk(
   async (bookingId: number, { rejectWithValue }) => {
     try {
       const response = await api.put<Booking>(
-        `/api/booking/${bookingId}/cancel`
+        `http://localhost:5000/booking/${bookingId}/cancel`
       );
       return response.data;
     } catch (error) {
