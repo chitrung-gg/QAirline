@@ -11,9 +11,16 @@ export class Policy {
     @Column({ type: "varchar", length: 255 })
     title: string; // Tiêu đề của chính sách (ví dụ: "Privacy Policy", "Cancellation Policy")
 
-    @ApiProperty({ description: 'Content of the policy', example: 'This policy explains how we handle your data...' })
-    @Column({ type: "text" })
-    content: string; // Nội dung chính sách chi tiết
+    // @ApiProperty({ description: 'Content of the policy', example: 'This policy explains how we handle your data...' })
+    // @Column({ type: "text" })
+    // content: string; // Nội dung chính sách chi tiết
+
+    @ApiProperty({
+      description: 'Tree structure of sections and subsections',
+      example: '{ "sections": [{ "title": "1.1 Hành lý bị hỏng", "content": "...", "subsections": [...] }] }'
+    })
+    @Column({ type: "jsonb", nullable: true })
+    treeContent: Record<string, any>; // Using Record<string, any> instead of object
 
     @ApiProperty({ description: 'Category of the policy', example: 'Privacy', nullable: true })
     @Column({ type: "varchar", length: 100, nullable: true })

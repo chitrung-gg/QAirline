@@ -39,6 +39,21 @@ export class AboutusService {
     throw new HttpException('Exception found in AboutusService: getAboutusById', HttpStatus.BAD_REQUEST)
   }
 
+  async getAboutusByTitle(title: string) {
+    // TODO: may change to find with string for real case purposes
+    const aboutus = await this.aboutusRepository.find({
+      where: {
+        title: title 
+      }
+    });
+    if (aboutus) {
+      return aboutus;
+    } else {
+      return []
+      throw new HttpException('Exception found in AboutusService: getAboutusByTitle', HttpStatus.BAD_REQUEST)
+    }
+  }
+
   async updateAboutus(id: number, aboutus: UpdateAboutusDto) {
     await this.cacheManager.reset()
     try {
