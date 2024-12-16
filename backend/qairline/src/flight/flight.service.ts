@@ -68,25 +68,27 @@ export class FlightService {
             // throw new Error('Invalid departure or arrival airport code');
         }
 
+        // If search result in Frontend include both departure and arrival, then use this function
+        // if (flight.returnDate < flight.departureDate) {
+        //     throw new HttpException("Return date must be in the future of departure date", HttpStatus.FORBIDDEN)
+        // }
+
         let query = this.flightRepository
             .createQueryBuilder('flight')
-            .where('flight.departureAirportId = :departureAirportId', {
-                departureAirportId: departureAirport.id,
-            })
-            .andWhere('flight.arrivalAirportId = :arrivalAirportId', {
-                arrivalAirportId: arrivalAirport.id,
-            })
+            .leftJoinAndSelect('flight.departureAirport', 'departureAirport')
+            .leftJoinAndSelect('flight.arrivalAirport', 'arrivalAirport') 
             .andWhere('flight.availableSeats >= :passengerCount', { passengerCount: flight.passengerCount})
-            .andWhere('flight.departureTime >= :departureDate', { departureDate: flight.departureDate });
+            .andWhere('DATE(flight.departureTime) = DATE(:departureDate)', { departureDate: flight.departureDate })
+
 
         // If it's a round-trip search, add conditions for return date
-        if (flight.isRoundTrip) {
-            if (flight.returnDate) {
-                query = query.andWhere('flight.departureTime >= :returnDate', { returnDate: flight.returnDate });
-            } else {
-                throw new HttpException('Exception found in FlightService: searchFlight', HttpStatus.BAD_REQUEST)
-            }
-        } 
+        // if (flight.isRoundTrip) {
+        //     if (flight.returnDate) {
+        //         query = query.andWhere('flight.departureTime = :returnDate', { returnDate: flight.returnDate });
+        //     } else {
+        //         throw new HttpException('Exception found in FlightService: searchFlight', HttpStatus.BAD_REQUEST)
+        //     }
+        // } 
 
         // Execute the query
         const flightResult =  await query.getMany();
