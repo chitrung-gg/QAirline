@@ -28,7 +28,7 @@ export class Booking {
     passengerName: string;
   
     @ApiProperty({ description: 'Email of the passenger', example: 'john.doe@example.com' })
-    @Column({ type: "varchar", unique: true, length: 100 })
+    @Column({ type: "varchar", length: 100 })
     passengerEmail: string; 
 
     @ApiProperty({ description: 'Date of birth of the passenger', example: '1990-01-01T00:00:00Z' })

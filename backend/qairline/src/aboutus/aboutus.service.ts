@@ -39,18 +39,19 @@ export class AboutusService {
     throw new HttpException('Exception found in AboutusService: getAboutusById', HttpStatus.BAD_REQUEST)
   }
 
-  async getAboutusByTitle(title: string) {
+  async getAboutusByCategory(category: "Achievement" | "Intro" | "OurValue" | "OurVision") {
     // TODO: may change to find with string for real case purposes
     const aboutus = await this.aboutusRepository.find({
       where: {
-        title: title 
+        category: category
       }
     });
-    if (aboutus) {
-      return aboutus;
+    if (aboutus && aboutus.length > 0) {
+      return aboutus.map(item => ({
+          ...item
+      }));
     } else {
-      return []
-      throw new HttpException('Exception found in AboutusService: getAboutusByTitle', HttpStatus.BAD_REQUEST)
+        return [];
     }
   }
 
