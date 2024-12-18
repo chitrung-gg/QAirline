@@ -2,10 +2,33 @@
 
 import { Promotion } from "@/interfaces/promotion";
 import { Card, CardBody, CardFooter, Image, Button } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
+import { toLocalTimeZone, parseZonedDateTime, DateFormatter } from "@internationalized/date";
+import { useState } from "react";
 
 export default function OfferCard(prop: Promotion) {
-  const router = useRouter();
+  const [buttonText, setButtonText] = useState("Sao chép mã");
+
+  const handleCopyCode = () => {
+    navigator.clipboard.writeText(prop.code).then(() => {
+      setButtonText("Đã sao chép"); 
+      setTimeout(() => {
+        setButtonText("Sao chép mã"); 
+      }, 1000);
+    }).catch((error) => {
+      console.error("Có lỗi khi sao chép mã!", error);
+    });
+  };
+
+  const formatDate = (isoDate: string) => {
+    const dateFormatter = new Intl.DateTimeFormat('vi-VN', {
+      calendar: 'gregory', // Lịch Dương
+      timeZone: 'UTC', // Múi giờ UTC
+    });
+  
+    const date = new Date(isoDate);
+    return dateFormatter.format(date);
+  };
+
   return (
     <Card shadow="sm" className="rounded-lg" >
       <CardBody className="overflow-visible p-0">
@@ -31,13 +54,23 @@ export default function OfferCard(prop: Promotion) {
                   text-lg">{prop.code}</span>
               </div>
               <div className="mt-5">
-                <span className="font-medium bg-secondary-light-hover px-2 py-1 rounded-lg mobile:text-xs text-sm">HSD: {prop.endDate}</span>
+                <span className="font-medium bg-secondary-light-hover px-2 py-1 rounded-lg mobile:text-xs text-sm">
+                  {/* HSD: {prop.endDate} */}
+                  HSD: {formatDate(prop.endDate)}
+                </span>
               </div>
             </div>
           </div>
           <div className="w-2/5 flex items-end md:justify-end mr-1">
-            <Button className="text-base mobile:text-sm font-medium text-white bg-blue-normal " radius='sm' onPress={() => router.push("/")}>
+            {/* <Button className="text-base mobile:text-sm font-medium text-white bg-blue-normal " radius='sm' onPress={() => router.push("/")}>
               Đặt vé ngay
+            </Button> */}
+            <Button 
+              className="text-base mobile:text-sm font-medium text-white bg-blue-normal" 
+              radius="sm" 
+              onPress={handleCopyCode}
+            >
+              {buttonText}
             </Button>
           </div>
         </div>

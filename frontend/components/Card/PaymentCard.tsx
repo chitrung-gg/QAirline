@@ -5,7 +5,7 @@ import React from "react";
 export default function PaymentCard() {
   return (
     <Card className="">
-        <CardHeader className="flex text-left items-start px-10 py-5 justify-between">
+        <CardHeader className="flex text-left items-start p-3 justify-between">
             <div className="flex flex-col">
                 <p className="text-lg font-semibold">Thanh toán</p>
             </div>
@@ -22,9 +22,8 @@ export default function PaymentCard() {
                 />
             </div>
         </CardHeader>
-        <CardBody className="flex flex-col px-10 py-1">
+        <CardBody className="flex flex-col p-3">
             <Input 
-                isRequired
                 labelPlacement={"outside"}
                 placeholder="xxxx xxxx xxxx xxxx"
                 size="lg" 
@@ -32,20 +31,20 @@ export default function PaymentCard() {
                 label="Thông tin thẻ" 
                 variant="bordered" 
                 className="mb-5"
+                type="number"
             />
             <div className="flex flex-col md:flex-row justify-between gap-2">
                 <Input 
-                    isRequired
                     labelPlacement={"outside"}
                     placeholder="Tháng"
                     size="lg" 
                     radius="sm"
-                    label="Ngày hết hạn" 
+                    label="Tháng hết hạn" 
                     variant="bordered" 
                     className="mb-5"
+                    type="number"
                 />
                 <Input 
-                    isRequired
                     labelPlacement={"outside"}
                     placeholder="Năm"
                     size="lg" 
@@ -53,10 +52,10 @@ export default function PaymentCard() {
                     label="Năm hết hạn" 
                     variant="bordered" 
                     className="mb-5"
+                    type="number"
                 />
                 <Divider orientation="vertical" className="mx-1" />
                 <Input 
-                    isRequired
                     labelPlacement={"outside"}
                     placeholder="xxx"
                     size="lg" 
@@ -64,10 +63,10 @@ export default function PaymentCard() {
                     label="CVV/CVC" 
                     variant="bordered" 
                     className="mb-5"
+                    type="number"
                 />
             </div>
             <Input 
-                isRequired
                 labelPlacement={"outside"}
                 placeholder="Chủ thẻ"
                 size="lg" 

@@ -83,6 +83,9 @@ export const PromotionCodeForm: React.FC<PromotionCodeFormProps> = ({
                     className="flex-1"
                     color={error ? 'danger' : 'default'}
                     errorMessage={error}
+                    variant='bordered'
+                    size='lg'
+                    radius='sm'
                 />
                 <Button
                     color="primary"

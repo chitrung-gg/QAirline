@@ -18,15 +18,7 @@ export default function OffersPage() {
                 setIsLoading(true);
                 const promotions = await promotionService.getAll();
 
-                // Transform promotions to match OfferCard props
-                const transformedOffers = promotions.map((promo: Promotion) => ({
-                    image: '/images/sky.jpg', // Default image, replace with actual image logic if needed
-                    title: promo.description,
-                    promoCode: promo.code,
-                    expiryDate: promo.endDate
-                }));
-
-                setOffers(transformedOffers);
+                setOffers(promotions);
                 setIsLoading(false);
             } catch (err) {
                 setError('Failed to fetch offers');
@@ -69,7 +61,7 @@ export default function OffersPage() {
                         Không có ưu đãi nào hiện tại
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 desktop:grid-cols-2 laptop:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 desktop:grid-cols-3 laptop:grid-cols-3 gap-8">
                         {offers.map((offer, index) => (
                             <OfferCard key={index} {...offer} />
                         ))}

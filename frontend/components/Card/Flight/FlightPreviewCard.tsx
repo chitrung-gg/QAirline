@@ -73,7 +73,7 @@ export default function FlightPreviewCard(prop: Flight) {
                             <p>{prop.arrivalAirport?.iataCode}</p>
                         </div>
                     </div>
-                    <Divider />
+                    {/* <Divider />
                     <div className="flex justify-between items-center">
                         <p className="text-xl font-bold">Tổng tiền</p>
                         <div className="text-right">
@@ -95,7 +95,7 @@ export default function FlightPreviewCard(prop: Flight) {
                                 </p>
                             )}
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </CardBody>
         </Card>
