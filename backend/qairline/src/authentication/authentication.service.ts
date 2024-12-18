@@ -75,6 +75,8 @@ export class AuthenticationService {
             } catch (error) {
                 console.log('Invalid or expired token', error);
             }
+        } else {
+            return null
         }
 
         return user

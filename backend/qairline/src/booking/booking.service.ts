@@ -32,28 +32,37 @@ export class BookingService {
 	) {}
 
 	generateBookingCode(airlineCode: string, flightId: number): string {
-		const todayDate = new Date().toISOString().slice(2, 10).replace(/-/g, '');
+		// const todayDate = new Date().toISOString().slice(2, 10).replace(/-/g, '');
 
 		// Generate a simple random 4-character alphanumeric passenger ID
 		const passengerId = Math.random().toString(36).substring(2, 6).toUpperCase();
 	
-		// Combine all elements to form the ticket code
-		return `${airlineCode}${flightId}-${todayDate}-${passengerId}`;
+		return `${airlineCode}-${passengerId}`;
 	}
 
 	async createBooking(booking: CreateBookingDto, user: any) {
 		await this.cacheManager.reset()
+
 		const flight = await this.flightRepository.findOne({
 			where: {
 				id: booking.flight.id
 			}
 		})
-		const promotion = await this.promotionRepository.findOne({
-			where: {
-				id: booking.promotion.id
-			}
-		})
 
+		let promotion = null
+		if (booking.promotion && booking.promotion.id) {
+			promotion = await this.promotionRepository.findOne({
+				where: {
+					id: booking.promotion.id
+				}
+			})
+
+			if (!promotion) {
+				throw new HttpException('Not found the promotion with the id given', HttpStatus.NOT_FOUND)
+			}
+		}
+
+		
 		const newBooking = await this.bookingRepository.create(booking)
 		newBooking.bookingCode = this.generateBookingCode(flight.aircraft.aircraftCode, flight.id)
 		
@@ -67,11 +76,18 @@ export class BookingService {
 			newBooking.user = await this.userService.getUserById(user.id)
 		}
 
+		let totalPrice = -1
 		if (promotion) {
-			newBooking.totalPrice = await this.calculateFinalPrice(newBooking, promotion)
+			totalPrice = await this.calculateFinalPrice(newBooking, promotion)
 		} else {
-			newBooking.totalPrice = newBooking.ticketPrice[newBooking.seatClass]
+			totalPrice = newBooking.ticketPrice[newBooking.seatClass]
 		}
+
+		if (newBooking.totalPrice != totalPrice) {
+			throw new HttpException('Price from Frontend different with the one from Backend', HttpStatus.BAD_REQUEST)
+		}
+
+		newBooking.totalPrice = totalPrice
 
 		await this.bookingRepository.save(newBooking)
 
@@ -315,6 +331,8 @@ export class BookingService {
 		let query = this.bookingRepository
 			.createQueryBuilder('booking')
 			.leftJoinAndSelect('booking.flight', 'flight')  // Join and select the flight entity
+			.leftJoinAndSelect('flight.departureAirport', 'departureAirport')
+			.leftJoinAndSelect('flight.arrivalAirport', 'arrivalAirport')
 			.leftJoinAndSelect('booking.promotion', 'promotion')  // Join and select the promotion entity
 			.leftJoinAndSelect('booking.payments', 'payment')  // Join and select the payments
 			.where('booking.bookingCode = :bookingCode', { bookingCode });  // Use the booking code for the where clause

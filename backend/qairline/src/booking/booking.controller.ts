@@ -26,7 +26,7 @@ export class BookingController {
   @ApiResponse({ status: 400, description: 'Invalid input.' })
   async createBooking(@Body() createBookingDto: CreateBookingDto, @Req() req: RequestWithUser) {
     const token = req.headers['authorization']?.split(' ')[1];
-    const user = this.authenticationService.decodeToken(token)
+    const user = await this.authenticationService.decodeToken(token)
     return this.bookingService.createBooking(createBookingDto, user);
   }
 

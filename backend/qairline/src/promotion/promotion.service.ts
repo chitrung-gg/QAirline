@@ -44,6 +44,19 @@ export class PromotionService {
       throw new HttpException('Exception found in PromotionService: getPromotionById', HttpStatus.BAD_REQUEST)
   }
 
+  async getPromotionByCode(code: string) {
+      const promotion = this.promotionRepository.findOne({
+          where: {
+              code: code
+          },
+          relations: ['booking']
+      })
+      if (promotion) {
+          return promotion
+      }
+      throw new HttpException('Exception found in PromotionService: getPromotionByCode', HttpStatus.BAD_REQUEST)
+  }
+
   async updatePromotion(id: number, promotion: UpdatePromotionDto) {
     await this.cacheManager.reset()
     try {
