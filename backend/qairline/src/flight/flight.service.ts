@@ -30,7 +30,7 @@ export class FlightService {
 
         const diff = arrival - departure;
 
-        return diff / (1000 * 60 * 60); // 1000ms = 1s, 60s = 1m, 60m = 1h
+        return diff / (1000 * 60); // 1000ms = 1s, 60s = 1m
     }
 
     async setSeatClasses(aircraftService: AircraftService, flight: Flight) {
@@ -45,7 +45,7 @@ export class FlightService {
             throw new HttpException('Please check again the departureTime and arrivalTime', HttpStatus.NOT_ACCEPTABLE);
         }
         const newFlight = await this.flightRepository.create(flight)
-        this.setDuration(newFlight.departureTime, newFlight.arrivalTime)
+        newFlight.duration = await this.setDuration(newFlight.departureTime, newFlight.arrivalTime)
         // flight.seatClasses = {
         //     ...(await this.aircraftService.getAircraftById(flight.aircraft.id)).seatClasses
         // }
@@ -74,11 +74,13 @@ export class FlightService {
         // }
 
         let query = this.flightRepository
-            .createQueryBuilder('flight')
-            .leftJoinAndSelect('flight.departureAirport', 'departureAirport')
-            .leftJoinAndSelect('flight.arrivalAirport', 'arrivalAirport') 
-            .andWhere('flight.availableSeats >= :passengerCount', { passengerCount: flight.passengerCount})
-            .andWhere('DATE(flight.departureTime) = DATE(:departureDate)', { departureDate: flight.departureDate })
+                .createQueryBuilder('flight')
+                .leftJoinAndSelect('flight.departureAirport', 'departureAirport')
+                .leftJoinAndSelect('flight.arrivalAirport', 'arrivalAirport')
+                .andWhere('flight.availableSeats >= :passengerCount', { passengerCount: flight.passengerCount })
+                .andWhere('DATE(flight.departureTime) = DATE(:departureDate)', { departureDate: flight.departureDate })
+                .andWhere('departureAirport.id = :departureAirportId', { departureAirportId: departureAirport.id })
+                .andWhere('arrivalAirport.id = :arrivalAirportId', { arrivalAirportId: arrivalAirport.id });
 
 
         // If it's a round-trip search, add conditions for return date
