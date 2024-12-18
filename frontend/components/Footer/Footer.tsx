@@ -48,15 +48,15 @@ export default function Footer() {
                     tablet:justify-center tablet:pb-4
                     mini-laptop:justify-center mini-laptop:pb-4"
                         >
-                        <div className="flex w-fit h-fit hover:cursor-pointer bg-white rounded-xl items-center py-2 pr-4 pl-2" onClick={() => router.push('/')}>
+                        <div className="flex w-fit h-fit hover:cursor-pointer bg-transparent rounded-xl items-center py-2 pr-4 pl-2" onClick={() => router.push('/')}>
                             <Image
                                 src="/images/Qairline.png"
                                 width={75}
                                 height={75}
                                 alt='Qairline logo'
-                                className='transition-all hover:scale-110'
+                                className='transition-all hover:scale-110 filter brightness-0 invert'
                             />
-                            <p className="font-bold text-blue-normal text-xl">QAirline</p>
+                            <p className="font-bold text-white text-xl">QAirline</p>
                         </div>
 
                     </div>

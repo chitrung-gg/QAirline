@@ -4,6 +4,14 @@ import React from 'react';
 import { Card, CardHeader, CardBody, CardFooter, Divider, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import Image from "next/image";
 import { Flight } from '@/interfaces/flight';
+import { FlightStatus } from '@/interfaces/flight';
+
+const statusOptions = [
+    { name: "Đã lên lịch", uid: FlightStatus.SCHEDULED },
+    { name: "Đã đến", uid: FlightStatus.ARRIVED },
+    { name: "Chậm", uid: FlightStatus.DELAYED },
+    { name: "Hủy", uid: FlightStatus.CANCELLED }
+];
 
 export default function FlightDetailsCard(props: Flight) {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -14,7 +22,7 @@ export default function FlightDetailsCard(props: Flight) {
                 className="bg-transparent text-blue-normal text-md font-semibold"
                 onPress={onOpen}
             >
-                Flight Details
+                Chi tiết chuyến bay
             </Button>
 
             <Modal
@@ -26,14 +34,13 @@ export default function FlightDetailsCard(props: Flight) {
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex flex-col gap-1">
-                                Flight Details
+                                Chi tiết chuyến bay
                             </ModalHeader>
                             <ModalBody>
                                 <div className='flex flex-col gap-4'>
                                     <div className="justify-between">
                                         <div className="flex flex-col mr-3">
-                                            <p className="text-md">Flight Number: {props.flightNumber}</p>
-                                            <p className="text-md">Aircraft: {props.aircraft?.model} ({props.aircraft?.manufacturer})</p>
+                                            <p className="text-md">Mã chuyến bay: {props.flightNumber}</p>
                                         </div>
                                     </div>
                                     <Divider />

@@ -14,6 +14,7 @@ export interface Booking {
   promotion?: Promotion;
   ticketPrice: Record<string, number>;
   totalPrice: number;
+  passengerNumber: number;
   seatNumber?: string; // no need
   seatClass: string;
   bookingDate: string;
@@ -24,7 +25,7 @@ export interface Booking {
 
 export enum BookingStatus {
     CONFIRMED = 'Confirmed',
-    PENDING = 'Pending',
+    PENDING = 'Pending', // ?
     CANCELLED = 'Cancelled',
 }
 
@@ -35,10 +36,22 @@ export enum PaymentStatus {
 }
 
 export interface CreateBookingDto {
-  userId?: number;
-  flightId?: number;
-  passengerName?: string;
-  seatNumber?: string;
+  user?: User;
+  flight: Flight;
+  passengerName: string;
+  passengerDob: string;
+  passengerEmail: string;
+  passportNumber: string;
+  promotion?: Promotion;
+  ticketPrice: Record<string, number>;
+  totalPrice: number;
+  passengerNumber: number;
+  seatClass: string;
+  bookingDate: string;
+  bookingStatus?: BookingStatus;
+  paymentStatus?: PaymentStatus;
+  seatNumber?: string; // no need
+//   payments?: Payment[];
 }
 
 export interface UpdateBookingDto extends Partial<CreateBookingDto> {}

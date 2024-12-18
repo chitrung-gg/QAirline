@@ -42,8 +42,6 @@ export default function NavBar() {
     const router = useRouter();
     
     const { user, logoutContext } = React.useContext(UserContext);
-    console.log('User:', user);
-
 
     const handleLogout = async () => {
         if (window.confirm('Bạn có muốn đăng xuất không?')) {
