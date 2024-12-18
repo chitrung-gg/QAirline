@@ -9,6 +9,23 @@ interface FlightPreviewCardProps extends Partial<Flight> {
     getDiscountInfo?: () => { discountedPrice?: number; code?: string };
 }
 
+export const formatDateTime = (isoString: string, format: 'DD/MM/YYYY' | 'MM/DD/YYYY' = 'DD/MM/YYYY') => {
+    const date = new Date(isoString);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+    const year = date.getFullYear();
+
+    let formattedDate;
+    if (format === 'DD/MM/YYYY') {
+        formattedDate = `${day}/${month}/${year}`;
+    } else {
+        formattedDate = `${month}/${day}/${year}`;
+    }
+
+    const formattedTime = date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+    return { formattedDate, formattedTime };
+};
+
 export default function FlightPreviewCard(prop: Flight) {
     const [currentPrice, setCurrentPrice] = useState<number | undefined>(undefined);
     const [appliedDiscount, setAppliedDiscount] = useState<string | undefined>(undefined);
@@ -26,6 +43,18 @@ export default function FlightPreviewCard(prop: Flight) {
 
     // Determine the default price based on the first seat class
     const defaultPrice = prop.baseClassPrice && Object.values(prop.baseClassPrice)[0];
+
+    const { formattedDate: departureDate, formattedTime: departureTime } = formatDateTime(prop.departureTime);
+    const { formattedDate: arrivalDate, formattedTime: arrivalTime } = formatDateTime(prop.arrivalTime);
+
+    function calculateDuration(duration: number | undefined) {
+        if (!duration) return "0 phút";
+        const hours = Math.floor(duration / 60);
+        const minutes = duration % 60;
+        return `${hours > 0 ? `${hours} giờ ` : ""}${minutes} phút`;
+    }
+
+    const calculatedDuration = calculateDuration(prop.duration);
 
     return (
         <Card className="w-full">
@@ -58,17 +87,19 @@ export default function FlightPreviewCard(prop: Flight) {
                     <div className="flex justify-between">
                         <div>
                             <p className="font-bold">Khởi hành</p>
-                            <p className="text-lg">{prop.departureTime}</p>
+                            <p className="text-lg">{departureTime}</p>
+                            <p className="text-lg">{departureDate}</p>
                             <p>{prop.departureAirport?.name || 'Không xác định'}</p>
                             <p>{prop.departureAirport?.iataCode}</p>
                         </div>
                         <div className="text-center">
                             <p className="font-bold">Thời gian bay</p>
-                            <p>{prop.duration || 'Chưa xác định'}</p>
+                            <p>{calculatedDuration}</p>
                         </div>
                         <div className="text-right">
                             <p className="font-bold">Đến</p>
-                            <p className="text-lg">{prop.arrivalTime}</p>
+                            <p className="text-lg">{arrivalTime}</p>
+                            <p className="text-lg">{arrivalDate}</p>
                             <p>{prop.arrivalAirport?.name || 'Không xác định'}</p>
                             <p>{prop.arrivalAirport?.iataCode}</p>
                         </div>

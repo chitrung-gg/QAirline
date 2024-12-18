@@ -1,8 +1,7 @@
-"use client";
-
 import ImageSection from "@/components/ImageSection";
 import FAQSection from "@/components/Support/FAQSection";
 import Headline from "@/components/Support/Headline";
+import axios from "axios";
 
 const faqs = [
     {
@@ -42,12 +41,17 @@ const faqs = [
     }
 ];
 
-export default function Support() {
+export default async function Support() {
+    const res = await axios.get('http://localhost:5000/faq');
+    const data = res.data;
+
+    // const data = faqs;
+
     return (
         <div className="">
             <ImageSection />
             <Headline />
-            <FAQSection faqs={faqs}/>
+            <FAQSection faqs={data}/>
         </div>
-    )
+    );
 }

@@ -111,7 +111,7 @@ export default function BookingPage() {
                                     startContent={<FaPlaneDeparture className="text-default-400 text-xl" />}
                                     onSelectionChange={(key) => {
                                         const selected = airports.find((a) => a.id === Number(key));
-                                        handleAirportSelect("destination", selected?.name || "");
+                                        handleAirportSelect("departure", selected?.city || "");
                                     }}
                                     className="w-full"
                                 >
@@ -131,7 +131,7 @@ export default function BookingPage() {
                                     startContent={<FaPlaneArrival className="text-default-400 text-xl" />}
                                     onSelectionChange={(key) => {
                                         const selected = airports.find((a) => a.id === Number(key));
-                                        handleAirportSelect("destination", selected?.name || "");
+                                        handleAirportSelect("destination", selected?.city || "");
                                     }}
                                     className="w-full"
                                 >
@@ -166,6 +166,7 @@ export default function BookingPage() {
                                     placeholder="Chọn ngày đi"
                                     value={searchForm.departureDate}
                                     onChange={handleInputChange}
+                                    min={new Date().toISOString().split('T')[0]}
                                     className="w-full"
                                 />
 
@@ -178,6 +179,7 @@ export default function BookingPage() {
                                         placeholder="Chọn ngày về"
                                         value={searchForm.returnDate}
                                         onChange={handleInputChange}
+                                        min={new Date().toISOString().split('T')[0]}
                                         className="w-full"
                                     />
                                 )}

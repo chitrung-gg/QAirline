@@ -21,14 +21,23 @@ const achivements = [
     },
 ];
 
-export default function Archivement() {
+interface Achievement {
+    image_url: string;
+    description: string;
+}
+
+interface ArchivementProps {
+    achievements: Achievement[];
+}
+
+export default function Archivement({ achievements }: ArchivementProps) {
     return (
         <div className="max-w-6xl mx-auto">
             <div className="w-full flex flex-col justify-center items-center px-4 py-8 desktop:py-8 gap-8">
                 <p className="text-2xl md:text-3xl lg:text-3xl font-bold text-blue-normal italic text-center">Thành tựu đạt được</p>
                 <div className="grid grid-cols-4 mobile:grid-cols-2 tablet:grid-cols-2 gap-2">
                     {/* Archivement grid */}
-                    {achivements.map((achievement, index) => (
+                    {achievements.map((achievement, index) => (
                         <Card
                             key={index}
                             className="achievement-item flex flex-col items-center text-center gap-4"
@@ -39,7 +48,6 @@ export default function Archivement() {
                                 height={200}
                                 className="w-full object-cover transition-all"
                             />
-
                             <p className="text-base p-2">{achievement.description}</p>
                         </Card>
                     ))}

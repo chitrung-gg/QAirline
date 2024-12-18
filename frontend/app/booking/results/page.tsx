@@ -22,36 +22,47 @@ export default function FlightResultsPage() {
 
     // Get search params and flights from Redux store
     const searchParams = useAppSelector(state => state.bookingCreate.searchParams);
+    const currentFlightStep = useAppSelector(state => state.bookingCreate.currentFlightStep);
     const [flights, setFlights] = React.useState<Flight[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
 
     // Fetch flights based on search parameters
     const fetchFlights = async () => {
         try {
-            const response = await api.get('http://localhost:5000/flight', {
-                params: {
-                    departureAirport: searchParams.departure,
-                    arrivalAirport: searchParams.destination,
-                    departureDate: searchParams.departureDate,
-                }
-            });
+            const params = {
+                departureCity: currentFlightStep === "departure" ? searchParams.departure : searchParams.destination,
+                arrivalCity: currentFlightStep === "departure" ? searchParams.destination : searchParams.departure,
+                departureDate: currentFlightStep === "departure" ? searchParams.departureDate : searchParams.returnDate,
+                passengerCount: searchParams.passengers,
+            };
+
+            const response = await api.get('http://localhost:5000/flight/search', { params });
+
+            // console.log('API Request:', params);
+            // console.log('API Response:', response.data);
+
             setFlights(response.data);
-            setIsLoading(false);
         } catch (error) {
             console.error('Error fetching flights:', error);
+        } finally {
             setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        // If no search params, redirect to search page uncomment this block to use
-        // if (!searchParams.departure || !searchParams.destination) {
-        //     router.push('/booking');
-        //     return;
-        // }
-
+        console.log('searchParams:', searchParams);
+        if (
+            !searchParams.departure ||
+            !searchParams.destination ||
+            !searchParams.departureDate ||
+            (searchParams.tripType === "khu-hoi" && !searchParams.returnDate)
+        ) {
+            router.push('/booking');
+            return;
+        }
+    
         fetchFlights();
-    }, [searchParams, router]);
+    }, [currentFlightStep, searchParams, router]);
 
     if (isLoading) {
         return (
@@ -98,31 +109,25 @@ export default function FlightResultsPage() {
                                 variant="flat"
                                 startContent={<MapPin size={16} />}
                             >
-                                Đi: {searchParams.departure}
+                                {/* Đi: {searchParams.departure} */}
+                                Đi: {currentFlightStep === "departure" ? searchParams.departure : searchParams.destination}
                             </Chip>
                             <Chip
                                 color="secondary"
                                 variant="flat"
                                 startContent={<MapPin size={16} />}
                             >
-                                Đến: {searchParams.destination}
+                                {/* Đến: {searchParams.destination} */}
+                                Đến: {currentFlightStep === "departure" ? searchParams.destination : searchParams.departure}
                             </Chip>
                             <Chip
                                 color="success"
                                 variant="flat"
                                 startContent={<Calendar size={16} />}
                             >
-                                Ngày đi: {searchParams.departureDate}
+                                {/* Ngày đi: {searchParams.departureDate} */}
+                                Ngày đi: {currentFlightStep === "departure" ? searchParams.departureDate : searchParams.returnDate}
                             </Chip>
-                            {searchParams.returnDate && (
-                                <Chip
-                                    color="warning"
-                                    variant="flat"
-                                    startContent={<Calendar size={16} />}
-                                >
-                                    Ngày về: {searchParams.returnDate}
-                                </Chip>
-                            )}
                         </div>
                         <Chip
                             color="default"

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardBody, Input, Button } from "@nextui-org/react";
+import { Card, CardBody, Input, Button, CardFooter } from "@nextui-org/react";
 
 interface PassengerFormProps {
     initialData?: {
@@ -207,6 +207,14 @@ const PassengerForm: React.FC<PassengerFormProps> = ({
                     </div>
                 </div>
             </CardBody>
+            <CardFooter className="flex justify-end">
+                <Button
+                    color="primary"
+                    onClick={handleSubmit}
+                >
+                    Tiếp tục
+                </Button>   
+            </CardFooter>
         </Card>
     );
 };
