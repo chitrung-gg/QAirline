@@ -29,7 +29,7 @@ export default function NewsCard(prop: News) {
                     <span className="text-base">{prop.title}</span>
                 </Link>
                 <div className="w-full text-left col-span-4 mt-1">
-                    <a href={`/news/`} className="text-blue-normal">Xem thêm</a>
+                    <a href={`/news/${prop.id}`} className="text-blue-normal">Xem thêm</a>
                 </div>
                 
               </CardFooter>

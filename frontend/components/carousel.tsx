@@ -68,7 +68,7 @@ export default function Carousel({ destinations }: CarouselProps) {
             <img 
                 src={destination.image || ""} 
                 alt={`Slide ${index + 1}`} 
-                className="w-full rounded-lg" 
+                className="w-full rounded-lg object-cover" 
             />
             <div className="absolute top-1/2 left-5 right-5 flex justify-between -translate-y-1/2 transform">
               <button

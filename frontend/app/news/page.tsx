@@ -14,7 +14,7 @@ export default function NewsPage() {
     
     const fetchNews = async () => {
         try {
-            const response = await api.get(`/news`);
+            const response = await api.get(`http://localhost:5000/news`);
             return response.data;
         } catch (error) {
             throw error;
@@ -56,7 +56,7 @@ export default function NewsPage() {
         const end = start + newsPerPage;
     
         return news.slice(start, end);
-      }, [page, newsPerPage]);
+      }, [page, newsPerPage, news]);
 
     return (
         <div className="min-h-screen bg-gray-50">
