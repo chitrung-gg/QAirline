@@ -3,12 +3,13 @@
 import { Image } from "@nextui-org/react";
 
 interface OurValueProps {
+    category: string;
     title: string;
     content: string[];  
-    imageUrl: string;
+    image: string[];
 }
 
-export default function OurValue({ title, content, imageUrl }: OurValueProps) {
+export default function OurValue({ title, content, image }: OurValueProps) {
     return (
         <div className="max-w-6xl mx-auto">
             <div className="w-full flex flex-col justify-center items-center px-4 py-8 desktop:py-8 gap-8">
@@ -19,17 +20,20 @@ export default function OurValue({ title, content, imageUrl }: OurValueProps) {
                 {/* Value section */}
                 <Image 
                     // src="/images/value.png"
-                    src={imageUrl}
+                    src={image[0]}
                     alt="our value"
                     className="w-full object-cover"
                 />
 
                 <div className="mt-6">
-                    {content.map((text, index) => (
+                    {/* {content.map((text, index) => (
                         <p key={index} className="text-lg mobile:text-base tablet:text-base mt-4">
                             {text}
                         </p>
-                    ))}
+                    ))} */}
+                    <p className="text-lg mobile:text-base tablet:text-base mt-4">
+                        {content[0]}
+                    </p>
                 </div>
             </div>
         </div>

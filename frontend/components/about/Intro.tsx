@@ -3,12 +3,13 @@
 import { Image } from "@nextui-org/react";
 
 interface IntroductionProps {
+    category: string;
     title: string;
     content: string[];
-    imageUrl: string;
+    image: string[];
 }
 
-export default function Introduction({ title, content, imageUrl }: IntroductionProps) {
+export default function Introduction({ title, content, image }: IntroductionProps) {
     return (
         <div className="max-w-6xl mx-auto">
             <div className="w-full flex flex-col justify-center items-center px-4 py-8 desktop:py-8 gap-8">
@@ -22,16 +23,17 @@ export default function Introduction({ title, content, imageUrl }: IntroductionP
                         {/* Qairline tự hào là hãng hàng không tiên phong trong việc mang lại trải nghiệm bay đẳng cấp với dịch vụ chất lượng cao,
                         an toàn tuyệt đối và phong cách phục vụ tận tâm.
                         Hãy cùng chúng tôi khám phá thế giới theo cách riêng của bạn! */}
-                        {content.map((text, index) => (
+                        {/* {content.map((text, index) => (
                             <p key={index}>{text}</p>
-                        ))}
+                        ))} */}
                         {/* {content.join(" ")} */}
+                        {content[0]}
                     </p>
 
                     {/* Image Section */}
                     <Image 
                         // src="/images/sky.jpg"
-                        src={imageUrl}
+                        src={image[0]}
                         width={1000}
                         height={150}
                         alt="image intro"

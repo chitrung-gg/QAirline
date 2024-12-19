@@ -3,12 +3,13 @@
 import { Image } from "@nextui-org/react";
 
 interface OurVisionProps {
+    category: string;
     title: string;
     content: string[];
-    imageUrl: string;
+    image: string[];
 }
 
-export default function OurVision({ title, content, imageUrl }: OurVisionProps) {
+export default function OurVision({ title, content, image }: OurVisionProps) {
     return (
         <div className="max-w-6xl mx-auto">
             <div className="w-full flex flex-col justify-center items-center px-4 py-8 desktop:py-8 gap-8">
@@ -20,7 +21,7 @@ export default function OurVision({ title, content, imageUrl }: OurVisionProps) 
                     {/* Image Section */}
                     <Image 
                         // src="/images/hero-section.png"
-                        src={imageUrl}
+                        src={image[0]}
                         width={1000}
                         height={150}
                         alt="image intro"

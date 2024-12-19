@@ -9,33 +9,17 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 interface AboutUsSection {
+    category: string;
     title: string;
     content: string[];
-    imageUrl: string;
+    image: string[];
 }
 
-interface Achievement {
-    image_url: string;
-    description: string;
-}
-
-const parseJsonField = (field: string | null): any => {
-    if (field) {
-        try {
-            return JSON.parse(field);  
-        } catch (error) {
-            console.error("Error parsing JSON data:", error);
-            return field; 
-        }
-    }
-    return field; 
-};
-
-export default async function About() {
+export default function About() {
 
     const [introData, setIntroData] = useState<AboutUsSection | null>(null);
     const [ourValueData, setOurValueData] = useState<AboutUsSection | null>(null);
-    const [achievementData, setAchievementData] = useState<Achievement[] | null>(null);
+    const [achievementData, setAchievementData] = useState<AboutUsSection | null>(null);
     const [ourVisionData, setOurVisionData] = useState<AboutUsSection | null>(null);
 
     useEffect(() => {
@@ -47,20 +31,28 @@ export default async function About() {
                 const ourVisionResponse = await axios.get("http://localhost:5000/aboutus/Intro");
 
                 setIntroData({
-                    title: parseJsonField(introResponse.data.title),
-                    content: parseJsonField(introResponse.data.content) || [],
-                    imageUrl: parseJsonField(introResponse.data.image)?.[0] || "",
+                    category: introResponse.data.category,
+                    title: introResponse.data.title,
+                    content: introResponse.data.content,
+                    image: introResponse.data.image,
                 });
                 setOurValueData({
-                    title: parseJsonField(ourValueResponse.data.title),
-                    content: parseJsonField(ourValueResponse.data.content) || [],
-                    imageUrl: parseJsonField(ourValueResponse.data.image)?.[0] || "",
+                    category: ourValueResponse.data.category,
+                    title: ourValueResponse.data.title,
+                    content: ourValueResponse.data.content,
+                    image: ourValueResponse.data.image,
                 });
-                setAchievementData(parseJsonField(achievementResponse.data) || []);
+                setAchievementData({
+                        category: achievementResponse.data.category,
+                        title: achievementResponse.data.title,
+                        content: achievementResponse.data.content,
+                        image: achievementResponse.data.image,
+                });
                 setOurVisionData({
-                    title: parseJsonField(ourVisionResponse.data.title),
-                    content: parseJsonField(ourVisionResponse.data.content) || [],
-                    imageUrl: parseJsonField(ourVisionResponse.data.image)?.[0] || "",
+                    category: ourVisionResponse.data.category,
+                    title: ourVisionResponse.data.title,
+                    content: ourVisionResponse.data.content,
+                    image: ourVisionResponse.data.image,
                 });
             } catch (error) {
                 console.error("Error fetching about data:", error);
@@ -79,7 +71,7 @@ export default async function About() {
             <ImageSection />
             <Introduction {...introData}/>
             <OurValue {...ourValueData} />
-            <Archivement achievements={achievementData}/>
+            <Archivement {...achievementData}/>
             <OurVision {...ourVisionData} />
             <Promotion />
         </div>
