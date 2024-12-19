@@ -47,17 +47,18 @@ export class VerificationService {
       ).toISOString()
     }
 
-    const verificationEntity = await this.getVerificationByEmail(user.email)
-
-    if (verificationEntity) {
-      await this.updateVerification(verificationEntity.id, tokenEntityDto)
-    } else {
-      await this.createVerification(tokenEntityDto)
+    if (user && user.email) {
+      const verificationEntity = await this.getVerificationByEmail(user.email)
+  
+      if (verificationEntity) {
+        await this.updateVerification(verificationEntity.id, tokenEntityDto)
+      } else {
+        await this.createVerification(tokenEntityDto)
+      }
     }
-
     return otp;
   }
-
+  
   async validateOtp(email: string, otp: string) {
     this.cacheManager.reset()
     const user = await this.userRepository.findOne({

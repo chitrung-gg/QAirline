@@ -13,6 +13,7 @@ import RequestWithUser from 'src/authentication/interface/requestWithUser.interf
 import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/entity/user.entity';
 import { EmailService } from 'src/email/email.service';
+import { VerificationService } from 'src/verification/verification.service';
 
 @Injectable()
 export class BookingService {
@@ -27,6 +28,7 @@ export class BookingService {
 	  private paymentRepository: Repository<Payment>,
 	  private userService: UserService,
 	  private emailService: EmailService,
+	  private verificationTokenService: VerificationService,
 	  @Inject(CACHE_MANAGER)
 	  private cacheManager: Cache
 	) {}
@@ -88,9 +90,11 @@ export class BookingService {
 		}
 
 		newBooking.totalPrice = totalPrice
-
 		await this.bookingRepository.save(newBooking)
 
+		flight.availableSeats -= newBooking.passengerNumber
+		flight.seatClasses[newBooking.seatClass] -= newBooking.passengerNumber
+		await this.flightRepository.save(flight)
 		/* Uncomment for send email */
 		// this.emailService.sendEmail({
 		// 	recipient: booking.passengerEmail,
@@ -289,6 +293,7 @@ export class BookingService {
 		// 			</html>`
 		// })
 		
+		
 		return newBooking
 	}
 
@@ -391,6 +396,76 @@ export class BookingService {
 			throw new HttpException('Exception found in BookingService: updateBooking', HttpStatus.BAD_REQUEST)
 		}
 	}
+	
+	async generateEmailVerificationForCancel(email: string) {
+		const otp = await this.verificationTokenService.generateOtp(email);
+
+		/* Uncomment for send email */
+		this.emailService.sendEmail({
+			subject: 'QAirline - Account Verification',
+			recipient: email,
+			content: `<!DOCTYPE html>
+					<html lang="en">
+					<head>
+						<meta charset="UTF-8">
+						<meta name="viewport" content="width=device-width, initial-scale=1.0">
+						<title>OTP Verification</title>
+						<style>
+							body {
+								font-family: Arial, sans-serif;
+								background-color: #f4f4f9;
+								margin: 0;
+								padding: 0;
+							}
+							.email-container {
+								background-color: #ffffff;
+								margin: 50px auto;
+								padding: 30px;
+								max-width: 600px;
+								border-radius: 8px;
+								box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+							}
+							h1 {
+								font-size: 24px;
+								color: #333;
+							}
+							p {
+								font-size: 16px;
+								line-height: 1.6;
+								color: #555;
+							}
+							.otp {
+								font-size: 24px;
+								font-weight: 700;
+								color: #4CAF50;
+								background-color: #f0f8f4;
+								padding: 10px 20px;
+								border-radius: 5px;
+								display: inline-block;
+							}
+							.footer {
+								margin-top: 30px;
+								font-size: 14px;
+								color: #888;
+								text-align: center;
+							}
+						</style>
+					</head>
+					<body>
+						<div class="email-container">
+							<h1>Hello ${email}</h1>
+							<p>You may change your QAirline account password using the following OTP:</p>
+							<p><span class="otp">${otp}</span></p>
+							<p class="footer">Regards,<br />QAirline</p>
+						</div>
+					</body>
+					</html>`
+		});
+    }
+
+	async verifyGeneratedEmailVerificationForCancel(email: string, otp: string) {
+        return await this.verificationTokenService.validateOtp(email, otp)
+    }
 	
 	async cancelBooking(bookingCode: string) {
 		const booking = await this.bookingRepository.findOne({

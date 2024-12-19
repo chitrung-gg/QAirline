@@ -3,10 +3,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/user/entity/user.entity";
 
 export class CreateDestinationDto {
-    @ApiProperty({ description: 'ID of the destination', example: 1 })
-    @IsNumber()
-    id: number;
-
     @ApiProperty({ description: 'Name of the destination', example: 'Paris' })
     @IsString()
     name: string; // Tên địa điểm (ví dụ: "Paris", "Tokyo Tower", "Grand Canyon")

@@ -36,7 +36,7 @@ export class PromotionService {
           where: {
               id: id
           },
-          relations: ['booking']
+          relations: ['bookings']
       })
       if (promotion) {
           return promotion

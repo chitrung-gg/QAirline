@@ -39,8 +39,8 @@ export class AboutusController {
   @ApiParam({ name: 'category', description: 'Category of the About Us section', example: 1 })
   @ApiResponse({ status: 200, description: 'Return the About Us section with the specified category' })
   @ApiResponse({ status: 404, description: 'About Us section not found.' })
-  getAboutusByCategory(@Param('Category') Category: "Achievement" | "Intro" | "OurValue" | "OurVision") {
-    return this.aboutusService.getAboutusByCategory(Category);
+  getAboutusByCategory(@Param('category') category: "Achievement" | "Intro" | "OurValue" | "OurVision") {
+    return this.aboutusService.getAboutusByCategory(category);
   }
 
   @Patch(':id')
