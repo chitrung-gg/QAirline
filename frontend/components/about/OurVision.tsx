@@ -32,9 +32,10 @@ export default function OurVision({ title, content, image }: OurVisionProps) {
                     <p className="mobile:text-base tablet:text-base mini-laptop:text-base text-lg">
                         {/* Với sứ mệnh mang thế giới đến gần hơn, Qairline luôn nỗ lực để trở thành lựa chọn hàng đầu của khách hàng trên mỗi hành trình.
                         Tầm nhìn của chúng tôi là vươn cao trên bầu trời quốc tế, xây dựng thương hiệu hàng không được yêu thích nhất thế giới. */}
-                        {content.map((paragraph, index) => (
+                        {/* {content.map((paragraph, index) => (
                             <p key={index} className="mb-4">{paragraph}</p>
-                        ))}
+                        ))} */}
+                        {content[0]}
                     </p>
                 </div>
             </div>

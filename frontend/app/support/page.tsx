@@ -48,7 +48,7 @@ interface FAQItem {
     answer: string;
 }
 
-export default async function Support() {
+export default function Support() {
     const [data, setData] = useState<FAQItem[]>([]);
     const fetchData = async () => {
         try {

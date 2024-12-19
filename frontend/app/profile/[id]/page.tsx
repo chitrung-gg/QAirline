@@ -61,12 +61,12 @@ export default function Page(props: { params: { id: string } }) {
             setEmailValue(data.email);
             setUsernameValue(data.username);
             setPhoneNumberValue(data.phoneNumber);
-            setFirstNameValue(data.firstName);
-            setLastNameValue(data.lastName);
+            setFirstNameValue(data.firstName ? data.firstName : "");
+            setLastNameValue(data.lastName ? data.lastName : "");
             setDobValue(data.dob ? today("UTC").set({ year: new Date(data.dob).getFullYear(), month: new Date(data.dob).getMonth() + 1, day: new Date(data.dob).getDate() }) : null);
-            setGenderValue(data.gender);
-            setAddressValue(data.address);
-            setPassportNumberValue(data.passportNumber);
+            setGenderValue(data.gender ? data.gender : UserGender.MALE);
+            setAddressValue(data.address ? data.address : "");
+            setPassportNumberValue(data.passportNumber ? data.passportNumber : "");
             setRoleValue(data.role);
             //setPasswordValue(data.password);
         };
@@ -83,8 +83,7 @@ export default function Page(props: { params: { id: string } }) {
 
     const validatePassportNumber = (passport: string) => {
         if (passport === "") return true;
-        // Basic passport number validation 
-        // Adjust regex as needed for specific passport format
+
         const passportRegex = /^[A-Z0-9]{6,9}$/;
         return passportRegex.test(passport);
     };
@@ -300,6 +299,7 @@ export default function Page(props: { params: { id: string } }) {
                             <RadioGroup 
                                 orientation="horizontal"
                                 value={genderValue}
+                                defaultValue={genderValue}
                                 onValueChange={(value) => setGenderValue(value as UserGender)}
                             >
                                 {genderOptions.map((option) => (
