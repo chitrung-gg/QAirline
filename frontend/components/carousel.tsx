@@ -13,7 +13,7 @@ export default function Carousel({ destinations }: CarouselProps) {
   // const slides = [
   //   {
   //       id: 1,
-  //       image: "https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp",
+  //       image: "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
   //       name: "Hanoi",
   //       country: "Vietnam",
   //       city: "Hanoi",
@@ -68,7 +68,7 @@ export default function Carousel({ destinations }: CarouselProps) {
             <img 
                 src={destination.image || ""} 
                 alt={`Slide ${index + 1}`} 
-                className="w-full rounded-lg object-cover" 
+                className="w-full rounded-lg object-cover h-[200px] md:h-[300px] lg:h-[400px]" 
             />
             <div className="absolute top-1/2 left-5 right-5 flex justify-between -translate-y-1/2 transform">
               <button

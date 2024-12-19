@@ -1,5 +1,5 @@
 "use client";
-import {Card, CardHeader, CardBody, CardFooter, Input, Link, Image, Button} from "@nextui-org/react";
+import {Card, CardHeader, CardBody, CardFooter, Input, Link, Image, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, useDisclosure} from "@nextui-org/react";
 import React from "react";
 import { HiEye, HiEyeSlash } from "react-icons/hi2";
 import { useRouter } from "next/navigation";
@@ -30,6 +30,9 @@ export default function RegisterPage() {
     const [phoneValue, setPhoneValue] = React.useState("");
 
     const [loading, setLoading] = React.useState(false);
+
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isOpenError, onOpen: onOpenError, onClose: onCloseError } = useDisclosure();
 
     const validateEmail = (emailValue: String) => emailValue.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i);
 
@@ -76,20 +79,25 @@ export default function RegisterPage() {
                 role: UserRole.USER
             });
 
-    
-            if (response.status === 201) {
-                alert("Đăng ký thành công!");
-                router.push('/auth/login'); // Chuyển hướng đến trang login
-            } else {
-                alert("Đăng ký thất bại, vui lòng thử lại.");
-            }
+            onOpen();
         } catch (error) {
-            console.error("Đăng ký thất bại:", error);
-            alert("Đăng ký thất bại, vui lòng thử lại.");
+            // console.error("Đăng ký thất bại:", error);
+            // alert("Đăng ký thất bại, vui lòng thử lại.");
+            onOpenError();
         } finally {
             setLoading(false); 
         }
     };
+
+    const handleCloseModal = () => {
+        onClose();
+        
+        router.push("/auth/login");
+    };
+
+    const handleCloseError = () => {
+        onCloseError();
+    }
     
     return (
         <div className="flex justify-center items-center min-h-screen bg-cover bg-center" style={{ backgroundImage: 'url(/images/sky.jpg)' }}>
@@ -231,6 +239,34 @@ export default function RegisterPage() {
                     </CardFooter>
                 </Card>
             </form>
+
+            <Modal isOpen={isOpen} onClose={handleCloseModal} isDismissable={false} isKeyboardDismissDisabled={true}>
+                <ModalContent>
+                    <ModalHeader>Thành công</ModalHeader>
+                    <ModalBody>
+                        <p>Đăng ký thành công</p>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" variant="light" onPress={handleCloseModal}>
+                            Đóng
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+            
+            <Modal isOpen={isOpenError} onClose={handleCloseError} isDismissable={false} isKeyboardDismissDisabled={true}>
+                <ModalContent>
+                    <ModalHeader>Lỗi</ModalHeader>
+                    <ModalBody>
+                        <p>Có lỗi xảy ra, vui lòng kiểm tra lại thông tin hoặc thử lại sau.</p>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" variant="light" onPress={handleCloseError}>
+                            Đóng
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </div>
     )
 }

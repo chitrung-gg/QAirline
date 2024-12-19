@@ -1,10 +1,11 @@
 "use client";
-import {Card, CardHeader, CardBody, CardFooter, Input, Link, Image, Button} from "@nextui-org/react";
+import {Card, CardHeader, CardBody, CardFooter, Input, Link, Image, Button, Modal, ModalBody, ModalFooter, ModalHeader, useDisclosure, ModalContent} from "@nextui-org/react";
 import React from "react";
 import { HiEye, HiEyeSlash } from "react-icons/hi2";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { UserContext, ContextData } from "@/app/UserContext";
+import { on } from "events";
 
 export default function Page() {
     const { user } = React.useContext(UserContext);
@@ -33,7 +34,12 @@ export default function Page() {
     const toggleConfirmPasswordVisibility = () => setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
 
     const [cooldown, setCooldown] = React.useState(false);  
-    const [countdown, setCountdown] = React.useState(60);   
+    const [countdown, setCountdown] = React.useState(60); 
+    
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isOpenError, onOpen: onOpenError, onClose: onCloseError } = useDisclosure();
+    const { isOpen: isOpenSuccess, onOpen: onOpenSuccess, onClose: onCloseSuccess } = useDisclosure();
+    const { isOpen: isOpenSent, onOpen: onOpenSent, onClose: onCloseSent } = useDisclosure();
 
     React.useEffect(() => {
         let intervalId: NodeJS.Timeout | null = null;
@@ -66,9 +72,9 @@ export default function Page() {
         try {
             const response = await axios.post("http://localhost:5000/user/email", { email: emailValue });
             if (response.status === 200) {
-                return true; // Nếu email đã tồn tại
+                return true; 
             }
-            return false; // Nếu email chưa tồn tại
+            return false; 
         } catch (error) {
             //alert("Email chưa tồn tại.");
             return false;
@@ -95,9 +101,11 @@ export default function Page() {
             setCooldown(true); 
             setCountdown(60);
             setOtpVerified(false);
-            alert("OTP đã được gửi vào email của bạn.");
+            //alert("OTP đã được gửi vào email của bạn.");
+            onOpenSent();
         } catch (error) {
-            alert("Có lỗi khi gửi OTP.");
+            //alert("Có lỗi khi gửi OTP.");
+            onOpenError();
         } 
     };
 
@@ -114,9 +122,11 @@ export default function Page() {
                 });
 
             setOtpVerified(true);
-            alert("OTP xác thực thành công!");
+            //alert("OTP xác thực thành công!");
+            onOpenSuccess();    
         } catch (error) {
-            alert("Xác thực OTP thất bại.");
+            //alert("Xác thực OTP thất bại.");
+            onOpenError();
         } 
     };
 
@@ -148,8 +158,9 @@ export default function Page() {
                 password: passwordValue,
             });
 
-            alert("Đổi mk thành công");
-            router.push("/auth/login");
+            onOpen();
+            //alert("Đổi mk thành công");
+            //router.push("/auth/login");
         } catch (error) {
             console.error('Đổi mk thất bại:', error);
             alert('Đổi mk thất bại, vui lòng thử lại.');
@@ -157,6 +168,24 @@ export default function Page() {
             setLoading(false); 
         }
     };
+
+    const handleCloseModal = () => {
+        onClose();
+        
+        router.push("/auth/login");
+    };
+
+    const handleCloseError = () => {
+        onCloseError();
+    }
+
+    const handleCloseSuccess = () => {
+        onCloseSuccess();
+    }
+
+    const handleCloseSent = () => {
+        onCloseSent();
+    }
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-cover bg-center" style={{ backgroundImage: 'url(/images/sky.jpg)' }}>
@@ -291,6 +320,62 @@ export default function Page() {
                     </CardFooter>
                 </Card>
             </form>
+
+            <Modal isOpen={isOpen} onClose={handleCloseModal} isDismissable={false} isKeyboardDismissDisabled={true}>
+                <ModalContent>
+                    <ModalHeader>Thành công</ModalHeader>
+                    <ModalBody>
+                        <p>Đổi mật khẩu thành công</p>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" variant="light" onPress={handleCloseModal}>
+                            Đóng
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+            <Modal isOpen={isOpenError} onClose={handleCloseError} isDismissable={false} isKeyboardDismissDisabled={true}>
+                <ModalContent>
+                    <ModalHeader>Lỗi</ModalHeader>
+                    <ModalBody>
+                        <p>Có lỗi xảy ra, vui lòng thử lại sau.</p>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" variant="light" onPress={handleCloseError}>
+                            Đóng
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+            <Modal isOpen={isOpenSuccess} onClose={handleCloseSuccess} isDismissable={false} isKeyboardDismissDisabled={true}>
+                <ModalContent>
+                    <ModalHeader>Thành công</ModalHeader>
+                    <ModalBody>
+                        <p>Xác thực mã OTP thành công</p>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" variant="light" onPress={handleCloseSuccess}>
+                            Đóng
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
+            <Modal isOpen={isOpenSent} onClose={handleCloseSent} isDismissable={false} isKeyboardDismissDisabled={true}>
+                <ModalContent>
+                    <ModalHeader>Thành công</ModalHeader>
+                    <ModalBody>
+                        <p>Gửi mã OTP thành công. Hãy kiểm tra email của bạn</p>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" variant="light" onPress={handleCloseSent}>
+                            Đóng
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </div>
     )
 }

@@ -5,7 +5,6 @@ import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
 import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
 import { News } from "@/interfaces/news";
-import { i } from "framer-motion/client";
 
 const newItem = {
     id: 1,
@@ -40,7 +39,7 @@ export default function NewsDetailsPage(props: { params: { id: string } }) {
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="relative h-[200px] w-full">
-                <Image
+                <img
                     src={initialData?.coverImage || "/images/sky.jpg"}
                     alt="cover image"
                     className="w-full h-full object-cover"
