@@ -210,7 +210,7 @@ export default function BookingDetailsPage() {
                         [selectedDepartureClass]: selectedFlights.departure.baseClassPrice?.[selectedDepartureClass] || 0,
                     },
                     totalPrice: calculateDeparturePriceWithDiscount(),
-                    passengerNumber: searchParams.passengers,
+                    passengerNumber: Number(searchParams.passengers),
                     promotion: selectedPromotion ? selectedPromotion : undefined,
                 };
 
@@ -244,7 +244,7 @@ export default function BookingDetailsPage() {
                     ticketPrice: {
                         [selectedReturnClass]: selectedFlights.return.baseClassPrice?.[selectedReturnClass] || 0,
                     },
-                    passengerNumber: searchParams.passengers,
+                    passengerNumber: Number(searchParams.passengers),
                     promotion: selectedPromotion?.discountType === discountType.PERCENT ? selectedPromotion : undefined,
                 };
 

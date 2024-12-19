@@ -25,34 +25,34 @@ export default function About() {
     useEffect(() => {
         const fetchAboutData = async () => {
             try {
-                const introResponse = await axios.get("http://localhost:5000/aboutus/Intro");
-                const ourValueResponse = await axios.get("http://localhost:5000/aboutus/OurValue");
-                const achievementResponse = await axios.get("http://localhost:5000/aboutus/Achievement");
-                const ourVisionResponse = await axios.get("http://localhost:5000/aboutus/Intro");
+                const introResponse = await axios.get("http://localhost:5000/aboutus/category/Intro");
+                const ourValueResponse = await axios.get("http://localhost:5000/aboutus/category/OurValue");
+                const achievementResponse = await axios.get("http://localhost:5000/aboutus/category/Achievement");
+                const ourVisionResponse = await axios.get("http://localhost:5000/aboutus/category/Intro");
 
                 setIntroData({
-                    category: introResponse.data.category,
-                    title: introResponse.data.title,
-                    content: introResponse.data.content,
-                    image: introResponse.data.image,
+                    category: introResponse.data[0].category,
+                    title: introResponse.data[0].title,
+                    content: introResponse.data[0].content,
+                    image: introResponse.data[0].image,
                 });
                 setOurValueData({
-                    category: ourValueResponse.data.category,
-                    title: ourValueResponse.data.title,
-                    content: ourValueResponse.data.content,
-                    image: ourValueResponse.data.image,
+                    category: ourValueResponse.data[0].category,
+                    title: ourValueResponse.data[0].title,
+                    content: ourValueResponse.data[0].content,
+                    image: ourValueResponse.data[0].image,
                 });
                 setAchievementData({
-                        category: achievementResponse.data.category,
-                        title: achievementResponse.data.title,
-                        content: achievementResponse.data.content,
-                        image: achievementResponse.data.image,
+                        category: achievementResponse.data[0].category,
+                        title: achievementResponse.data[0].title,
+                        content: achievementResponse.data[0].content,
+                        image: achievementResponse.data[0].image,
                 });
                 setOurVisionData({
-                    category: ourVisionResponse.data.category,
-                    title: ourVisionResponse.data.title,
-                    content: ourVisionResponse.data.content,
-                    image: ourVisionResponse.data.image,
+                    category: ourVisionResponse.data[0].category,
+                    title: ourVisionResponse.data[0].title,
+                    content: ourVisionResponse.data[0].content,
+                    image: ourVisionResponse.data[0].image,
                 });
             } catch (error) {
                 console.error("Error fetching about data:", error);

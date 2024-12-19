@@ -11,129 +11,6 @@ import { BookingStatus, PaymentStatus } from "@/interfaces/booking";
 import { useParams, useRouter } from "next/navigation";
 import React from "react";
 
-const tempBooking: Booking[] = [
-    {
-        id: 1,
-        passengerName: "John Doe",
-        passengerDob: "1990-01-01T00:00:00.000Z",
-        passportNumber: "P12345678",
-        bookingCode: "Q123456",
-        seatClass: "Economy",
-        ticketPrice: {
-            "Giá vé": 1000000,
-            "Thuế": 50000,
-            "Phí": 10000
-        },
-        totalPrice: 1060000,
-        flight: {
-            id: 1,
-            flightNumber: "FEF",
-            departureTime: "2024-12-11T04:06:00.000Z",
-            arrivalTime: "2024-12-19T04:06:00.000Z",
-            status: FlightStatus.SCHEDULED,
-            availableSeats: 450,
-            seatClasses: {
-                "Class 1": 48,
-                "Class 2": 20,
-                "Economy": 100
-            },
-            duration: 11520,
-            aircraft: {
-                id: 5,
-                aircraftCode: "huhu1333",
-                model: "hehe23",
-                manufacturer: "abc32",
-                capacity: 450,
-                seatClasses: {
-                    "Class 1": 48,
-                    "Class 2": 20,
-                    "Economy": 100
-                },
-                status: AircraftStatus.ACTIVE,
-                createdAt: "2024-12-06T13:55:14.770Z",
-                updatedAt: "2024-12-06T14:19:52.571Z"
-            },
-            departureAirport: {
-                id: 1,
-                name: "Tan Son Nhat International Airport",
-                city: "Ho Chi Minh City",
-                country: "Vietnam",
-                iataCode: "SGN"
-            },
-            arrivalAirport: {
-                id: 2,
-                name: "Noi Bai International Airport",
-                city: "Hanoi",
-                country: "Vietnam",
-                iataCode: "HAN"
-            }
-        },
-        bookingDate: "2024-12-06T14:19:52.571Z",
-        bookingStatus: BookingStatus.CONFIRMED,
-        paymentStatus: PaymentStatus.PAID
-    },
-    {
-        id: 2,
-        passengerName: "John Doe",
-        passengerDob: "1990-01-01T00:00:00.000Z",
-        passportNumber: "P12345678",
-        bookingCode: "Q123456",
-        seatClass: "Economy",
-        ticketPrice: {
-            "Giá vé": 1000000,
-            "Thuế": 50000,
-            "Phí": 10000
-        },
-        totalPrice: 1060000,
-        flight: {
-            id: 1,
-            flightNumber: "FEF",
-            departureTime: "2024-12-11T04:06:00.000Z",
-            arrivalTime: "2024-12-19T04:06:00.000Z",
-            status: FlightStatus.SCHEDULED,
-            availableSeats: 450,
-            seatClasses: {
-                "Class 1": 48,
-                "Class 2": 20,
-                "Economy": 100
-            },
-            duration: 11520,
-            aircraft: {
-                id: 5,
-                aircraftCode: "huhu1333",
-                model: "hehe23",
-                manufacturer: "abc32",
-                capacity: 450,
-                seatClasses: {
-                    "Class 1": 48,
-                    "Class 2": 20,
-                    "Economy": 100
-                },
-                status: AircraftStatus.ACTIVE,
-                createdAt: "2024-12-06T13:55:14.770Z",
-                updatedAt: "2024-12-06T14:19:52.571Z"
-            },
-            departureAirport: {
-                id: 1,
-                name: "Tan Son Nhat International Airport",
-                city: "Ho Chi Minh City",
-                country: "Vietnam",
-                iataCode: "SGN"
-            },
-            arrivalAirport: {
-                id: 2,
-                name: "Noi Bai International Airport",
-                city: "Hanoi",
-                country: "Vietnam",
-                iataCode: "HAN"
-            }
-        },
-        bookingDate: "2024-12-06T14:19:52.571Z",
-        bookingStatus: BookingStatus.CONFIRMED,
-        paymentStatus: PaymentStatus.PAID
-    }
-];
-
 const flightStatusOptions = [
     { name: "Đã lên lịch", uid: FlightStatus.SCHEDULED },
     { name: "Đã đến", uid: FlightStatus.ARRIVED },
@@ -257,16 +134,16 @@ export default function Page(props: { params: { id: string } }) {
                                                 <Divider />
                                                 <div className="flex flex-col justify-between items-start">
                                                     {/* Map qua các giá trị ticketPrice */}
-                                                    {Object.entries(data.ticketPrice).map(([key, value], index) => (
+                                                    {/* {Object.entries(data.ticketPrice).map(([key, value], index) => (
                                                         <div key={index} className="flex justify-between w-full">
                                                         <p className="text-left">{key}:</p>
                                                         <p className="text-right">{value} VND</p>
                                                         </div>
-                                                    ))}
+                                                    ))} */}
                                                     
                                                     {/* Dòng tổng tiền */}
-                                                    <div className="flex justify-between w-full mt-1">
-                                                        <p className="text-left font-bold">Tổng tiền:</p>
+                                                    <div className="flex justify-between w-full">
+                                                        <p className="text-left font-bold">Đã thanh toán:</p>
                                                         <p className="text-right font-bold">{data.totalPrice} VND</p>
                                                     </div>
                                                 </div>

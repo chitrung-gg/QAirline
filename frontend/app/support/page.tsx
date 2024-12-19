@@ -1,7 +1,9 @@
+"use client";
 import ImageSection from "@/components/ImageSection";
 import FAQSection from "@/components/Support/FAQSection";
 import Headline from "@/components/Support/Headline";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 const faqs = [
     {
@@ -41,11 +43,26 @@ const faqs = [
     }
 ];
 
-export default async function Support() {
-    const res = await axios.get('http://localhost:5000/faq');
-    const data = res.data;
+interface FAQItem {
+    question: string;
+    answer: string;
+}
 
-    // const data = faqs;
+export default async function Support() {
+    const [data, setData] = useState<FAQItem[]>([]);
+    const fetchData = async () => {
+        try {
+          const response = await axios.get<FAQItem[]>('http://localhost:5000/faq'); // Adjust API endpoint
+          setData(response.data);
+        } catch (error) {
+          console.error('Error fetching faqs:', error);
+        }
+      };
+
+      useEffect(() => {
+        fetchData();
+      }, []);
+
 
     return (
         <div className="">

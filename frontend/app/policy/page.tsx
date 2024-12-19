@@ -41,9 +41,9 @@ const policyDataTemp = {
 export default async function Page() {
 
     const res = await axios.get('http://localhost:5000/policy');
-    //const data = res.data[0];
+    const data = res.data[0];
 
-    const data = policyDataTemp;
+    //const data = policyDataTemp;
 
     return (
         <Policy policyData={data} />
