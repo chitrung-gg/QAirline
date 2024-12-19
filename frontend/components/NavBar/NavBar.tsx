@@ -16,7 +16,10 @@ import {
     Dropdown,
     DropdownTrigger,
     DropdownMenu,
-    DropdownItem
+    DropdownItem,
+    Modal,
+    ModalContent, ModalBody, ModalFooter, ModalHeader,
+    useDisclosure
 } from "@nextui-org/react";
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -43,16 +46,16 @@ export default function NavBar() {
     
     const { user, logoutContext } = React.useContext(UserContext);
 
-    const handleLogout = async () => {
-        if (window.confirm('Bạn có muốn đăng xuất không?')) {
-            //const resLogout = await handleLogoutRequest();
+    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
 
-            localStorage.removeItem('authToken');
+    const handleLogout = () => {
+        onOpen(); 
+    }
 
-            logoutContext()
-
-        };
-
+    const handleConfirmLogout = () => {
+        localStorage.removeItem('authToken');
+        logoutContext();
+        onClose();  
     }
 
     const renderAuthButton = () => (
@@ -90,6 +93,23 @@ export default function NavBar() {
                     </DropdownItem>
                 </DropdownMenu>
             </Dropdown>
+
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalContent>
+                    <ModalHeader className="flex flex-col gap-1">Xác nhận đăng xuất</ModalHeader>
+                    <ModalBody>
+                        <p>Bạn có chắc chắn muốn đăng xuất không?</p>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button variant="light" onPress={onClose}>
+                            Hủy
+                        </Button>
+                        <Button className='bg-red-400 text-white hover:bg-red-600' variant="flat" onPress={handleConfirmLogout}>
+                            Đăng xuất
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </div>
     );
 

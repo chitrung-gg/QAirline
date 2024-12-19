@@ -329,7 +329,7 @@ export default function Home() {
           <div className="flex flex-row items-center justify-center md:justify-between pb-6">
             <p className="text-3xl font-semibold">Điểm đến phổ biến</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="">
             {/* {destinations.map((destination, index) => (
               <LocationCard key={index} {...destination} />
             ))} */}

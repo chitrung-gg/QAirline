@@ -92,7 +92,7 @@ const BookingSearchPage: React.FC = () => {
 
     const sendOtp = async () => {
         try {
-            const response = await axios.post("http://localhost:5000/user/forget", { email: selectedBooking.passengerEmail });
+            const response = await axios.post("http://localhost:5000/booking/cancel/verify", { email: selectedBooking.passengerEmail });
             setOtpSent(true);
             setCooldown(true); 
             setCountdown(60);
@@ -104,7 +104,7 @@ const BookingSearchPage: React.FC = () => {
 
     const verifyOtp = async () => {
         try {
-            const response = await axios.post(`http://localhost:5000/user/forget/verify`, 
+            const response = await axios.post(`http://localhost:5000/booking/cancel/verify/${otpValue}`, 
                 { 
                     email: selectedBooking.passengerEmail, 
                     otp: otpValue 
