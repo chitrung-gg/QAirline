@@ -27,13 +27,25 @@ export default function FlightResultsPage() {
     const [flights, setFlights] = React.useState<Flight[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
 
+    const isValidDate = (dateString: string | undefined) => {
+        return dateString ? !isNaN(Date.parse(dateString)) : false;
+    };
+
     // Fetch flights based on search parameters
     const fetchFlights = async () => {
         try {
+            console.log('searchParams inside fetchFlights:', searchParams);
+            console.log('currentFlightStep:', currentFlightStep);
+            let departureDate = currentFlightStep === "departure" ? searchParams.departureDate : searchParams.returnDate;
+            if (currentFlightStep === "return" && departureDate === undefined) {
+                departureDate = searchParams.departureDate;
+            }
+
             const params = {
                 departureCity: currentFlightStep === "departure" ? searchParams.departure : searchParams.destination,
                 arrivalCity: currentFlightStep === "departure" ? searchParams.destination : searchParams.departure,
-                departureDate: currentFlightStep === "departure" ? new Date(searchParams.departureDate!).toISOString() : new Date(searchParams.returnDate!).toISOString(),
+                //departureDate: currentFlightStep === "departure" ? new Date(searchParams.departureDate!).toISOString() : new Date(searchParams.returnDate!).toISOString(),
+                departureDate: new Date(departureDate!).toISOString(),
                 passengerCount: searchParams.passengers,
             };
 
@@ -56,8 +68,15 @@ export default function FlightResultsPage() {
             !searchParams.departure ||
             !searchParams.destination ||
             !searchParams.departureDate ||
-            (searchParams.tripType === "khu-hoi" && !searchParams.returnDate)
+            (searchParams.tripType === "khu-hoi" && !searchParams.returnDate) ||
+            (searchParams.tripType === "mot-chieu" && !searchParams.departureDate)
         ) {
+            router.push('/booking');
+            return;
+        }
+
+        if (currentFlightStep === "departure" && !searchParams.departureDate) {
+            console.error('Departure date is missing');
             router.push('/booking');
             return;
         }
@@ -86,7 +105,7 @@ export default function FlightResultsPage() {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="md:container mx-auto px-4 py-8">
             {/* Breadcrumbs */}
             <Breadcrumbs
                 className="mb-6"
