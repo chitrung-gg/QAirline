@@ -150,7 +150,7 @@ export default function Page(props: { params: { id: string } }) {
                         label="Họ"
                         variant="bordered"
                         className="py-3 font-semibold"
-                        value={initialData.lastName}
+                        value={initialData.lastName || ""}
                         isReadOnly
                     />
                 </div>
@@ -165,7 +165,7 @@ export default function Page(props: { params: { id: string } }) {
                         label="Tên đệm và tên"
                         variant="bordered"
                         className="py-3 font-semibold"
-                        value={initialData.firstName}
+                        value={initialData.firstName || ""}
                         isReadOnly
                     />
                 </div>
@@ -188,7 +188,7 @@ export default function Page(props: { params: { id: string } }) {
                     </label>
                     <RadioGroup 
                         orientation="horizontal"
-                        value={initialData.gender} 
+                        value={initialData.gender || UserGender.MALE} 
                         isDisabled
                     >
                         {genderOptions.map((option) => (
@@ -226,7 +226,7 @@ export default function Page(props: { params: { id: string } }) {
                         label="Địa chỉ"
                         variant="bordered"
                         className="py-3 font-semibold"
-                        value={initialData.address}
+                        value={initialData.address || ""}
                         isReadOnly
                     />
                 </div>
@@ -241,7 +241,7 @@ export default function Page(props: { params: { id: string } }) {
                         label="Số hộ chiếu"
                         variant="bordered"
                         className="py-3 font-semibold"
-                        value={initialData.passportNumber}
+                        value={initialData.passportNumber || ""}
                         isReadOnly
                     />
                 </div>
