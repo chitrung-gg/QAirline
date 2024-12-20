@@ -111,9 +111,9 @@ export default function Page(props: { params: { id: string } }) {
         };
 
         console.log(data);
-        // Call API to create news
+        
         try {
-            const res = await axios.patch(`http://localhost:5000/user/${id}`, data, {
+            const res = await axios.patch(`http://localhost:5000/user/hash/${id}`, data, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }

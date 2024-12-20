@@ -101,7 +101,7 @@ export class UserController {
     @ApiResponse({ status: 200, description: 'The user has been successfully updated.' })
     @ApiResponse({ status: 404, description: 'User not found.' })
     async updateUserWithHash(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-        return this.userService.updateUserWithHash(id, updateUserDto);
+        return await this.userService.updateUserWithHash(id, updateUserDto);
     }
 
     @UseGuards(JwtAuthenticationGuard)

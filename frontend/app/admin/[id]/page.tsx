@@ -103,7 +103,7 @@ export default function Page(props: { params: { id: string } }) {
                     />
                 </div>
     
-                <Input 
+                {/* <Input 
                     isRequired
                     labelPlacement={"outside"}
                     placeholder="Mật khẩu"
@@ -124,7 +124,7 @@ export default function Page(props: { params: { id: string } }) {
                     type={isPasswordVisible ? "text" : "password"}
                     value={initialData.password}
                     isReadOnly
-                />
+                /> */}
 
                 <Input 
                     isRequired

@@ -81,8 +81,9 @@ export class UserService {
         try {
             const userInDb = await this.getUserById(id)
             const hashedPassword = await bcrypt.hash(user.password, 10)
-            userInDb.password = hashedPassword
+            userInDb.password = hashedPassword  
             await this.userRepository.save(userInDb)
+            await this.userRepository.update(id, user)
         } catch (error) {
             throw new HttpException('Exception found in UserService: updateUser', HttpStatus.BAD_REQUEST)
         }
