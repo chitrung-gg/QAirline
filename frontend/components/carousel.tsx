@@ -77,17 +77,22 @@ export default function Carousel({ destinations }: CarouselProps) {
               >
                 <HiChevronLeft />
               </button>
-              <div className="flex flex-col text-left text-white gap-1 md:gap-2 px-3">
+              {/* <div className="flex flex-col text-left text-white gap-1 md:gap-2 px-3">
                 <p className="font-bold text-2xl">{destination.city}</p>
                 <p className="text-lg">{destination.country}</p>
-                <p className="text-base max-h-32 overflow-y-auto">{destination.description}</p>
-              </div>
+                <p className="text-base max-h-24 overflow-y-auto">{destination.description}</p>
+              </div> */}
               <button
                 onClick={handleNext}
                 className="max-h-fit my-auto text-white bg-black bg-opacity-50 hover:bg-opacity-70 text-5xl rounded-full"
               >
                 <HiChevronRight />
               </button>
+            </div>
+            <div className="absolute bottom-5 md:bottom-10 left-20 right-20 flex flex-col gap-1 md:gap-2 text-left text-white px-3">
+              <p className="font-bold text-2xl">{destination.city}</p>
+              <p className="text-lg">{destination.country}</p>
+              <p className="text-base max-h-24 overflow-y-auto">{destination.description}</p>
             </div>
           </div>
         ))}
