@@ -75,6 +75,18 @@ export class UserService {
             throw new HttpException('Exception found in UserService: updateUser', HttpStatus.BAD_REQUEST)
         }
     }
+    
+    async updateUserWithHash(id: number, user: UpdateUserDto) {
+        await this.cacheManager.reset()
+        try {
+            const userInDb = await this.getUserById(id)
+            const hashedPassword = await bcrypt.hash(user.password, 10)
+            userInDb.password = hashedPassword
+            await this.userRepository.save(userInDb)
+        } catch (error) {
+            throw new HttpException('Exception found in UserService: updateUser', HttpStatus.BAD_REQUEST)
+        }
+    }
 
     async deleteUser(id: number) {
         await this.cacheManager.reset()

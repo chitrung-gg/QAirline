@@ -92,8 +92,17 @@ export class UserController {
         return this.userService.updateUser(id, updateUserDto);
     }
 
-    
-  
+    @UseGuards(JwtAuthenticationGuard)
+    @Patch('hash/:id')
+    @ApiOperation({ summary: 'Update user by ID with password hash' })
+    @ApiBearerAuth()
+    @ApiParam({ name: 'id', description: 'ID of the user', example: 1 })
+    @ApiBody({ type: () => UpdateUserDto })
+    @ApiResponse({ status: 200, description: 'The user has been successfully updated.' })
+    @ApiResponse({ status: 404, description: 'User not found.' })
+    async updateUserWithHash(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+        return this.userService.updateUserWithHash(id, updateUserDto);
+    }
 
     @UseGuards(JwtAuthenticationGuard)
     @Delete(':id') 
@@ -163,8 +172,4 @@ export class UserController {
 
         return { status: result ? 'success' : 'failure', message: null };
     }
-
-    
-
-
 }
