@@ -79,7 +79,7 @@ export class UserService {
     async updateUserWithHash(id: number, user: UpdateUserDto) {
         await this.cacheManager.reset()
         try {
-            const userInDb = await this.getUserById(id)
+            await this.getUserById(id)
             const hashedPassword = await bcrypt.hash(user.password, 10)
             user.password = hashedPassword
             await this.userRepository.update(id, user)
