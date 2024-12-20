@@ -33,7 +33,7 @@ export class Booking {
 
     @ApiProperty({ description: 'Date of birth of the passenger', example: '1990-01-01T00:00:00Z' })
     @Column({
-        type: 'timestamptz',
+        type: 'timestamp',
         transformer: {
           to: (value: string | Date | null) => {
             if (value === null) return null;
@@ -78,7 +78,7 @@ export class Booking {
 
     @ApiProperty({ description: 'Booking date', example: '2023-01-01T00:00:00Z' })
     @CreateDateColumn({
-        type: 'timestamptz', nullable: true,
+        type: 'timestamp', nullable: true,
         // transformer: {
         //   to: (value: string | Date | null) => {
         //     if (value === null) return null;

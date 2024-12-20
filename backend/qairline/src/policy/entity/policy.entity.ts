@@ -36,7 +36,7 @@ export class Policy {
 
     @ApiProperty({ description: 'Creation date of the policy', example: '2023-01-01T00:00:00Z' })
     @CreateDateColumn({
-        type: 'timestamptz',
+        type: 'timestamp',
         // transformer: {
         //   to: (value: string | Date | null) => {
         //     if (value === null) return null;
@@ -52,7 +52,7 @@ export class Policy {
 
     @ApiProperty({ description: 'Last update date of the policy', example: '2023-01-01T00:00:00Z' })
     @UpdateDateColumn({
-        type: 'timestamptz',
+        type: 'timestamp',
         // transformer: {
         //   to: (value: string | Date | null) => {
         //     if (value === null) return null;

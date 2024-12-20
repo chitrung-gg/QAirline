@@ -19,7 +19,7 @@ export class Verification {
 
     @ApiProperty({ description: 'Expiration date of the verification token', example: '2023-01-01T00:00:00Z' })
     @Column({
-        type: 'timestamptz', 
+        type: 'timestamp', 
         transformer: {
           to: (value: string | Date | null) => {
             if (value === null) return null;
@@ -34,7 +34,7 @@ export class Verification {
 
     @ApiProperty({ description: 'Creation date of the verification token', example: '2023-01-01T00:00:00Z', required: false })
     @CreateDateColumn({
-        type: 'timestamptz', nullable: true,
+        type: 'timestamp', nullable: true,
         // transformer: {
         //   to: (value: string | Date | null) => {
         //     if (value === null) return null;
@@ -50,7 +50,7 @@ export class Verification {
 
     @ApiProperty({ description: 'Updation date of the verification token', example: '2023-01-01T00:00:00Z', required: false })
     @UpdateDateColumn({
-        type: 'timestamptz', nullable: true,
+        type: 'timestamp', nullable: true,
         // transformer: {
         //   to: (value: string | Date | null) => {
         //     if (value === null) return null;

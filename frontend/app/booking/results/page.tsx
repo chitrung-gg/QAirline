@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from '@/components/redux/hooks';
 import { Flight } from '@/interfaces/flight';
 import { api } from '@/utils/api/config';
 import { Calendar, MapPin, Users } from 'lucide-react';
+import axios from 'axios';
 
 export default function FlightResultsPage() {
     const router = useRouter();
@@ -36,10 +37,10 @@ export default function FlightResultsPage() {
                 passengerCount: searchParams.passengers,
             };
 
-            const response = await api.get('http://localhost:5000/flight/search', { params });
+            const response = await axios.get('http://localhost:5000/flight/search', { params });
 
-            // console.log('API Request:', params);
-            // console.log('API Response:', response.data);
+            console.log('API Request:', params);
+            console.log('API Response:', response.data);
 
             setFlights(response.data);
         } catch (error) {

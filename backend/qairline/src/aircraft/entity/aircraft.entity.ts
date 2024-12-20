@@ -38,7 +38,7 @@ export class Aircraft {
 
   @ApiProperty({ description: 'Creation date of the aircraft record', example: '2023-01-01T00:00:00Z' })
   @CreateDateColumn({
-    type: 'timestamptz', nullable: true,
+    type: 'timestamp', nullable: true,
     // transformer: {
     //   to: (value: string | Date | null) => {
     //     if (value === null) return null;
@@ -54,7 +54,7 @@ export class Aircraft {
 
   @ApiProperty({ description: 'Last update date of the aircraft record', example: '2023-01-01T00:00:00Z' })
   @UpdateDateColumn({
-    type: 'timestamptz', nullable: true,
+    type: 'timestamp', nullable: true,
     // transformer: {
     //   to: (value: string | Date | null) => {
     //     if (value === null) return null;

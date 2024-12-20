@@ -485,7 +485,9 @@ export class BookingService {
 			}
 		})
 
-
+		booking.flight.availableSeats += booking.passengerNumber
+		booking.flight.seatClasses[booking.seatClass] += booking.passengerNumber
+		await this.flightRepository.save(booking.flight)
 		// console.log(payments)
 		await Promise.all(payments.map(async (payment) => {
 			payment.paymentStatus = "Pending";

@@ -34,7 +34,7 @@ export class Flight {
 
     @ApiProperty({ description: 'Time of departure' })
     @Column({
-        type: 'timestamptz',
+        type: 'timestamp',
         transformer: {
           to: (value: string | Date | null) => {
             if (value === null) return null;
@@ -49,7 +49,7 @@ export class Flight {
 
     @ApiProperty({ description: 'Time of arrival' })
     @Column({
-        type: 'timestamptz',
+        type: 'timestamp',
         transformer: {
           to: (value: string | Date | null) => {
             if (value === null) return null;

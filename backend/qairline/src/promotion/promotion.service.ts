@@ -49,7 +49,7 @@ export class PromotionService {
           where: {
               code: code
           },
-          relations: ['booking']
+          relations: ['bookings']
       })
       if (promotion) {
           return promotion
@@ -76,7 +76,7 @@ export class PromotionService {
         where: {
             id: id
         },
-        relations: ['booking']
+        relations: ['bookings']
     })
 
     if (promotion.bookings.length) {

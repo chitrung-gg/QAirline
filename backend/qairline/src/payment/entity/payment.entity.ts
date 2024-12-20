@@ -32,7 +32,7 @@ export class Payment {
 
     @ApiProperty({ description: 'Date of the payment', example: '2023-01-01T00:00:00Z' })
     @Column({
-        type: 'timestamptz',
+        type: 'timestamp',
         transformer: {
           to: (value: string | Date | null) => {
             if (value === null) return null;
@@ -55,7 +55,7 @@ export class Payment {
 
     @ApiProperty({ description: 'Date the refund was processed (if any)', example: '2023-01-02T00:00:00Z', nullable: true })
     @Column({
-      type: 'timestamptz', nullable: true,
+      type: 'timestamp', nullable: true,
       transformer: {
         to: (value: string | Date | null) => {
           if (value === null) return null;
