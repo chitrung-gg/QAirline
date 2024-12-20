@@ -96,202 +96,198 @@ export class BookingService {
 		flight.seatClasses[newBooking.seatClass] -= newBooking.passengerNumber
 		await this.flightRepository.save(flight)
 		/* Uncomment for send email */
-		// this.emailService.sendEmail({
-		// 	recipient: booking.passengerEmail,
-		// 	subject: 'QAirline - Booking Information',
-		// 	content: `<!DOCTYPE html>
-		// 			<html lang="en">
-		// 			<head>
-		// 				<meta charset="UTF-8">
-		// 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		// 				<title>Flight Booking Confirmation</title>
-		// 				<style>
-		// 					body {
-		// 						font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-		// 						background-color: #f4f7fb;
-		// 						margin: 0;
-		// 						padding: 0;
-		// 						color: #333;
-		// 					}
+		this.emailService.sendEmail({
+			recipient: booking.passengerEmail,
+			subject: 'QAirline - Booking Information',
+			content: `<!DOCTYPE html>
+					<html lang="en">
+					<head>
+						<meta charset="UTF-8">
+						<meta name="viewport" content="width=device-width, initial-scale=1.0">
+						<title>Flight Booking Confirmation</title>
+						<style>
+							body {
+								font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+								background-color: #f4f7fb;
+								margin: 0;
+								padding: 0;
+								color: #333;
+							}
 
-		// 					.email-wrapper {
-		// 						width: 100%;
-		// 						max-width: 650px;
-		// 						margin: 40px auto;
-		// 						padding: 25px;
-		// 						background-color: #fff;
-		// 						border-radius: 10px;
-		// 						box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		// 					}
+							.email-wrapper {
+								width: 100%;
+								max-width: 650px;
+								margin: 40px auto;
+								padding: 25px;
+								background-color: #fff;
+								border-radius: 10px;
+								box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+							}
 
-		// 					h2 {
-		// 						font-size: 28px;
-		// 						font-weight: 600;
-		// 						color: #0d47a1;
-		// 						margin-bottom: 15px;
-		// 					}
+							h2 {
+								font-size: 28px;
+								font-weight: 600;
+								color: #0d47a1;
+								margin-bottom: 15px;
+							}
 
-		// 					p {
-		// 						font-size: 16px;
-		// 						line-height: 1.6;
-		// 						margin-bottom: 20px;
-		// 						color: #555;
-		// 					}
+							p {
+								font-size: 16px;
+								line-height: 1.6;
+								margin-bottom: 20px;
+								color: #555;
+							}
 
-		// 					table {
-		// 						width: 100%;
-		// 						border-collapse: collapse;
-		// 						margin-bottom: 20px;
-		// 					}
+							table {
+								width: 100%;
+								border-collapse: collapse;
+								margin-bottom: 20px;
+							}
 
-		// 					td, th {
-		// 						padding: 15px;
-		// 						text-align: left;
-		// 						font-size: 16px;
-		// 						border-bottom: 1px solid #e0e0e0;
-		// 					}
+							td, th {
+								padding: 15px;
+								text-align: left;
+								font-size: 16px;
+								border-bottom: 1px solid #e0e0e0;
+							}
 
-		// 					th {
-		// 						background-color: #f7f7f7;
-		// 						font-weight: 500;
-		// 						color: #777;
-		// 					}
+							th {
+								background-color: #f7f7f7;
+								font-weight: 500;
+								color: #777;
+							}
 
-		// 					td {
-		// 						background-color: #fafafa;
-		// 						color: #555;
-		// 					}
+							td {
+								background-color: #fafafa;
+								color: #555;
+							}
 
-		// 					td.highlight {
-		// 						font-weight: 600;
-		// 						color: #1a73e8;
-		// 					}
+							td.highlight {
+								font-weight: 600;
+								color: #1a73e8;
+							}
 
-		// 					.cta-button {
-		// 						display: inline-block;
-		// 						padding: 12px 24px;
-		// 						font-size: 16px;
-		// 						font-weight: 500;
-		// 						background-color: #1a73e8;
-		// 						color: #fff;
-		// 						text-decoration: none;
-		// 						border-radius: 5px;
-		// 						margin-top: 20px;
-		// 						transition: background-color 0.3s ease;
-		// 					}
+							.cta-button {
+								display: inline-block;
+								padding: 12px 24px;
+								font-size: 16px;
+								font-weight: 500;
+								background-color: #1a73e8;
+								color: #fff;
+								text-decoration: none;
+								border-radius: 5px;
+								margin-top: 20px;
+								transition: background-color 0.3s ease;
+							}
 
-		// 					.cta-button:hover {
-		// 						background-color: #1565c0;
-		// 					}
+							.cta-button:hover {
+								background-color: #1565c0;
+							}
 
-		// 					.footer {
-		// 						text-align: center;
-		// 						font-size: 14px;
-		// 						color: #777;
-		// 						margin-top: 30px;
-		// 					}
+							.footer {
+								text-align: center;
+								font-size: 14px;
+								color: #777;
+								margin-top: 30px;
+							}
 
-		// 					.footer a {
-		// 						color: #1a73e8;
-		// 						text-decoration: none;
-		// 					}
+							.footer a {
+								color: #1a73e8;
+								text-decoration: none;
+							}
 
-		// 					.footer p {
-		// 						margin-top: 10px;
-		// 						color: #999;
-		// 					}
+							.footer p {
+								margin-top: 10px;
+								color: #999;
+							}
 
-		// 					.separator {
-		// 						margin-top: 25px;
-		// 						border-top: 2px solid #f0f0f0;
-		// 						margin-bottom: 20px;
-		// 					}
+							.separator {
+								margin-top: 25px;
+								border-top: 2px solid #f0f0f0;
+								margin-bottom: 20px;
+							}
 
-		// 				</style>
-		// 			</head>
-		// 			<body>
+						</style>
+					</head>
+					<body>
 
-		// 				<div class="email-wrapper">
+						<div class="email-wrapper">
 
-		// 					<h2>Hello ${newBooking.passengerName},</h2>
+							<h2>Hello ${newBooking.passengerName},</h2>
 
-		// 					<p>Thank you for booking your flight with QAirline! Below are the details of your booking:</p>
+							<p>Thank you for booking your flight with QAirline! Below are the details of your booking:</p>
 
-		// 					<table>
-		// 						<tr>
-		// 							<th>Passenger Name</th>
-		// 							<td>${newBooking.passengerName}</td>
-		// 						</tr>
-		// 						<tr>
-		// 							<th>Email</th>
-		// 							<td>${newBooking.passengerEmail}</td>
-		// 						</tr>
-		// 						<tr>
-		// 							<th>Date of Birth</th>
-		// 							<td>${newBooking.passengerDob}</td>
-		// 						</tr>
-		// 						<tr>
-		// 							<th>Booking Code</th>
-		// 							<td>${newBooking.bookingCode}</td>
-		// 						</tr>
-		// 						<tr>
-		// 							<th>Passport Number</th>
-		// 							<td>${newBooking.passportNumber}</td>
-		// 						</tr>
-		// 						<tr>
-		// 							<th>Seat Number</th>
-		// 							<td>${newBooking.seatNumber}</td>
-		// 						</tr>
-		// 						<tr>
-		// 							<th>Seat Class</th>
-		// 							<td>${newBooking.seatClass}</td>
-		// 						</tr>
-		// 						<tr>
-		// 							<th>Booking Date</th>
-		// 							<td>${newBooking.bookingDate}</td>
-		// 						</tr>
-		// 						<tr>
-		// 							<th>Booking Status</th>
-		// 							<td class="highlight">${newBooking.bookingStatus}</td>
-		// 						</tr>
-		// 						<tr>
-		// 							<th>Flight Number</th>
-		// 							<td>${flight.flightNumber}</td>
-		// 						</tr>
-		// 						<tr>
-		// 							<th>Departure Time</th>
-		// 							<td>${flight.departureTime}</td>
-		// 						</tr>
-		// 						<tr>
-		// 							<th>Arrival Time (estimated)</th>
-		// 							<td>${flight.arrivalTime}</td>
-		// 						</tr>
-		// 						<tr>
-		// 							<th>Departure Airport (City)</th>
-		// 							<td>${flight.departureAirport.name} (${flight.departureAirport.city})</td>
-		// 						</tr>
-		// 						<tr>
-		// 							<th>Arrival Airport (City)</th>
-		// 							<td>${flight.arrivalAirport.name} (${flight.arrivalAirport.city})</td>
-		// 						</tr>
-		// 					</table>
+							<table>
+								<tr>
+									<th>Passenger Name</th>
+									<td>${newBooking.passengerName}</td>
+								</tr>
+								<tr>
+									<th>Email</th>
+									<td>${newBooking.passengerEmail}</td>
+								</tr>
+								<tr>
+									<th>Date of Birth</th>
+									<td>${newBooking.passengerDob}</td>
+								</tr>
+								<tr>
+									<th>Booking Code</th>
+									<td>${newBooking.bookingCode}</td>
+								</tr>
+								<tr>
+									<th>Passport Number</th>
+									<td>${newBooking.passportNumber}</td>
+								</tr>
+								<tr>
+									<th>Seat Class</th>
+									<td>${newBooking.seatClass}</td>
+								</tr>
+								<tr>
+									<th>Booking Date</th>
+									<td>${newBooking.bookingDate}</td>
+								</tr>
+								<tr>
+									<th>Booking Status</th>
+									<td class="highlight">${newBooking.bookingStatus}</td>
+								</tr>
+								<tr>
+									<th>Flight Number</th>
+									<td>${flight.flightNumber}</td>
+								</tr>
+								<tr>
+									<th>Departure Time</th>
+									<td>${flight.departureTime}</td>
+								</tr>
+								<tr>
+									<th>Arrival Time (estimated)</th>
+									<td>${flight.arrivalTime}</td>
+								</tr>
+								<tr>
+									<th>Departure Airport (City)</th>
+									<td>${flight.departureAirport.name} (${flight.departureAirport.city})</td>
+								</tr>
+								<tr>
+									<th>Arrival Airport (City)</th>
+									<td>${flight.arrivalAirport.name} (${flight.arrivalAirport.city})</td>
+								</tr>
+							</table>
 
-		// 					<div class="separator"></div>
+							<div class="separator"></div>
 
-		// 					<p>If you have any questions or need assistance, feel free to contact our customer support team.</p>
+							<p>If you have any questions or need assistance, feel free to contact our customer support team.</p>
 							
-		// 					<a href="mailto:support@qairline.com" class="cta-button">Contact Support</a>
+							<a href="mailto:support@qairline.com" class="cta-button">Contact Support</a>
 
-		// 					<div class="footer">
-		// 						<p>Best regards,<br>QAirline Team</p>
-		// 						<p><a href="mailto:support@qairline.com">support@qairline.com</a></p>
-		// 					</div>
+							<div class="footer">
+								<p>Best regards,<br>QAirline Team</p>
+								<p><a href="mailto:support@qairline.com">support@qairline.com</a></p>
+							</div>
 
-		// 				</div>
+						</div>
 
-		// 			</body>
-		// 			</html>`
-		// })
+					</body>
+					</html>`
+		})
 		
 		
 		return newBooking
