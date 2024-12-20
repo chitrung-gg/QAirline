@@ -173,7 +173,7 @@ export default function BookingDetailsPage() {
         setIsSubmitting(true);
         try {
             if (!passengerInfo) {
-                alert('Thông tin hành khách không được để trống.');
+                alert('Thông tin người đặt không được để trống.');
                 setIsSubmitting(false);
                 return;
             }

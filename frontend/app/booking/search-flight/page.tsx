@@ -301,13 +301,13 @@ const BookingSearchPage: React.FC = () => {
                     <ModalContent>
                         {(onClose) => (
                             <>
-                                <ModalHeader className="flex items-center gap-2 text-red-600">
+                                <ModalHeader className="flex items-center gap-2 text-red-400">
                                     <AlertCircle size={24} />
                                     Xác Nhận Hủy Vé
                                 </ModalHeader>
                                 <ModalBody>
                                     <p className="text-gray-700">Bạn có chắc chắn muốn hủy vé này?</p>
-                                    <p className="text-red-500 font-medium">Việc hủy vé không thể hoàn tác.</p>
+                                    <p className="text-red-400 font-medium">Việc hủy vé không thể hoàn tác.</p>
                                 </ModalBody>
                                 <ModalFooter>
                                     <Button
@@ -318,7 +318,7 @@ const BookingSearchPage: React.FC = () => {
                                         Quay Lại
                                     </Button>
                                     <Button
-                                        color="danger"
+                                        className='bg-red-400 hover:bg-red-600 text-white'
                                         onPress={() => {
                                             confirmCancellation();
                                             onClose();

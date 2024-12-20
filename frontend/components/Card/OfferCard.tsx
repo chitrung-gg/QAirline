@@ -37,7 +37,7 @@ export default function OfferCard(prop: Promotion) {
           width="100%"
           alt="offer"
           className="w-full object-cover h-[240px]"
-          src="/images/sky.jpg"
+          src={prop.coverImage}
         />
       </CardBody>
       <CardFooter className="flex flex-col justify-between">

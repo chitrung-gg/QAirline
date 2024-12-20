@@ -96,7 +96,7 @@ export default function Page(props: { params: { id: string } }) {
                                         <CardHeader className="justify-between">
                                             <div className="flex flex-col gap-3">
                                                 <div className="flex flex-col items-left">
-                                                    <p className="text-md font-semibold">Tên hành khách: {data.passengerName}</p>
+                                                    <p className="text-md font-semibold">Tên người đặt: {data.passengerName}</p>
                                                     <p className="text-md font-semibold">Ngày sinh: {new Date(data.passengerDob).toLocaleDateString()}</p>
                                                 </div>
                                                 {/* <div className="flex flex-col justify-center items-center">

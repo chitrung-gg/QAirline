@@ -19,10 +19,10 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Qairline',
-    default: 'Qairline',
+    template: '%s | QAirline',
+    default: 'QAirline',
   },
-  description: "Qairline - Đặt vé máy bay trực tuyến",
+  description: "QAirline - Đặt vé máy bay trực tuyến",
 };
 
 export default function RootLayout({

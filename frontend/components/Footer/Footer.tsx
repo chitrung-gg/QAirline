@@ -122,7 +122,7 @@ export default function Footer() {
                             <p className="text-2xl">Liên Hệ</p>
                             <div className='flex items-center gap-2 p-2 w-fit rounded-lg border-2'> 
                                 <FaPhoneAlt className='text-xl'/>
-                                <p className="text-3xl">1900.8386</p>
+                                <p className="text-3xl">1900.3101</p>
                             </div>
                         </div>
 

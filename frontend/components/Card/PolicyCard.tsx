@@ -15,7 +15,7 @@ export default function PolicyCard() {
                         QAirline luôn mong muốn được đồng hành cùng Quý khách trong những chuyến bay và cam kết áp dụng mọi biện pháp
                         để bảo vệ khách hàng trong suốt hành trình bay cùng QAirline.
                     </p>
-                    <Divider className="my-2 bg-transparent" />
+                    {/* <Divider className="my-2 bg-transparent" />
                     <div className="text-small">
                         <h2 className="mx-2 mb-2 font-semibold">1. Trường hợp số lượng hành khách làm thủ tục lên tầu nhiều hơn so với số ghế thực tế của máy bay</h2>
                         <p className="mx-3">
@@ -23,7 +23,7 @@ export default function PolicyCard() {
                             Trường hợp này xảy ra nếu số lượng hành khách làm thủ tục vượt quá số ghế thực tế của máy bay.
                         </p>
                         <p className="mx-3">...</p>
-                    </div>
+                    </div> */}
                 </div>
             </CardBody>
             <CardFooter className="pt-2 ml-1 gap-2 grid grid-cols-2 justify-between mt-2">

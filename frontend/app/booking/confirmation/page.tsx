@@ -122,7 +122,7 @@ export default function BookingConfirmationPage() {
 
                             <div className="space-y-4">
                                 <h2 className="text-xl font-semibold text-gray-700 border-b pb-2">
-                                    Thông tin hành khách
+                                    Thông tin người đặt
                                 </h2>
                                 <div className="space-y-2 text-gray-600">
                                     <p className="flex justify-between">
@@ -169,7 +169,7 @@ export default function BookingConfirmationPage() {
 
                                 <div className="space-y-4">
                                     <h2 className="text-xl font-semibold text-gray-700 border-b pb-2">
-                                        Thông tin hành khách
+                                        Thông tin người đặt
                                     </h2>
                                     <div className="space-y-2 text-gray-600">
                                         <p className="flex justify-between">

@@ -89,10 +89,10 @@ export default function Page(props: { params: { id: string } }) {
 
                 <Input
                     isRequired
-                    label="Tên hành khách"
+                    label="Tên người đặt"
                     labelPlacement="outside"
                     type="text"
-                    placeholder="Tên hành khách"
+                    placeholder="Tên người đặt"
                     value={initialData.passengerName}
                     isReadOnly
                     size="lg"
