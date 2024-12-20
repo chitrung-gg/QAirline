@@ -312,7 +312,7 @@ export default function BookingDetailsPage() {
                                 onSelectionChange={(key) => setSelectedDepartureClass(key as string)}
                                 defaultItems={Object.entries(selectedFlights.departure?.baseClassPrice || {}).map(([className, price]) => ({
                                     key: className,
-                                    label: `${className} - ${price.toLocaleString()}VND`,
+                                    label: `${className} - ${price.toLocaleString()} VND`,
                                 }))}
                                 >
                                 {(item) => (
@@ -337,7 +337,7 @@ export default function BookingDetailsPage() {
                                 onSelectionChange={(key) => setSelectedReturnClass(key as string)}
                                 defaultItems={Object.entries(selectedFlights.return.baseClassPrice || {}).map(([className, price]) => ({
                                     key: className,
-                                    label: `${className} - ${price.toLocaleString()}VND`,
+                                    label: `${className} - ${price.toLocaleString()} VND`,
                                 }))}
                                 >
                                 {(item) => (

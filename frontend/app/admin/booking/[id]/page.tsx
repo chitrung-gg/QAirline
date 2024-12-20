@@ -35,7 +35,8 @@ export default function Page(props: { params: { id: string } }) {
         const fetchData = async () => {
             if (!id) return;  
             const res = await axios.get(`http://localhost:5000/booking/${id}`);
-            const data = res.data;            
+            const data = res.data;     
+            //console.log('data:', data);       
             setInitialData(data);
         };
     
@@ -46,6 +47,9 @@ export default function Page(props: { params: { id: string } }) {
     if (!initialData) {
         return <div className="text-xl md:text-2xl">Loading...</div>;
     }
+
+    const dateString = initialData.bookingDate.split('T')[0];
+    const dobString = initialData.passengerDob.split('T')[0];
 
     return (
       <main className='h-full w-full'>
@@ -97,13 +101,12 @@ export default function Page(props: { params: { id: string } }) {
                     className="py-3 font-semibold"
                 />
 
-                <Input
+                <DatePicker
                     isRequired
                     label="Ngày sinh"
                     labelPlacement="outside"
-                    type="text"
-                    placeholder="Ngày sinh"
-                    value={initialData.passengerDob}
+                    //value={initialData.passengerDob}
+                    value={parseDate(dobString)}
                     isReadOnly
                     size="lg"
                     radius="sm"
@@ -139,7 +142,7 @@ export default function Page(props: { params: { id: string } }) {
                     className="py-3 font-semibold"
                 />
 
-                {Object.keys(initialData.ticketPrice).map((ticketPrice) => (
+                {/* {Object.keys(initialData.ticketPrice).map((ticketPrice) => (
                     <div key={ticketPrice}>
                         <Input
                             label={`Giá (${ticketPrice})`}
@@ -153,21 +156,20 @@ export default function Page(props: { params: { id: string } }) {
                             isReadOnly
                         />
                     </div>
-                ))}
-
-                <Input
-                    isRequired
-                    label="Hạng ghế"
-                    labelPlacement="outside"
-                    type="text"
-                    placeholder="Hạng ghế"
-                    value={initialData.seatClass}
-                    isReadOnly
-                    size="lg"
-                    radius="sm"
-                    variant="bordered"
-                    className="py-3 font-semibold"
-                />
+                ))} */}
+                <div>
+                    <Input
+                        label={`Giá vé`}
+                        labelPlacement="outside"
+                        size="lg"
+                        radius="sm"
+                        variant="bordered"
+                        className="py-3 font-semibold"
+                        type="number"
+                        value={initialData.ticketPrice[initialData.seatClass].toString()}
+                        isReadOnly
+                    />
+                </div>
 
                 <Input
                     isRequired
@@ -187,7 +189,8 @@ export default function Page(props: { params: { id: string } }) {
                     <DatePicker
                         isRequired
                         showMonthAndYearPickers
-                        defaultValue={parseDateTime(initialData.bookingDate)}
+                        //defaultValue={parseDate(initialData.bookingDate)} 
+                        value={parseDate(dateString)}
                         label="Ngày đặt vé"
                         labelPlacement="outside"
                         variant="bordered"

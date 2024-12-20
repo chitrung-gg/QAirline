@@ -15,9 +15,10 @@ const statusOptions = [
 
 export const formatDateTime = (isoString: string, format: 'DD/MM/YYYY' | 'MM/DD/YYYY' = 'DD/MM/YYYY') => {
     const date = new Date(isoString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
-    const year = date.getFullYear();
+
+    const day = date.getUTCDate().toString().padStart(2, '0');
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+    const year = date.getUTCFullYear();
 
     let formattedDate;
     if (format === 'DD/MM/YYYY') {
@@ -26,7 +27,7 @@ export const formatDateTime = (isoString: string, format: 'DD/MM/YYYY' | 'MM/DD/
         formattedDate = `${month}/${day}/${year}`;
     }
 
-    const formattedTime = date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+    const formattedTime = date.toUTCString().slice(17, 22); 
     return { formattedDate, formattedTime };
 };
 
