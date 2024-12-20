@@ -238,7 +238,7 @@ export class UserService {
 
         const hashedPassword = await bcrypt.hash(password, 10)
         user.password = hashedPassword
-        return await this.userRepository.save(user)
+        await this.userRepository.save(user)
     }
 
     async verifyGeneratedEmailVerificationForPassword(email: string, otp: string) {

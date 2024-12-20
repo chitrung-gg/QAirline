@@ -450,7 +450,7 @@ export class BookingService {
 					<body>
 						<div class="email-container">
 							<h1>Hello ${email}</h1>
-							<p>You may change your QAirline account password using the following OTP:</p>
+							<p>You may cancel your booking using the following OTP:</p>
 							<p><span class="otp">${otp}</span></p>
 							<p class="footer">Regards,<br />QAirline</p>
 						</div>
