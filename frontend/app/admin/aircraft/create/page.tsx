@@ -97,13 +97,21 @@ export default function Page() {
             return;
         }
 
+        const seatClassesWithNames: { [key: string]: number } = {};
+        Object.entries(seatClassNames).forEach(([className, name]) => {
+            if (name.trim()) {
+                seatClassesWithNames[name] = seatClasses[className]; // Sử dụng tên mới
+            }
+        });
+
         const data: CreateAircraftDto = {
             aircraftCode: aircraftCodeValue,
             model: modelValue,
             capacity: capacityValue,
             status: statusValue,
             manufacturer: manufacturerValue,
-            seatClasses,
+            //seatClasses,
+            seatClasses: seatClassesWithNames,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
         };

@@ -13,6 +13,15 @@ const newItem = {
     content: 'QAirline vừa công bố kế hoạch mở rộng đường bay mới từ Hà Nội đến New York, Mỹ. Đây là một bước tiến quan trọng trong việc mở rộng mạng lưới bay của hãng. Đường bay mới sẽ được khai trương vào ngày dd/mm/yyyy. Để chào mừng sự kiện này, QAirline sẽ tặng kèm đồ ăn nhẹ cho tất cả các chuyến bay từ Hà Nội đến New York trong vòng 1 tuần kể từ ngày khai trương. Đây là cơ hội tuyệt vời để Quý khách trải nghiệm dịch vụ hàng không chất lượng cao của QAirline với mức giá ưu đãi nhất.',
 }
 
+const formatContent = (content: string) => {
+    return content.split("\n").map((item, index) => (
+      <React.Fragment key={index}>
+        {item}
+        <br />
+      </React.Fragment>
+    ));
+};
+
 export default function NewsDetailsPage(props: { params: { id: string } }) {
     const [params, setParams] = React.useState<{ id: string } | null>(null);
 
@@ -63,7 +72,7 @@ export default function NewsDetailsPage(props: { params: { id: string } }) {
                 </div>
 
                 <div className="">
-                    <p>{initialData?.content}</p>
+                    <p>{initialData ? formatContent(initialData.content) : null}</p>
                 </div>
             </div>
             
