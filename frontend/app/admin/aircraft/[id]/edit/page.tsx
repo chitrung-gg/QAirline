@@ -87,7 +87,7 @@ export default  function Page(props: { params: { id: string } }) {
     if (isNameChange) {
       setSeatClassNames((prev) => ({
         ...prev,
-        [className]: value.trim(),
+        [className]: value,
       }));
     } else {
       setSeatClasses((prev) => ({
@@ -128,7 +128,14 @@ export default  function Page(props: { params: { id: string } }) {
     if (!initialData) {
       onErrorOpen();
       return;
-  }
+    }
+
+    const seatClassesWithNames: { [key: string]: number } = {};
+    Object.entries(seatClassNames).forEach(([className, name]) => {
+      if (name.trim()) {
+        seatClassesWithNames[name] = seatClasses[className]; // Sử dụng tên mới
+      }
+    });
 
     const data: UpdateAircraftDto = {
         aircraftCode: aircraftCodeValue,
@@ -136,11 +143,12 @@ export default  function Page(props: { params: { id: string } }) {
         manufacturer: manufacturerValue,
         capacity: capacityValue,
         status: statusValue,
-        seatClasses: seatClasses,
+        seatClasses: seatClassesWithNames,
         createdAt: initialData.createdAt,
         updatedAt: new Date().toISOString(),
     };
     try {
+        console.log(data);
         const res = await axios.patch(`http://localhost:5000/aircraft/${initialData.id}`, data);
         onOpen();
     } catch (error) {

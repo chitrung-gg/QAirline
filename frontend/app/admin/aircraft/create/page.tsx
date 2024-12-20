@@ -59,7 +59,7 @@ export default function Page() {
         if (isNameChange) {
             setSeatClassNames((prev) => ({
                 ...prev,
-                [className]: value.trim(),
+                [className]: value,
             }));
         } else {
             setSeatClasses((prev) => ({

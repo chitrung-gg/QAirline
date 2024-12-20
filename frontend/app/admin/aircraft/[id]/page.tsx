@@ -152,7 +152,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
               {aircraftData.flights.map((flight) => (
                 <Link
                   key={flight.id}
-                  href={`/admin/flights/${flight.id}`}
+                  href={`/admin/flight/${flight.id}`}
                   className="text-blue-600 hover:text-blue-800 transition-colors"
                 >
                   {flight.flightNumber}
