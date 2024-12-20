@@ -175,7 +175,7 @@ export default function Home() {
 
   return (
     <div>
-      <div className="flex flex-col justify-center items-center min-h-[70vh] bg-cover bg-center" style={{ backgroundImage: 'url(/images/sky.jpg)' }}>
+      <div className="flex flex-col justify-center items-center min-h-[70vh] bg-cover bg-center" style={{ backgroundImage: 'url(https://t4.ftcdn.net/jpg/02/35/49/01/360_F_235490181_DsgRd2Yrwx9fy2KLmfYgCkzX0W9xQEIU.jpg)' }}>
         <h1 className="max-w-4/5 my-5 text-center text-white text-4xl font-bold">Vui từng chuyến bay</h1>
         <div className="lg:w-4/5 rounded-lg my-5">
           {/* <Button
