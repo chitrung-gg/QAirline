@@ -55,7 +55,7 @@ export default function BookingDetailsPage() {
     const [selectedReturnClass, setSelectedReturnClass] = useState<string>('');
 
     const [promotions, setPromotions] = useState<Promotion[]>([]);
-    const [promotionInput, setPromotionInput] = useState('');
+    //const [promotionInput, setPromotionInput] = useState('');
     const [selectedPromotion, setSelectedPromotion] = useState<Promotion | null>(null);
 
     const [isPassengerInfoSubmitted, setIsPassengerInfoSubmitted] = useState(false);
@@ -375,7 +375,7 @@ export default function BookingDetailsPage() {
                             selectedKey={selectedPromotion?.code}
                             onSelectionChange={(key) => {
                                 handlePromotionSelect(key as string);
-                                setPromotionInput(key ? promotions.find(p => p.code === key)?.code || "" : "");
+                                //setPromotionInput(key ? promotions.find(p => p.code === key)?.code || "" : "");
                               }}
                             defaultItems={promotions
                                 .filter(promo => promo.isActive) 
@@ -384,15 +384,15 @@ export default function BookingDetailsPage() {
                                     label: `${promo.code} - ${promo.discount} ${promo.discountType === discountType.PERCENT ? '%' : 'VNĐ'}`
                                 }))
                             }
-                            value={promotionInput}
-                            onInputChange={(value) => setPromotionInput(value)}
+                            //value={promotionInput}
+                            //onInputChange={(value) => setPromotionInput(value)}
                         >
                             {(item) => (
                                 <AutocompleteItem key={item.key}>{item.label}</AutocompleteItem>
                             )}
                         </Autocomplete>
 
-                        {selectedPromotion && (
+                        {/* {selectedPromotion && (
                             <Button
                                 className='bg-red-500 font-semibold text-white'
                                 size="sm"
@@ -403,7 +403,7 @@ export default function BookingDetailsPage() {
                             >
                                 Bỏ mã giảm giá
                             </Button>
-                        )}
+                        )} */}
                     </div>
 
                     
