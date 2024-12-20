@@ -9,7 +9,7 @@ export default function Promotion() {
         <div className="max-w-6xl mx-auto">
             <div className="w-full flex flex-col justify-center items-center px-4 py-8 desktop:py-8 gap-8">
                 <p className="text-2xl md:text-3xl lg:text-3xl font-bold text-blue-normal italic text-center">
-                    Hãy để Qairline đồng hành cùng bạn trên những chuyến bay đáng nhớ.<br/>
+                    Hãy để QAirline đồng hành cùng bạn trên những chuyến bay đáng nhớ.<br/>
                     Đặt vé ngay hôm nay!
                 </p>
                 <div className="grid grid-cols-1 gap-4">

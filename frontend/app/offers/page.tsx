@@ -53,7 +53,7 @@ export default function OffersPage() {
             mobile:px-4
             desktop:py-12">
                 <div className="flex items-center justify-start mobile:justify-center tablet:justify-center pb-12">
-                    <p className="text-3xl font-bold font-robotoflex capitalize text-blue-normal">Ưu đãi</p>
+                    <p className="text-3xl font-bold font-robotoflex text-blue-normal">Ưu đãi</p>
                 </div>
 
                 {offers.length === 0 ? (

@@ -25,7 +25,7 @@ export default function OurValue({ title, content, image }: OurValueProps) {
                     className="w-full object-cover"
                 />
 
-                <div className="mt-6">
+                <div className="">
                     {/* {content.map((text, index) => (
                         <p key={index} className="text-lg mobile:text-base tablet:text-base mt-4">
                             {text}

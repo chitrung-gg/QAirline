@@ -54,7 +54,7 @@ export default function Archivement({ title, content, image }: AchievementProps)
                     ))} */}
                     {/* Mapping content[i] and image[i] */}
                     {content.map((desc, i) => (
-                        <Card key={i} className="achievement-item flex flex-col items-center text-center gap-4">
+                        <Card key={i} className="achievement-item flex flex-col items-center text-center gap-2">
                             <Image
                                 src={image[i]}  
                                 alt={`Achievement ${i + 1}`}
