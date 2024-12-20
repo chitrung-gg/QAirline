@@ -33,7 +33,7 @@ export default function FlightResultsPage() {
             const params = {
                 departureCity: currentFlightStep === "departure" ? searchParams.departure : searchParams.destination,
                 arrivalCity: currentFlightStep === "departure" ? searchParams.destination : searchParams.departure,
-                departureDate: currentFlightStep === "departure" ? searchParams.departureDate : searchParams.returnDate,
+                departureDate: currentFlightStep === "departure" ? new Date(searchParams.departureDate!).toISOString() : new Date(searchParams.returnDate!).toISOString(),
                 passengerCount: searchParams.passengers,
             };
 
