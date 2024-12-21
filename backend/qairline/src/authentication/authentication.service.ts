@@ -75,6 +75,8 @@ export class AuthenticationService {
             } catch (error) {
                 console.log('Invalid or expired token', error);
             }
+        } else {
+            return null
         }
 
         return user
@@ -92,7 +94,7 @@ export class AuthenticationService {
         await this.userService.createUser({
             ...signUpData,
             // TODO: Change password to hashed type when deploying
-            // password: hashedPassword,
+            password: hashedPassword,
         })
     }
 
@@ -104,8 +106,8 @@ export class AuthenticationService {
 
         const hashedPassword = await bcrypt.hash(userInDb.password, 10)
         // TODO: change password to encrypted form before deploying
-        // const passwordMatch = await bcrypt.compare(logInData.password, userInDb.password)
-        const passwordMatch = await bcrypt.compare(logInData.password, hashedPassword)
+        const passwordMatch = await bcrypt.compare(logInData.password, userInDb.password)
+        // const passwordMatch = await bcrypt.compare(logInData.password, hashedPassword)
         if (!passwordMatch) {
             throw new HttpException('Wrong login credentials in passwordMatch', HttpStatus.BAD_REQUEST)
         }

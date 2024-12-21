@@ -25,13 +25,22 @@ export class AboutusController {
     return this.aboutusService.getAllAboutus();
   }
 
-  @Get(':id')
+  @Get('id/:id')
   @ApiOperation({ summary: 'Get About Us section by ID' })
   @ApiParam({ name: 'id', description: 'ID of the About Us section', example: 1 })
   @ApiResponse({ status: 200, description: 'Return the About Us section with the specified ID.' })
   @ApiResponse({ status: 404, description: 'About Us section not found.' })
   getAboutusById(@Param('id') id: number) {
     return this.aboutusService.getAboutusById(id);
+  }
+
+  @Get('category/:category')
+  @ApiOperation({ summary: 'Get About Us section by category' })
+  @ApiParam({ name: 'category', description: 'Category of the About Us section', example: 1 })
+  @ApiResponse({ status: 200, description: 'Return the About Us section with the specified category' })
+  @ApiResponse({ status: 404, description: 'About Us section not found.' })
+  getAboutusByCategory(@Param('category') category: "Achievement" | "Intro" | "OurValue" | "OurVision") {
+    return this.aboutusService.getAboutusByCategory(category);
   }
 
   @Patch(':id')

@@ -36,12 +36,25 @@ export class PromotionService {
           where: {
               id: id
           },
-          relations: ['booking']
+          relations: ['bookings']
       })
       if (promotion) {
           return promotion
       }
       throw new HttpException('Exception found in PromotionService: getPromotionById', HttpStatus.BAD_REQUEST)
+  }
+
+  async getPromotionByCode(code: string) {
+      const promotion = this.promotionRepository.findOne({
+          where: {
+              code: code
+          },
+          relations: ['bookings']
+      })
+      if (promotion) {
+          return promotion
+      }
+      throw new HttpException('Exception found in PromotionService: getPromotionByCode', HttpStatus.BAD_REQUEST)
   }
 
   async updatePromotion(id: number, promotion: UpdatePromotionDto) {
@@ -63,7 +76,7 @@ export class PromotionService {
         where: {
             id: id
         },
-        relations: ['booking']
+        relations: ['bookings']
     })
 
     if (promotion.bookings.length) {

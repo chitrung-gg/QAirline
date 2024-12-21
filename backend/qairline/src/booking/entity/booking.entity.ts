@@ -3,7 +3,7 @@ import { Flight } from "src/flight/entity/flight.entity";
 import { Payment } from "src/payment/entity/payment.entity";
 import { Promotion } from "src/promotion/entity/promotion.entity";
 import { User } from "src/user/entity/user.entity";
-import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Booking {
@@ -28,12 +28,12 @@ export class Booking {
     passengerName: string;
   
     @ApiProperty({ description: 'Email of the passenger', example: 'john.doe@example.com' })
-    @Column({ type: "varchar", unique: true, length: 100 })
+    @Column({ type: "varchar", length: 100 })
     passengerEmail: string; 
 
     @ApiProperty({ description: 'Date of birth of the passenger', example: '1990-01-01T00:00:00Z' })
     @Column({
-        type: 'timestamptz',
+        type: 'timestamp',
         transformer: {
           to: (value: string | Date | null) => {
             if (value === null) return null;
@@ -68,26 +68,26 @@ export class Booking {
     @Column({ type: "float", nullable: true})
     totalPrice: number; // Amount paid
   
-    @ApiProperty({ description: 'Seat number assigned to the passenger', example: 'A1' })
-    @Column({ type: "varchar", length: 10 })
-    seatNumber: string; // Số ghế đã đặt (ví dụ: A1, B2)
+    @ApiProperty({ description: 'Number of passengers', example: '1' })
+    @Column({ type: "integer", nullable: true })
+    passengerNumber: number; // Số lượng hành khách
   
     @ApiProperty({ description: 'Seat class assigned to the passenger', example: 'Economy' })
     @Column({ type: "varchar", length: 50 })
     seatClass: string; // Loại hạng ghế (Economy, Business, First Class)
 
     @ApiProperty({ description: 'Booking date', example: '2023-01-01T00:00:00Z' })
-    @Column({
-        type: 'timestamptz', nullable: true,
-        transformer: {
-          to: (value: string | Date | null) => {
-            if (value === null) return null;
-            return new Date(value).toISOString();
-          },
-          from: (value: Date) => {
-            return value ? value.toISOString() : null;
-          },
-        },
+    @CreateDateColumn({
+        type: 'timestamp', nullable: true,
+        // transformer: {
+        //   to: (value: string | Date | null) => {
+        //     if (value === null) return null;
+        //     return new Date(value).toISOString();
+        //   },
+        //   from: (value: Date) => {
+        //     return value ? value.toISOString() : null;
+        //   },
+        // },
         default: () => "CURRENT_TIMESTAMP"
     })
     bookingDate: string;

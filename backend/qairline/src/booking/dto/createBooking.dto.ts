@@ -1,4 +1,4 @@
-import { IsArray, IsDate, IsEmail, IsIn, IsISO8601, IsJSON, IsObject, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDate, IsEmail, IsIn, IsISO8601, IsJSON, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
 import { Flight } from "src/flight/entity/flight.entity";
 import { Payment } from "src/payment/entity/payment.entity";
 import { Promotion } from "src/promotion/entity/promotion.entity";
@@ -47,17 +47,22 @@ export class CreateBookingDto {
     @IsObject()
     ticketPrice?: Record<string, number>;
   
-    @ApiProperty({ description: 'Seat number assigned to the passenger', example: 'A1' })
-    @IsString()
-    seatNumber: string; 
+    @ApiProperty({ description: 'Total payment after applying promotionn (if have)', example: 100 })
+    @IsNumber()
+    totalPrice: number; // Amount paid
+
+    @ApiProperty({ description: 'Number of passengers', example: '1' })
+    @IsNumber()
+    passengerNumber: number; 
   
     @ApiProperty({ description: 'Seat class assigned to the passenger', example: 'Economy' })
     @IsString()
     seatClass: string; 
 
     @ApiProperty({ description: 'Booking date', example: '2023-01-01T00:00:00Z' })
+    @IsOptional()
     @IsISO8601()
-    bookingDate: string;
+    bookingDate?: string;
   
     @ApiProperty({ description: 'Booking status', enum: ["Confirmed", "Pending", "Cancelled"] })
     @IsString()

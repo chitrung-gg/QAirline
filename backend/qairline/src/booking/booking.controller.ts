@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Query, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Query, UseGuards, Request } from '@nestjs/common';
 import { BookingService } from './booking.service';
 import { CreateBookingDto } from './dto/createBooking.dto';
 import { UpdateBookingDto } from './dto/updateBooking.dto';
@@ -24,9 +24,9 @@ export class BookingController {
   @ApiBody({ type: () => CreateBookingDto })
   @ApiResponse({ status: 201, description: 'The booking has been successfully created.' })
   @ApiResponse({ status: 400, description: 'Invalid input.' })
-  async createBooking(@Body() createBookingDto: CreateBookingDto, @Req() req: RequestWithUser) {
+  async createBooking(@Body() createBookingDto: CreateBookingDto, @Request() req: RequestWithUser) {
     const token = req.headers['authorization']?.split(' ')[1];
-    const user = this.authenticationService.decodeToken(token)
+    const user = await this.authenticationService.decodeToken(token)
     return this.bookingService.createBooking(createBookingDto, user);
   }
 
@@ -46,6 +46,29 @@ export class BookingController {
   @ApiResponse({ status: 400, description: 'Invalid input.' })
   async cancelBooking(@Body('bookingCode') bookingCode: string) {
     return this.bookingService.cancelBooking(bookingCode)
+  }
+
+  @Post('cancel/verify')
+  @ApiOperation({ summary: 'Send email verify for booking cancel' })
+  @ApiBody({ description: 'Booking code', schema: { properties: { bookingCode: { type: 'string' } } } })
+  @ApiResponse({ status: 200, description: 'Booking cancelled successfully.' })
+  @ApiResponse({ status: 400, description: 'Invalid input.' })
+  async generateEmailVerificationForBooking(@Request() req: RequestWithUser) {
+    await this.bookingService.generateEmailVerificationForCancel(req.body.email)
+    return { status: 'success', message: 'Sending verification in a moment' };
+  }
+
+  @Post('cancel/verify/:otp')
+  @ApiOperation({ summary: 'Verify OTP when cancel' })
+  @ApiBody({ description: 'Booking code', schema: { properties: { bookingCode: { type: 'string' } } } })
+  @ApiResponse({ status: 200, description: 'Booking cancelled successfully.' })
+  @ApiResponse({ status: 400, description: 'Invalid input.' })
+  async verifyOtp(@Request() req: RequestWithUser) {
+    const isVerified = await this.bookingService.verifyGeneratedEmailVerificationForCancel(req.body.email, req.body.otp)
+        return {
+            status: 'Success',
+            isVerified: isVerified
+        }
   }
 
   @Get('code')

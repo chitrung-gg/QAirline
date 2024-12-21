@@ -36,7 +36,7 @@ export class User {
 
     @ApiProperty({ description: 'Date of birth of the user', example: '1990-01-01T00:00:00Z', nullable: true })
     @Column({
-      type: 'timestamptz', nullable: true,
+      type: 'timestamp', nullable: true,
       transformer: {
         to: (value: string | Date | null) => {
           if (value === null) return null;

@@ -3,10 +3,6 @@ import { Flight } from "src/flight/entity/flight.entity";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreateAirportDto {
-    @ApiProperty({ description: 'ID of the airport', example: 1 })
-    @IsNumber()
-    id: number;
-
     @ApiProperty({ description: 'Name of the airport', example: 'John F. Kennedy International Airport' })
     @IsString()
     name: string; // Name of the airport

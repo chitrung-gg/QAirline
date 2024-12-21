@@ -75,6 +75,18 @@ export class UserService {
             throw new HttpException('Exception found in UserService: updateUser', HttpStatus.BAD_REQUEST)
         }
     }
+    
+    async updateUserWithHash(id: number, user: UpdateUserDto) {
+        await this.cacheManager.reset()
+        try {
+            await this.getUserById(id)
+            const hashedPassword = await bcrypt.hash(user.password, 10)
+            user.password = hashedPassword
+            await this.userRepository.update(id, user)
+        } catch (error) {
+            throw new HttpException('Exception found in UserService: updateUser', HttpStatus.BAD_REQUEST)
+        }
+    }
 
     async deleteUser(id: number) {
         await this.cacheManager.reset()
@@ -93,66 +105,66 @@ export class UserService {
         const otp = await this.verificationTokenService.generateOtp(user.email);
     
         /* Uncomment for send email */
-        // this.emailService.sendEmail({
-        //     subject: 'QAirline - Account Verification',
-        //     recipient: user.email,
-        //     content: `<!DOCTYPE html>
-        //             <html lang="en">
-        //             <head>
-        //                 <meta charset="UTF-8">
-        //                 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        //                 <title>OTP Verification</title>
-        //                 <style>
-        //                     body {
-        //                         font-family: Arial, sans-serif;
-        //                         background-color: #f4f4f9;
-        //                         margin: 0;
-        //                         padding: 0;
-        //                     }
-        //                     .email-container {
-        //                         background-color: #ffffff;
-        //                         margin: 50px auto;
-        //                         padding: 30px;
-        //                         max-width: 600px;
-        //                         border-radius: 8px;
-        //                         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        //                     }
-        //                     h1 {
-        //                         font-size: 24px;
-        //                         color: #333;
-        //                     }
-        //                     p {
-        //                         font-size: 16px;
-        //                         line-height: 1.6;
-        //                         color: #555;
-        //                     }
-        //                     .otp {
-        //                         font-size: 24px;
-        //                         font-weight: 700;
-        //                         color: #4CAF50;
-        //                         background-color: #f0f8f4;
-        //                         padding: 10px 20px;
-        //                         border-radius: 5px;
-        //                         display: inline-block;
-        //                     }
-        //                     .footer {
-        //                         margin-top: 30px;
-        //                         font-size: 14px;
-        //                         color: #888;
-        //                         text-align: center;
-        //                     }
-        //                 </style>
-        //             </head>
-        //             <body>
-        //                 <div class="email-container">
-        //                     <h1>Hello${user.firstName ? ' ' + user.firstName : ''}${user.lastName ? ' ' + user.lastName : ''},</h1>
-        //                     <p>You may verify your QAirline account using the following OTP:</p>
-        //                     <p><span class="otp">${otp}</span></p>
-        //                     <p class="footer">Regards,<br />QAirline</p>
-        //                 </div>
-        //             </body>
-        //             </html>`
-        // });
+        this.emailService.sendEmail({
+            subject: 'QAirline - Account Verification',
+            recipient: user.email,
+            content: `<!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>OTP Verification</title>
+                        <style>
+                            body {
+                                font-family: Arial, sans-serif;
+                                background-color: #f4f4f9;
+                                margin: 0;
+                                padding: 0;
+                            }
+                            .email-container {
+                                background-color: #ffffff;
+                                margin: 50px auto;
+                                padding: 30px;
+                                max-width: 600px;
+                                border-radius: 8px;
+                                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                            }
+                            h1 {
+                                font-size: 24px;
+                                color: #333;
+                            }
+                            p {
+                                font-size: 16px;
+                                line-height: 1.6;
+                                color: #555;
+                            }
+                            .otp {
+                                font-size: 24px;
+                                font-weight: 700;
+                                color: #4CAF50;
+                                background-color: #f0f8f4;
+                                padding: 10px 20px;
+                                border-radius: 5px;
+                                display: inline-block;
+                            }
+                            .footer {
+                                margin-top: 30px;
+                                font-size: 14px;
+                                color: #888;
+                                text-align: center;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="email-container">
+                            <h1>Hello${user.firstName ? ' ' + user.firstName : ''}${user.lastName ? ' ' + user.lastName : ''},</h1>
+                            <p>You may verify your QAirline account using the following OTP:</p>
+                            <p><span class="otp">${otp}</span></p>
+                            <p class="footer">Regards,<br />QAirline</p>
+                        </div>
+                    </body>
+                    </html>`
+        });
     }
     
     async generateEmailVerificationForPassword(email: string) {
@@ -238,7 +250,7 @@ export class UserService {
 
         const hashedPassword = await bcrypt.hash(password, 10)
         user.password = hashedPassword
-        return await this.userRepository.save(user)
+        await this.userRepository.save(user)
     }
 
     async verifyGeneratedEmailVerificationForPassword(email: string, otp: string) {

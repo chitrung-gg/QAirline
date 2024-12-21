@@ -36,6 +36,15 @@ export class PromotionController {
       return this.promotionService.getPromotionById(id)
   }
 
+  @Get('code/:code')
+  @ApiOperation({ summary: 'Get promotion by Code' })
+  @ApiParam({ name: 'code', description: 'Code of the promotion', example: 1 })
+  @ApiResponse({ status: 200, description: 'Return the promotion with the specified Code.' })
+  @ApiResponse({ status: 404, description: 'Promotion not found.' })
+  async getPromotionByCode(@Param('Code') code: string) {
+      return this.promotionService.getPromotionByCode(code)
+  }
+
   @Patch(':id')
   @ApiOperation({ summary: 'Update promotion by ID' })
   @ApiParam({ name: 'id', description: 'ID of the promotion', example: 1 })

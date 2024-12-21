@@ -1,4 +1,4 @@
-import { IsBoolean, IsISO8601, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsISO8601, IsJSON, IsObject, IsOptional, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class CreatePolicyDto {
@@ -6,9 +6,16 @@ export class CreatePolicyDto {
     @IsString()
     title: string; // Tiêu đề của chính sách (ví dụ: "Privacy Policy", "Cancellation Policy")
 
-    @ApiProperty({ description: 'Content of the policy', example: 'This policy explains how we handle your data...' })
-    @IsString()
-    content: string; // Nội dung chính sách chi tiết
+    // @ApiProperty({ description: 'Content of the policy', example: 'This policy explains how we handle your data...' })
+    // @IsString()
+    // content: string; // Nội dung chính sách chi tiết
+
+    @ApiProperty({
+        description: 'Tree structure of sections and subsections',
+        example: '{ "sections": [{ "title": "1.1 Hành lý bị hỏng", "content": "...", "subsections": [...] }] }'
+    })
+    @IsObject()
+    treeContent: Record<string, any>; // Using Record<string, any> instead of object
 
     @ApiProperty({ description: 'Category of the policy', example: 'Privacy', required: false })
     @IsOptional()

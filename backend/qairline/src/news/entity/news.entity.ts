@@ -34,7 +34,7 @@ export class News {
 
     @ApiProperty({ description: 'Creation date of the news article', example: '2023-01-01T00:00:00Z' })
     @CreateDateColumn({
-      type: 'timestamptz',
+      type: 'timestamp',
       // transformer: {
       //   to: (value: string | Date | null) => {
       //     if (value === null) return null;
@@ -50,7 +50,7 @@ export class News {
 
     @ApiProperty({ description: 'Last update date of the news article', example: '2023-01-01T00:00:00Z' })
     @UpdateDateColumn({
-      type: 'timestamptz',
+      type: 'timestamp',
       // transformer: {
       //   to: (value: string | Date | null) => {
       //     if (value === null) return null;

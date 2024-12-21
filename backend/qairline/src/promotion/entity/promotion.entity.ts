@@ -23,7 +23,7 @@ export class Promotion {
     
     @ApiProperty({ description: 'Start date for the promotion', example: '2023-06-01T00:00:00Z' })
     @Column({
-      type: 'timestamptz',
+      type: 'timestamp',
       transformer: {
         to: (value: string | Date | null) => {
           if (value === null) return null;
@@ -38,7 +38,7 @@ export class Promotion {
 
     @ApiProperty({ description: 'End date for the promotion', example: '2023-08-31T23:59:59Z' })
     @Column({
-      type: 'timestamptz',
+      type: 'timestamp',
       transformer: {
         to: (value: string | Date | null) => {
           if (value === null) return null;
