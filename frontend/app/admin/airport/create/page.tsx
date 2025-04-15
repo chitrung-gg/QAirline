@@ -43,9 +43,10 @@ export default function Page() {
     };
 
     const handleCloseModal = () => {
-      onClose();
-      
-      router.push("/admin/airport");
+        onClose();
+        setTimeout(() => {
+            router.push("/admin/airport");
+        }, 250);  
     };
 
     const handleCloseErrorModal = () => {

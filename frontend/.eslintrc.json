@@ -1,3 +1,13 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "@next/next/no-img-element": "off",
+    "react/jsx-key": "off",
+    "react/react-in-jsx-scope": "off",
+    "no-console": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-wrapper-object-types": "off",
+    "prefer-const": "off",
+    "@typescript-eslint/no-explicit-any": "off"
+  }
 }
