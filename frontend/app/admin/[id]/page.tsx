@@ -22,13 +22,7 @@ const roleOptions = [
     { name: "Người dùng", uid: "User" }
 ];
 
-interface PageProps {
-    params: {
-      id: string;
-    };
-}
-
-export default function Page({ params }: PageProps) {
+export default function Page({ params }: { params: { id: string } }) {
     const [id, setId] = React.useState<string | null>(null);
 
     React.useEffect(() => {
