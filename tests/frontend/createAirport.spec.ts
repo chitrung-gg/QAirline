@@ -1,7 +1,32 @@
 import { test, expect } from '@playwright/test';
+import * as dotenv from 'dotenv';
+dotenv.config(); 
 
 test.use({
   storageState: undefined,
+});
+
+test('Autonomous Test', async ({ page }) => {
+  await page.goto('http://localhost:3000/');
+  await page.getByRole('button', { name: 'Đăng nhập' }).click();
+  await page.getByRole('textbox', { name: 'Email của bạn Email của bạn' }).click();
+  await page.getByRole('textbox', { name: 'Email của bạn Email của bạn' }).fill('admin@qairline.com');
+  await page.getByRole('textbox', { name: 'Email của bạn Email của bạn' }).press('Tab');
+  await page.getByRole('textbox', { name: 'Mật khẩu Mật khẩu' }).fill('QAirline123');
+  await page.locator('form').getByRole('button', { name: 'Đăng nhập' }).click();
+  await page.getByRole('link', { name: 'Admin' }).click();
+  await page.getByRole('link', { name: 'Sân bay' }).click();
+  await page.getByRole('button', { name: 'Thêm mới' }).click();
+  await page.getByRole('textbox', { name: 'Tên sân bay Tên sân bay*' }).click();
+  await page.getByRole('textbox', { name: 'Tên sân bay Tên sân bay*' }).fill('Sân Bay B');
+  await page.getByRole('textbox', { name: 'Tên sân bay Tên sân bay*' }).press('Tab');
+  await page.getByRole('textbox', { name: 'Thành phố Thành phố*' }).fill('Hồ Chí Minh');
+  await page.getByRole('textbox', { name: 'Thành phố Thành phố*' }).press('Tab');
+  await page.getByRole('textbox', { name: 'Quốc gia Quốc gia*' }).fill('Việt Nam');
+  await page.getByRole('textbox', { name: 'Quốc gia Quốc gia*' }).press('Tab');
+  await page.getByRole('textbox', { name: 'Mã IATA Mã IATA*' }).fill('HCM');
+  await page.locator('div:nth-child(4) > .group > div > .relative > .inline-flex').click();
+  await page.getByRole('button', { name: 'Tạo sân bay' }).click();
 });
 
 test('Tạo sân bay thành công', async ({ page, context }) => {
@@ -13,8 +38,8 @@ test('Tạo sân bay thành công', async ({ page, context }) => {
     sessionStorage.clear();
   });
 
-  await page.getByPlaceholder('Email').fill('admin@qairline.com');
-  await page.getByPlaceholder('Mật khẩu').fill('QAirline123');
+  await page.getByPlaceholder('Email').fill(process.env.ADMIN_EMAIL || '');
+  await page.getByPlaceholder('Mật khẩu').fill(process.env.ADMIN_PASSWORD || '');
   await page.locator('form').getByRole('button', { name: 'Đăng nhập' }).click();
 
   await page.waitForURL('**', { waitUntil: 'load' });
@@ -66,8 +91,8 @@ test('Tạo sân bay thiếu trường', async ({ page, context }) => {
     sessionStorage.clear();
   });
 
-  await page.getByPlaceholder('Email').fill('admin@qairline.com');
-  await page.getByPlaceholder('Mật khẩu').fill('QAirline123');
+  await page.getByPlaceholder('Email').fill(process.env.ADMIN_EMAIL || '');
+  await page.getByPlaceholder('Mật khẩu').fill(process.env.ADMIN_PASSWORD || '');
   await page.locator('form').getByRole('button', { name: 'Đăng nhập' }).click();
 
   await page.waitForURL('**', { waitUntil: 'load' });
@@ -115,8 +140,8 @@ test('Hiển thị lỗi khi API trả về lỗi', async ({ page, context }) =>
     sessionStorage.clear();
   });
 
-  await page.getByPlaceholder('Email').fill('admin@qairline.com');
-  await page.getByPlaceholder('Mật khẩu').fill('QAirline123');
+  await page.getByPlaceholder('Email').fill(process.env.ADMIN_EMAIL || '');
+  await page.getByPlaceholder('Mật khẩu').fill(process.env.ADMIN_PASSWORD || '');
   await page.locator('form').getByRole('button', { name: 'Đăng nhập' }).click();
   await page.waitForURL('**', { waitUntil: 'load' });
 

@@ -1,10 +1,18 @@
 {
-  "dependencies": {
-    "playwright": "^1.51.1"
-  },
+  "name": "QAirline",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.51.1",
     "@types/node": "^22.14.0"
   },
-  "scripts": {}
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "jwt-decode": "^4.0.0"
+  }
 }

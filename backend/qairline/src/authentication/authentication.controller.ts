@@ -24,6 +24,7 @@ export class AuthenticationController {
     ) {}
     
     @UseGuards(JwtAuthenticationGuard)
+    @HttpCode(200)
     @Post()
     @ApiOperation({ summary: 'Authenticate user' })
     @ApiBearerAuth()
@@ -43,6 +44,7 @@ export class AuthenticationController {
         return this.authenticationService.signup(signUpData)
     }
 
+    @HttpCode(200)
     @Post('login')
     @ApiOperation({ summary: 'Log in a user' })
     @ApiBody({ type: () => LogInDto })

@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UseGuards } from '@nestjs/common';
 import { AirportService } from './airport.service';
 import { CreateAirportDto } from './dto/createAirport.dto';
 import { UpdateAirportDto } from './dto/updateAirport.dto';
 import { CacheInterceptor } from '@nestjs/cache-manager';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { JwtAuthenticationGuard } from 'src/authentication/guard/jwtAuthentication.guard';
 
 @ApiTags('airport')
 @Controller('airport')
@@ -11,6 +12,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/s
 export class AirportController {
     constructor(private readonly airportService: AirportService) {}
 
+    @UseGuards(JwtAuthenticationGuard)
     @Post()
     @ApiOperation({ summary: 'Create a new airport' })
     @ApiBody({ type: () => CreateAirportDto })

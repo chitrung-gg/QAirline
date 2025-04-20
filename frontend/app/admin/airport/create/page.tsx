@@ -18,6 +18,16 @@ export default function Page() {
     const [iataCodeValue, setIataCodeValue] = React.useState("");
 
     const handleSubmit = async (event: React.FormEvent) => {
+        const authToken = localStorage.getItem('authToken');
+        // console.log("Token:", authToken);
+        const config = authToken
+        ? {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        : {};
+
         event.preventDefault(); 
 
         if (!nameValue || !cityValue || !countryValue || !iataCodeValue) {
@@ -33,7 +43,7 @@ export default function Page() {
         };
         // Call API to create news
         try {
-            const res = await axios.post("http://localhost:5000/airport", data);
+            const res = await axios.post("http://localhost:5000/airport", data, config);
             onOpen();
             console.log(data);
         } catch (error) {

@@ -15,6 +15,7 @@ export class AirportService {
         private cacheManager: Cache
     ) {}
 
+    
     async createAirport(airport: CreateAirportDto) {
         await this.cacheManager.reset()
         const newAirport = await this.airportRepository.create(airport)
