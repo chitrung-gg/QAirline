@@ -28,6 +28,16 @@ Frameworks and technology stack used for this repository:
 2. Front-end side:  [NextJS](https://nextjs.org/)
 3. Database engine:  [PostgreSQL](https://www.postgresql.org/)
 
+### Testing with Playwright
+
+Authors have conducted automated testing with Playwright tool for ```createAirport``` features, with predefined configs for
+1. Frontend testing with three most popular browser engines (Chromium, Firefox, Webkit)
+2. Backend testing
+
+Test scripts are placed in ```root_project/tests```, which then are divided in ```backend``` and ```frontend``` subfolders.
+
+Warmly welcome to contribute to the projects for more testing !!!
+
 ### Installation
 
 These steps are for initializing the related frameworks and setting up environments to run the application: 
@@ -63,6 +73,20 @@ These steps are for initializing the related frameworks and setting up environme
     ```
 8. Install PostgreSQL, and then restore databases through file with path specified ```root_project/backend/qairline/qairline_db.tar```
 
+[Optional]
+
+These steps are for installing Playwright tools
+
+0.  Change working directory of CLI into ```root_project``` folder
+1.  Run 
+   ```sh
+   pnpm create playwright
+   ```
+2. Waiting for dependencies to be installed, and run this command for initiating Playwright
+   Pay attention that both ```backend``` and ```frontend``` server have already been started, and current terminal working directory is on ```root_project```
+   ```sh
+   pnpm exec playwright test --ui
+   ```
 
 ## Members
 

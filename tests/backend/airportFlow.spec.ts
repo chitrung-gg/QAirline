@@ -38,7 +38,7 @@ test.describe('Airport API Tests - Based on CFG', () => {
       expect(response.status()).toBe(401);
     });
 
-    test('Cannot create airport - Unauthorized, Path: 0 - 1(F) - 2 - 9', async () => {
+    test('Cannot create airport - Unauthorized', async () => {
       const airportData = {
         name: "Sân bay quốc tế Nội Bài",
         city: "Hà Nội",
@@ -62,7 +62,7 @@ test.describe('Airport API Tests - Based on CFG', () => {
       expect(response.decoded.role).toBe('User');
     });
 
-    test('Cannot create airport - Forbidden, Path: 0 - 1(F) - 2 - 9', async () => {
+    test('Cannot create airport - Forbidden', async () => {
       const airportData = {
         name: "Sân bay quốc tế Nội Bài",
         city: "Hà Nội",
@@ -86,7 +86,7 @@ test.describe('Airport API Tests - Based on CFG', () => {
       expect(response.decoded.role).toBe('Admin');
     });
 
-    test('Duplicate airport name, Path: 0 - 1(T) - 3(T) - 4 - 9', async () => {
+    test('Duplicate airport name', async () => {
       const airportData = {
         name: "Sân bay quốc tế Nội Bài",
         city: "Hà Nội",
@@ -100,7 +100,7 @@ test.describe('Airport API Tests - Based on CFG', () => {
       expect(body.message).toContain('Airport with the same name already exist');
     });
 
-    test('Null values, Path: 0 - 1(T) - 3(F) - 5(T) - 6 - 9', async () => {
+    test('Null values', async () => {
         const airportData = {
           name: "Sân bay quốc tế Nội Bài",
           city: "Hà Nội",
@@ -124,7 +124,7 @@ test.describe('Airport API Tests - Based on CFG', () => {
         expect(matched).toBe(true);
     });
 
-    test('Empty values, Path: 0 - 1(T) - 3(F) - 5(F) - 7(T) - 6 - 9', async () => {
+    test('Empty values', async () => {
       const airportData = {
         name: "",
         city: "Hà Nội",
@@ -138,7 +138,7 @@ test.describe('Airport API Tests - Based on CFG', () => {
       expect(body.message).toContain('Exception found in AirportService');
     });
 
-    test('Valid airport creation, Path: 0 - 1(T) - 3(F) - 5(F) - 7(F) - 8 - 9', async () => {
+    test('Valid airport creation', async () => {
       const airportData = {
         name: "Sân bay quốc tế Tân Sơn Nhất",
         city: "Hồ Chí Minh",

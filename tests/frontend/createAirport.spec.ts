@@ -29,6 +29,30 @@ test('Autonomous Test', async ({ page }) => {
   await page.getByRole('button', { name: 'Tạo sân bay' }).click();
 });
 
+test('Codegen Test', async ({ page }) => {
+  await page.goto('http://localhost:3000/');
+  await page.getByRole('button', { name: 'Đăng nhập' }).click();
+  await page.getByRole('textbox', { name: 'Email của bạn Email của bạn' }).click();
+  await page.getByRole('textbox', { name: 'Email của bạn Email của bạn' }).fill('admin@qairline.com');
+  await page.getByRole('textbox', { name: 'Email của bạn Email của bạn' }).press('Tab');
+  await page.getByRole('textbox', { name: 'Mật khẩu Mật khẩu' }).fill('QAirline123');
+  await page.getByRole('textbox', { name: 'Mật khẩu Mật khẩu' }).press('Enter');
+  await page.locator('form').getByRole('button', { name: 'Đăng nhập' }).click();
+  await page.getByRole('link', { name: 'Admin' }).click();
+  await page.getByRole('link', { name: 'Sân bay' }).click();
+  await page.getByRole('button', { name: 'Thêm mới' }).click();
+  await page.getByRole('textbox', { name: 'Tên sân bay Tên sân bay*' }).click();
+  await page.getByRole('textbox', { name: 'Tên sân bay Tên sân bay*' }).fill('ABC');
+  await page.getByRole('textbox', { name: 'Tên sân bay Tên sân bay*' }).press('Tab');
+  await page.getByRole('textbox', { name: 'Thành phố Thành phố*' }).fill('XYZ');
+  await page.getByRole('textbox', { name: 'Thành phố Thành phố*' }).press('Tab');
+  await page.getByRole('textbox', { name: 'Quốc gia Quốc gia*' }).fill('VN');
+  await page.getByRole('textbox', { name: 'Quốc gia Quốc gia*' }).press('Tab');
+  await page.getByRole('textbox', { name: 'Mã IATA Mã IATA*' }).fill('VN');
+  await page.getByRole('button', { name: 'Tạo sân bay' }).click();
+  await page.getByRole('button', { name: 'Đóng' }).click();
+});
+
 test('Tạo sân bay thành công', async ({ page, context }) => {
   await context.clearCookies();
 
