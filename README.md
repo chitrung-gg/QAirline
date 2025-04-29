@@ -80,7 +80,7 @@ These steps are for installing Playwright tools
 0.  Change working directory of CLI into ```root_project``` folder
 1.  Run 
    ```sh
-   pnpm create playwright
+   pnpm install
    ```
 2. Waiting for dependencies to be installed, and run this command for initiating Playwright
    Pay attention that both ```backend``` and ```frontend``` server have already been started, and current terminal working directory is on ```root_project```
