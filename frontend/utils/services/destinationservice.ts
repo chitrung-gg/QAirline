@@ -5,7 +5,7 @@ export const destinationService = {
     create: async (data: CreateDestinationDto) => {
         try {
             const response = await api.post(
-              `http://localhost:5000/destination`,
+              `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/destination`,
               data
             );
             return response.data;
@@ -15,7 +15,7 @@ export const destinationService = {
     },
     getAll: async () => {
         try {
-            const response = await api.get(`http://localhost:5000/destination`);
+            const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/destination`);
             return response.data;
         } catch (error) {
             throw error;
@@ -24,7 +24,7 @@ export const destinationService = {
     getById: async (id: number) => {
         try {
             const response = await api.get(
-              `http://localhost:5000/destination/${id}`
+              `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/destination/${id}`
             );
             return response.data;
         } catch (error) {
@@ -34,7 +34,7 @@ export const destinationService = {
     update: async (id: number, data: UpdateDestinationDto) => {
         try {
             const response = await api.patch(
-              `http://localhost:5000/destination/${id}`,
+              `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/destination/${id}`,
               data
             );
             return response.data;
@@ -45,7 +45,7 @@ export const destinationService = {
     delete: async (id: number) => {
         try {
             const response = await api.delete(
-              `http://localhost:5000/destination/${id}`
+              `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/destination/${id}`
             );
             return response.data;
         } catch (error) {

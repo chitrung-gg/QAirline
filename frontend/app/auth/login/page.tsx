@@ -49,7 +49,7 @@ export default function LoginPage() {
         setLoading(true); 
 
         try {
-            const response = await axios.post('http://localhost:5000/authentication/login', {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/authentication/login`, {
                 email: emailValue,
                 password: passwordValue,
             });

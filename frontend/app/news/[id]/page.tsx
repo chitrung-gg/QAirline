@@ -36,7 +36,7 @@ export default function NewsDetailsPage(props: { params: { id: string } }) {
     React.useEffect(() => {
         const fetchData = async () => {
             if (!id) return;  
-            const res = await axios.get(`http://localhost:5000/news/${id}`);
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news/${id}`);
             const data = res.data;
             console.log('data:', data); 
             setInitialData(data);

@@ -14,7 +14,7 @@ export default function NewsPage() {
     
     const fetchNews = async () => {
         try {
-            const response = await api.get(`http://localhost:5000/news`);
+            const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news`);
             return response.data;
         } catch (error) {
             throw error;

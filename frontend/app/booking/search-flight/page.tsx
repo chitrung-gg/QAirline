@@ -62,7 +62,7 @@ const BookingSearchPage: React.FC = () => {
         setLoading(true);
         //dispatch(fetchBookingByCode(bookingCode));
         try {
-            const response = await axios.get(`http://localhost:5000/booking/code?bookingCode=${bookingCode}`);
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/booking/code?bookingCode=${bookingCode}`);
             if (response.data) {
                 setSelectedBooking(response.data[0]); // check
                 setErrorMessage('');
@@ -94,7 +94,7 @@ const BookingSearchPage: React.FC = () => {
 
     const sendOtp = async () => {
         try {
-            const response = await axios.post("http://localhost:5000/booking/cancel/verify", { email: selectedBooking.passengerEmail });
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/booking/cancel/verify`, { email: selectedBooking.passengerEmail });
             setOtpSent(true);
             setCooldown(true); 
             setCountdown(60);
@@ -106,7 +106,7 @@ const BookingSearchPage: React.FC = () => {
 
     const verifyOtp = async () => {
         try {
-            const response = await axios.post(`http://localhost:5000/booking/cancel/verify/${otpValue}`, 
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/booking/cancel/verify/${otpValue}`, 
                 { 
                     email: selectedBooking.passengerEmail, 
                     otp: otpValue 

@@ -45,7 +45,7 @@ export default defineConfig({
       use: {
         browserName: 'chromium', 
         ...devices['Desktop Chrome'],
-        baseURL: 'http://localhost:3000',
+        baseURL: `${process.env.FRONTEND_URL}:${process.env.FRONTEND_PORT}`,
         headless: true, 
       },
     },
@@ -57,7 +57,7 @@ export default defineConfig({
       use: {
         browserName: 'firefox', 
         ...devices['Desktop Firefox'],
-        baseURL: 'http://localhost:3000',
+        baseURL: `${process.env.FRONTEND_URL}:${process.env.FRONTEND_PORT}`,
         headless: true, 
       },
     },
@@ -69,7 +69,7 @@ export default defineConfig({
       use: {
         browserName: 'webkit', 
         ...devices['Desktop Safari'],
-        baseURL: 'http://localhost:3000',
+        baseURL: `${process.env.FRONTEND_URL}:${process.env.FRONTEND_PORT}`,
         headless: true, 
       },
     },
@@ -79,7 +79,7 @@ export default defineConfig({
       testMatch: /.*\.spec\.ts/,
       testDir: 'tests/backend',
       use: {
-        baseURL: 'http://localhost:5000',
+        baseURL: `${process.env.BACKEND_URL}:${process.env.BACKEND_PORT}`,
       },
     },
 

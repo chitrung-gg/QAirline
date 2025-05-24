@@ -44,7 +44,7 @@ export default  function Page(props: { params: { id: string } }) {
     useEffect(() => {
       const fetchData = async () => {
           if (!id) return;  
-          const res = await axios.get(`http://localhost:5000/aircraft/${id}`);
+          const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/aircraft/${id}`);
           const data = res.data;
           setInitialData(data);
           setAircraftCodeValue(data.aircraftCode);
@@ -149,7 +149,7 @@ export default  function Page(props: { params: { id: string } }) {
     };
     try {
         console.log(data);
-        const res = await axios.patch(`http://localhost:5000/aircraft/${initialData.id}`, data);
+        const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/aircraft/${initialData.id}`, data);
         onOpen();
     } catch (error) {
         onErrorOpen();
@@ -159,7 +159,7 @@ export default  function Page(props: { params: { id: string } }) {
 
     const handleDelete = async () => {
       try {
-        const res = await axios.delete(`http://localhost:5000/aircraft/${id}`);
+        const res = await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/aircraft/${id}`);
         onDeletedOpen();
       } catch (error) {
         console.error(error);

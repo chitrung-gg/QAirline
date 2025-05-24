@@ -87,7 +87,7 @@ export default function Page() {
         // Call API to create promotion
         try {
             console.log(data);
-            const res = await axios.post("http://localhost:5000/promotion", data);
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/promotion`, data);
             onOpen();
         } catch (error) {
             console.error(error);

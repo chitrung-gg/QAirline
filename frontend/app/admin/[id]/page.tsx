@@ -38,7 +38,7 @@ export default function Page({ params }: { params: { id: string } }) {
         const fetchData = async () => {
             console.log('ID:', id);
             if (!id) return;  
-            const res = await axios.post(`http://localhost:5000/user/id`, {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/user/id`, {
                 id: id
             }, {
                 headers: {

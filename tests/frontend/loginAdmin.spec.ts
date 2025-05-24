@@ -3,7 +3,7 @@
 // test.use({ storageState: undefined });
 
 // test('Admin đăng nhập và kiểm tra menu Admin', async ({ page }) => {
-//   await page.goto('http://localhost:3000/auth/login');
+//   await page.goto('${process.env.FRONTEND_URL}:${process.env.FRONTEND_PORT}/auth/login');
 
 //   await page.getByPlaceholder('Email').fill('admin@qairline.com');
 //   await page.getByPlaceholder('Mật khẩu').waitFor({ state: 'visible' });

@@ -2,7 +2,7 @@ import axios from "axios";
 import PromotionTable from "@/components/admin/post-info/PromotionTable";
 
 export default async function Page() {
-  const res = await axios.get('http://localhost:5000/promotion');
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/promotion`);
   const data = res.data;
 
     return (

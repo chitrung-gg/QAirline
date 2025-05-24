@@ -5,7 +5,7 @@ import { api } from "../api/config";
 export const userService = {
   create: async (data: CreateUserDto) => {
     try {
-      const response = await api.post(`http://localhost:5000/user`, data);
+      const response = await api.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/user`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -22,7 +22,7 @@ export const userService = {
           }
         : {};
 
-      const response = await api.get(`http://localhost:5000/user`, config);
+      const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/user`, config);
       return response.data;
     } catch (error) {
       throw error;

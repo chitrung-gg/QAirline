@@ -5,7 +5,7 @@ import { api } from "../api/config";
 export const promotionService = {
   create: async (data: CreatePromotionDto) => {
     try {
-      const response = await api.post(`http://localhost:5000/promotion`, data);
+      const response = await api.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/promotion`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -14,7 +14,7 @@ export const promotionService = {
 
   getAll: async () => {
     try {
-      const response = await api.get(`http://localhost:5000/promotion`);
+      const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/promotion`);
       return response.data;
     } catch (error) {
       throw error;
@@ -23,7 +23,7 @@ export const promotionService = {
 
   getById: async (id: number) => {
     try {
-      const response = await api.get(`http://localhost:5000/promotion/${id}`);
+      const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/promotion/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -33,7 +33,7 @@ export const promotionService = {
   update: async (id: number, data: UpdatePromotionDto) => {
     try {
       const response = await api.patch(
-        `http://localhost:5000/promotion/${id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/promotion/${id}`,
         data
       );
       return response.data;
@@ -45,7 +45,7 @@ export const promotionService = {
   delete: async (id: number) => {
     try {
       const response = await api.delete(
-        `http://localhost:5000/promotion/${id}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/promotion/${id}`
       );
       return response.data;
     } catch (error) {
@@ -55,7 +55,7 @@ export const promotionService = {
 
   getByName: async (name: string) => {
     try {
-      const response = await api.get(`http://localhost:5000/promotion/${name}`);
+      const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/promotion/${name}`);
       return response.data;
     } catch (error) {
       throw error;

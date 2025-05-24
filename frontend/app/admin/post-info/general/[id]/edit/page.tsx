@@ -38,7 +38,7 @@ export default function Page(props: { params: { id: string } }) {
     useEffect(() => {
         const fetchData = async () => {
             if (!id) return;  
-            const res = await axios.get(`http://localhost:5000/news/${id}`);
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news/${id}`);
             const data = res.data;
             setInitialData(data);
             setTitleValue(data.title);
@@ -80,7 +80,7 @@ export default function Page(props: { params: { id: string } }) {
         };
 
         try {
-            const res = await axios.patch(`http://localhost:5000/news/${id}`, formData);
+            const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news/${id}`, formData);
             onOpen();
             console.log(formData);
         } catch (error) {
@@ -93,7 +93,7 @@ export default function Page(props: { params: { id: string } }) {
         // const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa thông tin này?"); // Remake UI for confirmation
         // if (confirmDelete) {
             try {
-                await axios.delete(`http://localhost:5000/news/${id}`);
+                await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news/${id}`);
                 onDeletedOpen();
             } catch (error) {
                 console.error(error);
@@ -125,7 +125,7 @@ export default function Page(props: { params: { id: string } }) {
         };
 
         try {
-            const res = await axios.patch(`http://localhost:5000/news/${id}`, formData);
+            const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news/${id}`, formData);
             onPublishedOpen();
             console.log(formData);
         } catch (error) {

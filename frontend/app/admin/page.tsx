@@ -12,7 +12,7 @@ export default function Page() {
       try {
         const authToken = localStorage.getItem('authToken');
         console.log('Token to get user data:', authToken);
-        const res = await axios.get('http://localhost:5000/user', {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/user`, {
           headers: {
             Authorization: `Bearer ${authToken}`
           }

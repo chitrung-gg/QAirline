@@ -4,7 +4,7 @@ import axios from "axios";
 
 
 export default async function Page() {
-  const res = await axios.get('http://localhost:5000/aircraft');
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/aircraft`);
   const data = res.data;
 
     return (

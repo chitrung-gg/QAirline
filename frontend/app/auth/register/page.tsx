@@ -71,7 +71,7 @@ export default function RegisterPage() {
                 role: UserRole.USER
             };
             console.log('Data:', data);
-            const response = await axios.post("http://localhost:5000/authentication/signup", {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/authentication/signup`, {
                 username: usernameValue,
                 phoneNumber: phoneValue,
                 email: emailValue,

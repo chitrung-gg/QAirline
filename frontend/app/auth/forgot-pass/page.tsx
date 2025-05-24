@@ -70,7 +70,7 @@ export default function Page() {
 
     const checkEmailExists = async () => {
         try {
-            const response = await axios.post("http://localhost:5000/user/email", { email: emailValue });
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/user/email`, { email: emailValue });
             if (response.status === 200) {
                 return true; 
             }
@@ -95,7 +95,7 @@ export default function Page() {
         }
 
         try {
-            const response = await axios.post("http://localhost:5000/user/forget", { email: emailValue });
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/user/forget`, { email: emailValue });
             setStoredEmail(emailValue);
             setOtpSent(true);
             setCooldown(true); 
@@ -115,7 +115,7 @@ export default function Page() {
             return;
         }
         try {
-            const response = await axios.post(`http://localhost:5000/user/forget/verify`, 
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/user/forget/verify`, 
                 { 
                     email: emailValue, 
                     otp: otpValue 
@@ -152,7 +152,7 @@ export default function Page() {
         setLoading(true); 
 
         try {
-            const response = await axios.patch('http://localhost:5000/user/change', { 
+            const response = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/user/change`, { 
                 isVerified: otpVerified,
                 email: emailValue,
                 password: passwordValue,

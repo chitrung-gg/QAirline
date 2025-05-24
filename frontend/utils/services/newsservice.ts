@@ -4,7 +4,7 @@ import { api } from "../api/config";
 export const newsService = {
     create: async (data: CreateNewsDto) => {
         try {
-            const response = await api.post(`http://localhost:5000/news`, data);
+            const response = await api.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news`, data);
             return response.data;
         } catch (error) {
             throw error;
@@ -12,7 +12,7 @@ export const newsService = {
     },
     getAll: async () => {
         try {
-            const response = await api.get(`http://localhost:5000/news`);
+            const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news`);
             return response.data;
         } catch (error) {
             throw error;
@@ -20,7 +20,7 @@ export const newsService = {
     },
     getById: async (id: number) => {
         try {
-            const response = await api.get(`http://localhost:5000/news/${id}`);
+            const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news/${id}`);
             return response.data;
         } catch (error) {
             throw error;
@@ -29,7 +29,7 @@ export const newsService = {
     update: async (id: number, data: UpdateNewsDto) => {
         try {
             const response = await api.patch(
-              `http://localhost:5000/news/${id}`,
+              `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news/${id}`,
               data
             );
             return response.data;
@@ -40,7 +40,7 @@ export const newsService = {
     delete: async (id: number) => {
         try {
             const response = await api.delete(
-              `http://localhost:5000/news/${id}`
+              `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news/${id}`
             );
             return response.data;
         } catch (error) {

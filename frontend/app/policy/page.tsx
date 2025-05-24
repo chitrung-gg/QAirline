@@ -40,7 +40,7 @@ import Policy from "@/components/policy";
 
 export default async function Page() {
 
-    const res = await axios.get('http://localhost:5000/policy');
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/policy`);
     const data = res.data[0];
 
     //const data = policyDataTemp;

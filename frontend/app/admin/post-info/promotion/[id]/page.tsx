@@ -1,9 +1,9 @@
 "use client";
 import Breadcrumbs from "@/components/admin/breadcrumb";
 import axios from "axios";
- import { Button, Input, Chip, Textarea, Radio, RadioGroup, DateRangePicker } from '@nextui-org/react';
- import Link from 'next/link';
- import { toCalendarDate, parseDate, CalendarDate, getLocalTimeZone, parseZonedDateTime, ZonedDateTime} from '@internationalized/date';
+import { Button, Input, Chip, Textarea, Radio, RadioGroup, DateRangePicker } from '@nextui-org/react';
+import Link from 'next/link';
+import { toCalendarDate, parseDate, CalendarDate, getLocalTimeZone, parseZonedDateTime, ZonedDateTime} from '@internationalized/date';
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from 'next/navigation';
 import { Promotion } from "@/interfaces/promotion";
@@ -28,7 +28,7 @@ export default function Page(props: { params: { id: string } }) {
   useEffect(() => {
     const fetchData = async () => {
         if (!id) return;  
-        const res = await axios.get(`http://localhost:5000/promotion/${id}`);
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/promotion/${id}`);
         const data = res.data;
         setInitialData(data);
     };

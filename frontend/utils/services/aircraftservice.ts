@@ -5,7 +5,7 @@ import { api } from "../api/config";
 export const aircraftService = {
   create: async (data: CreateAircraftDto) => {
     try {
-      const response = await api.post(`http://localhost:5000/aircraft`, data);
+      const response = await api.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/aircraft`, data);
       return response.data;
     } catch (error) {
       throw error;
@@ -14,7 +14,7 @@ export const aircraftService = {
 
   getAll: async () => {
     try {
-      const response = await api.get(`http://localhost:5000/aircraft`);
+      const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/aircraft`);
       return response.data;
     } catch (error) {
       throw error;
@@ -23,7 +23,7 @@ export const aircraftService = {
 
   getById: async (id: number) => {
     try {
-      const response = await api.get(`http://localhost:5000/aircraft/${id}`);
+      const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/aircraft/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -33,7 +33,7 @@ export const aircraftService = {
   update: async (id: number, data: UpdateAircraftDto) => {
     try {
       const response = await api.patch(
-        `http://localhost:5000/aircraft/${id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/aircraft/${id}`,
         data
       );
       return response.data;
@@ -44,7 +44,7 @@ export const aircraftService = {
 
   delete: async (id: number) => {
     try {
-      const response = await api.delete(`http://localhost:5000/aircraft/${id}`);
+      const response = await api.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/aircraft/${id}`);
       return response.data;
     } catch (error) {
       throw error;

@@ -50,7 +50,7 @@ export const flightService = {
   update: async (id: number, data: UpdateFlightDto) => {
     try {
       const response = await api.patch(
-        `http://localhost:5000/flight/${id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/flight/${id}`,
         data
       );
       return response.data;
@@ -61,7 +61,7 @@ export const flightService = {
 
   delete: async (id: number) => {
     try {
-      const response = await api.delete(`http://localhost:5000/flight/${id}`);
+      const response = await api.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/flight/${id}`);
       return response.data;
     } catch (error) {
       throw error;
@@ -70,7 +70,7 @@ export const flightService = {
 
   searchFlights: async (params: FlightSearchParams): Promise<Flight[]> => {
     try {
-      const response = await api.get(`http://localhost:5000/flight/`, {
+      const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/flight/`, {
         params: {
           isRoundTrip: params.isRoundTrip,
           departureAirport: params.departure,

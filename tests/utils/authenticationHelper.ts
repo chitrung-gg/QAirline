@@ -15,13 +15,13 @@ export interface DecodedToken {
 
 export async function getAnonymousContext(): Promise<APIRequestContext> {
     return await request.newContext({
-      baseURL: 'http://localhost:5000',
+      baseURL: `${process.env.BACKEND_URL}:${process.env.BACKEND_PORT}`,
     });
 }
 
 export async function loginAs(role: 'Admin' | 'User') {
   const apiContext = await request.newContext({
-    baseURL: 'http://localhost:5000',
+    baseURL: `${process.env.BACKEND_URL}:${process.env.BACKEND_PORT}`,
   });
 
   const credentials =

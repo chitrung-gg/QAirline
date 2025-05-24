@@ -2,7 +2,7 @@ import { request } from '@playwright/test';
 
 export async function createAirport(airportData: any, token: string) {
   const apiContext = await request.newContext({
-    baseURL: 'http://localhost:5000',
+    baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}`,
     extraHTTPHeaders: {
         Authorization: `Bearer ${token}`,
     },

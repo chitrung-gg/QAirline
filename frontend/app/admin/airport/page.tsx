@@ -2,7 +2,7 @@ import axios from 'axios';
 import AirportTable from '@/components/admin/airport/AirportTable';
 
 export default async function Page() {
-  const res = await axios.get('http://localhost:5000/airport');
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/airport`);
   const data = res.data;
 
     return (

@@ -2,7 +2,7 @@ import axios from 'axios';
 import GeneralNewsTable from '@/components/admin/post-info/GeneralTable';
 
 export default async function Page() {
-  const res = await axios.get('http://localhost:5000/news');
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news`);
   const data = res.data;
 
     return (

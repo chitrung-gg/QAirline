@@ -37,7 +37,7 @@ export default function BookingPage() {
 
     const fetchAirports = async () => {
         try {
-            const response = await api.get<Airport[]>('http://localhost:5000/airport'); // Adjust API endpoint
+            const response = await api.get<Airport[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/airport`); // Adjust API endpoint
             setAirports(response.data);
         } catch (error) {
             console.error('Error fetching airports:', error);

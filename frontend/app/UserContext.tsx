@@ -68,7 +68,7 @@ const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchUserContext = async () => {
         console.log('Fetching user data...  ', token);
         try {
-            const response = await axios.post("http://localhost:5000/authentication", {}, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/authentication`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

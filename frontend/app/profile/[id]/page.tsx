@@ -50,7 +50,7 @@ export default function Page(props: { params: { id: string } }) {
     React.useEffect(() => {
         const fetchData = async () => {
             if (!id) return;  
-            const res = await axios.post(`http://localhost:5000/user/id`, {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/user/id`, {
                 id: id
             } , {
                 headers: {
@@ -113,7 +113,7 @@ export default function Page(props: { params: { id: string } }) {
         console.log(data);
         
         try {
-            const res = await axios.patch(`http://localhost:5000/user/hash/${id}`, data, {
+            const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/user/hash/${id}`, data, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }

@@ -20,7 +20,7 @@ import { Calendar, Users } from 'lucide-react';
 
 const fetchDestinations = async () => {
   try {
-    const response = await api.get(`http://localhost:5000/destination`);
+    const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/destination`);
     return response.data;
   } catch (error) {
     throw error;
@@ -29,7 +29,7 @@ const fetchDestinations = async () => {
 
 const fetchNews = async () => {
   try {
-    const response = await api.get(`http://localhost:5000/news`);
+    const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news`);
     return response.data;
   } catch (error) {
     throw error;
@@ -38,7 +38,7 @@ const fetchNews = async () => {
 
 const fetchOffers = async () => {
   try {
-    const response = await api.get(`http://localhost:5000/promotion`);
+    const response = await api.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/promotion`);
     return response.data;
   } catch (error) {
     throw error;
@@ -71,7 +71,7 @@ export default function Home() {
 
   const fetchAirports = async () => {
     try {
-      const response = await api.get<Airport[]>('http://localhost:5000/airport'); // Adjust API endpoint
+      const response = await api.get<Airport[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/airport`); // Adjust API endpoint
       setAirports(response.data);
     } catch (error) {
       console.error('Error fetching airports:', error);

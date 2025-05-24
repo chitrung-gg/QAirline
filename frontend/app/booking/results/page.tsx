@@ -49,7 +49,7 @@ export default function FlightResultsPage() {
                 passengerCount: searchParams.passengers,
             };
 
-            const response = await axios.get('http://localhost:5000/flight/search', { params });
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/flight/search`, { params });
 
             console.log('API Request:', params);
             console.log('API Response:', response.data);

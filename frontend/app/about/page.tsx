@@ -15,8 +15,11 @@ interface AboutUsSection {
     image: string[];
 }
 
-export default function About() {
+const api = axios.create({
+    baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}`
+});
 
+export default function About() {
     const [introData, setIntroData] = useState<AboutUsSection | null>(null);
     const [ourValueData, setOurValueData] = useState<AboutUsSection | null>(null);
     const [achievementData, setAchievementData] = useState<AboutUsSection | null>(null);
@@ -25,10 +28,10 @@ export default function About() {
     useEffect(() => {
         const fetchAboutData = async () => {
             try {
-                const introResponse = await axios.get("http://localhost:5000/aboutus/category/Intro");
-                const ourValueResponse = await axios.get("http://localhost:5000/aboutus/category/OurValue");
-                const achievementResponse = await axios.get("http://localhost:5000/aboutus/category/Achievement");
-                const ourVisionResponse = await axios.get("http://localhost:5000/aboutus/category/OurVision");
+                const introResponse = await api.get('/aboutus/category/Intro');
+                const ourValueResponse = await api.get('/aboutus/category/OurValue');
+                const achievementResponse = await api.get('/aboutus/category/Achievement');
+                const ourVisionResponse = await api.get('/aboutus/category/OurVision');
 
                 setIntroData({
                     category: introResponse.data[0].category,
@@ -43,10 +46,10 @@ export default function About() {
                     image: ourValueResponse.data[0].image,
                 });
                 setAchievementData({
-                        category: achievementResponse.data[0].category,
-                        title: achievementResponse.data[0].title,
-                        content: achievementResponse.data[0].content,
-                        image: achievementResponse.data[0].image,
+                    category: achievementResponse.data[0].category,
+                    title: achievementResponse.data[0].title,
+                    content: achievementResponse.data[0].content,
+                    image: achievementResponse.data[0].image,
                 });
                 setOurVisionData({
                     category: ourVisionResponse.data[0].category,

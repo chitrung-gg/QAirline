@@ -116,7 +116,7 @@ export default function Page() {
             updatedAt: new Date().toISOString(),
         };
         try {
-          await axios.post("http://localhost:5000/aircraft", data);
+          await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/aircraft`, data);
           onOpen(); //open modal
 
         } catch (error) {

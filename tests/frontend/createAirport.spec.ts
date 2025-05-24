@@ -7,7 +7,7 @@ test.use({
 });
 
 test('Autonomous Test', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
+  await page.goto(`${process.env.FRONTEND_URL}:${process.env.FRONTEND_PORT}/`);
   await page.getByRole('button', { name: 'Đăng nhập' }).click();
   await page.getByRole('textbox', { name: 'Email của bạn Email của bạn' }).click();
   await page.getByRole('textbox', { name: 'Email của bạn Email của bạn' }).fill('admin@qairline.com');
@@ -30,7 +30,7 @@ test('Autonomous Test', async ({ page }) => {
 });
 
 test('Codegen Test', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
+  await page.goto(`${process.env.FRONTEND_URL}:${process.env.FRONTEND_PORT}/`);
   await page.getByRole('button', { name: 'Đăng nhập' }).click();
   await page.getByRole('textbox', { name: 'Email của bạn Email của bạn' }).click();
   await page.getByRole('textbox', { name: 'Email của bạn Email của bạn' }).fill('admin@qairline.com');
@@ -56,7 +56,7 @@ test('Codegen Test', async ({ page }) => {
 test('Tạo sân bay thành công', async ({ page, context }) => {
   await context.clearCookies();
 
-  await page.goto('http://localhost:3000/auth/login', {timeout: 180000}); 
+  await page.goto(`${process.env.FRONTEND_URL}:${process.env.FRONTEND_PORT}/auth/login`, {timeout: 180000}); 
   await page.evaluate(() => {
     localStorage.clear();
     sessionStorage.clear();
@@ -102,14 +102,14 @@ test('Tạo sân bay thành công', async ({ page, context }) => {
   await closeButton.waitFor({ state: 'attached' });
   await closeButton.click();
 
-  await expect(page).toHaveURL('http://localhost:3000/admin/airport', { timeout: 180000 });
+  await expect(page).toHaveURL(`${process.env.FRONTEND_URL}:${process.env.FRONTEND_PORT}/admin/airport`, { timeout: 180000 });
 });
 
 
 test('Tạo sân bay thiếu trường', async ({ page, context }) => {
   await context.clearCookies();
 
-  await page.goto('http://localhost:3000/auth/login', {timeout: 180000});
+  await page.goto(`${process.env.FRONTEND_URL}:${process.env.FRONTEND_PORT}/auth/login`, {timeout: 180000});
   await page.evaluate(() => {
     localStorage.clear();
     sessionStorage.clear();
@@ -158,7 +158,7 @@ test('Tạo sân bay thiếu trường', async ({ page, context }) => {
 
 test('Hiển thị lỗi khi API trả về lỗi', async ({ page, context }) => {
   await context.clearCookies();
-  await page.goto('http://localhost:3000/auth/login');
+  await page.goto(`${process.env.FRONTEND_URL}:${process.env.FRONTEND_PORT}/auth/login`);
   await page.evaluate(() => {
     localStorage.clear();
     sessionStorage.clear();

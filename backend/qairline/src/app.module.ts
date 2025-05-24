@@ -21,6 +21,7 @@ import { EmailModule } from './email/email.module';
 import { PolicyModule } from './policy/policy.module';
 import { FaqModule } from './faq/faq.module';
 import { AboutusModule } from './aboutus/aboutus.module';
+import * as redisStore from 'cache-manager-ioredis';
 
 @Module({
   imports: [FlightModule, ConfigModule.forRoot({
@@ -50,9 +51,18 @@ import { AboutusModule } from './aboutus/aboutus.module';
     isGlobal: true,
     imports: [ConfigModule],
     inject: [ConfigService],
+    // useFactory: async (configService: ConfigService) => ({
+    //   max: Number(configService.get('MAX_CACHE_QUANTITY')),
+    //   ttl: Number(configService.get('MAX_CACHE_TTL')),
+    // }),
     useFactory: async (configService: ConfigService) => ({
+      store: redisStore,
+      host: String(configService.get('REDIS_HOST')),
+      port: Number(configService.get('REDIS_PORT')),
+      password: String(configService.get('REDIS_PASSWORD')),
+      ttl: Number(configService.get('MAX_CACHE_TTL')), // in seconds
       max: Number(configService.get('MAX_CACHE_QUANTITY')),
-      ttl: Number(configService.get('MAX_CACHE_TTL')),
+      tls: {}, // Required for Azure Redis (SSL)
     }),
   }),
     DatabaseModule, AuthenticationModule, UserModule, BookingModule, PromotionModule, NewsModule, DestinationModule],

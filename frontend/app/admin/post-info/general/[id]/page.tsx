@@ -14,7 +14,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
     const id = params.id;
 
-    const res = await axios.get(`http://localhost:5000/news/${id}`);
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news/${id}`);
     const newsData = res.data;
 
     return (

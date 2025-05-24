@@ -32,15 +32,15 @@ export default function Page(props: { params: { id: string } }) {
     React.useEffect(() => {
         const fetchData = async () => {
             if (!id) return;  
-            const res = await axios.get(`http://localhost:5000/flight/${id}`);
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/flight/${id}`);
             const data = res.data;            
             setInitialData(data);
 
-            const resAircrafts = await axios.get(`http://localhost:5000/aircraft`);
+            const resAircrafts = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/aircraft`);
             const activeAircrafts = resAircrafts.data.filter((aircraft: Aircraft) => aircraft.status === AircraftStatus.ACTIVE);
             setAircrafts(activeAircrafts);
 
-            const resAirports = await axios.get(`http://localhost:5000/airport`);
+            const resAirports = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/airport`);
             const airportsData = resAirports.data;
             setAirports(airportsData);
         };

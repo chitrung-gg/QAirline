@@ -51,7 +51,7 @@ export default function Page() {
         };
         // Call API to create news
         try {
-            const res = await axios.post("http://localhost:5000/news", data);
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/news`, data);
             onOpen();
             console.log(data);
         } catch (error) {

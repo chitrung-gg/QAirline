@@ -65,8 +65,8 @@ export default function Page() {
     React.useEffect(() => {
         const fetchData = async () => {
             try {
-                const aircraftRes = await axios.get("http://localhost:5000/aircraft");
-                const airportRes = await axios.get("http://localhost:5000/airport"); 
+                const aircraftRes = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/aircraft`);
+                const airportRes = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/airport`); 
                 const activeAircrafts = aircraftRes.data.filter((aircraft: Aircraft) => aircraft.status === AircraftStatus.ACTIVE);
                 setAircrafts(activeAircrafts);
                 setAirports(airportRes.data);
@@ -156,7 +156,7 @@ export default function Page() {
         // Call API to create promotion
         try {
             console.log(data);
-            const res = await axios.post("http://localhost:5000/flight", data);
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/flight`, data);
             onOpen();
         } catch (error) {
             console.log(data)

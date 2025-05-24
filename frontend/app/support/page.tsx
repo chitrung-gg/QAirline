@@ -52,7 +52,7 @@ export default function Support() {
     const [data, setData] = useState<FAQItem[]>([]);
     const fetchData = async () => {
         try {
-          const response = await axios.get<FAQItem[]>('http://localhost:5000/faq'); // Adjust API endpoint
+          const response = await axios.get<FAQItem[]>(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/faq`); // Adjust API endpoint
           setData(response.data);
         } catch (error) {
           console.error('Error fetching faqs:', error);

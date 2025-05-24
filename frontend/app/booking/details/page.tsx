@@ -63,7 +63,7 @@ export default function BookingDetailsPage() {
     useEffect(() => {
         const fetchPromotions = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/promotion');
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/promotion`);
                 setPromotions(response.data);
             } catch (error) {
                 console.error('Error fetching promotions:', error);
@@ -182,7 +182,7 @@ export default function BookingDetailsPage() {
 
             let userData = null;
             if (userInfo?.userId) {
-                const res = await axios.post(`http://localhost:5000/user/id`, {
+                const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/user/id`, {
                     id: userInfo.userId
                 }, {
                     headers: {
@@ -217,7 +217,7 @@ export default function BookingDetailsPage() {
                 console.log('Departure booking data:', departureBookingData);
     
                 const departureResponse = await api.post(
-                    'http://localhost:5000/booking',
+                    `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/booking`,
                     departureBookingData
                 );
     
@@ -251,7 +251,7 @@ export default function BookingDetailsPage() {
                 console.log('Return booking data:', returnBookingData);
     
                 const returnResponse = await api.post(
-                    'http://localhost:5000/booking',
+                    `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/booking`,
                     returnBookingData
                 );
     

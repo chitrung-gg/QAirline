@@ -46,7 +46,7 @@ export default function Page(props: { params: { id: string } }) {
         const fetchData = async () => {
             if (!id) return;  
             try {
-                const res = await axios.get(`http://localhost:5000/booking/user/${id}`);
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/booking/user/${id}`);
                 const data = res.data;
                 if (data.length === 0) {
                     //setError("Không tìm thấy đặt vé nào");

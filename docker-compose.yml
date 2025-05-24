@@ -1,0 +1,54 @@
+services:
+  qairline-frontend:
+    build: ./frontend
+    container_name: qairline-frontend
+    ports:
+      - 3000:3000
+    depends_on:
+      - qairline-backend
+      - qairline-db
+      - qairline-redis
+    networks:
+      - qairline-network
+    env_file: ./frontend/.env
+    restart: on-failure:3
+  qairline-backend:
+    build: ./backend/qairline
+    container_name: qairline-backend
+    ports:
+      - 5000:5000
+    depends_on:
+      - qairline-db
+      - qairline-redis
+    networks:
+      - qairline-network
+    env_file: ./backend/qairline/.env
+    restart: on-failure:3
+  qairline-db:
+    image: postgres
+    container_name: qairline-db
+    ports:
+      - 5432:5432
+    networks:
+      - qairline-network
+    volumes:
+      - qairline-db:/var/lib/postgresql/data
+    restart: always
+    env_file: ./backend/qairline/.env
+  
+  # qairline-redis:
+  #   image: redis
+  #   container_name: qairline-redis
+  #   ports:
+  #     - 6379:6379
+  #   networks:
+  #     - qairline-network
+  #   restart: always
+  #   env_file: ./backend/qairline/.env
+  #   command: ["--requirepass", "${REDIS_PASSWORD}"]
+
+networks:
+  qairline-network:
+
+volumes:
+  qairline-db:

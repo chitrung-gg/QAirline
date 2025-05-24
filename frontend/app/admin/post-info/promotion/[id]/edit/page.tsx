@@ -49,7 +49,7 @@ export default function Page(props: { params: { id: string } }) {
     useEffect(() => {
         const fetchData = async () => {
             if (!id) return;  
-            const res = await axios.get(`http://localhost:5000/promotion/${id}`);
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/promotion/${id}`);
             const data = res.data;
             setInitialData(data);
             setCodeValue(data.code);
@@ -114,7 +114,7 @@ export default function Page(props: { params: { id: string } }) {
 
         try {
             console.log(formData);
-            const res = await axios.patch(`http://localhost:5000/promotion/${id}`, formData);
+            const res = await axios.patch(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/promotion/${id}`, formData);
             onOpen();
         } catch (error) {
             onErrorOpen();
@@ -126,7 +126,7 @@ export default function Page(props: { params: { id: string } }) {
         // const confirmDelete = window.confirm("Bạn có chắc chắn muốn xóa thông tin này?"); // Remake UI for confirmation
         // if (confirmDelete) {
             try {
-                await axios.delete(`http://localhost:5000/promotion/${id}`);
+                await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/promotion/${id}`);
                 onDeletedOpen();
             } catch (error) {
                 console.error(error);

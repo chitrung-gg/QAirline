@@ -74,7 +74,7 @@ export const fetchBookingByCode = createAsyncThunk(
   async (bookingCode: string, { rejectWithValue }) => {
     try {
       const response = await api.get<Booking>(
-        `http://localhost:5000/booking/code?bookingCode=${bookingCode}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/booking/code?bookingCode=${bookingCode}`
       );
       return response.data;
     } catch (error) {
@@ -88,7 +88,7 @@ export const cancelBooking = createAsyncThunk(
   async (bookingId: number, { rejectWithValue }) => {
     try {
       const response = await api.post<Booking>(
-        `http://localhost:5000/booking/cancel`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}/booking/cancel`,
         { bookingCode: bookingId }
       );
       return response.data;

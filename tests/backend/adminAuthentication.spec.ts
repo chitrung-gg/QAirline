@@ -12,7 +12,7 @@ test.describe('Admin Authentication Status', () => {
 
     // test.beforeAll('Setup shared API connection', async () => {
     //     context = await request.newContext({
-    //         baseURL: 'http://localhost:5000',
+    //         baseURL: '${process.env.NEXT_PUBLIC_BACKEND_URL}:${process.env.NEXT_PUBLIC_BACKEND_PORT}',
     //     });
     // })
 
