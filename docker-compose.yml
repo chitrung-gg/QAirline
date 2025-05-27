@@ -7,7 +7,7 @@ services:
     depends_on:
       - qairline-backend
       - qairline-db
-      - qairline-redis
+      # - qairline-redis
     networks:
       - qairline-network
     env_file: ./frontend/.env
@@ -19,7 +19,7 @@ services:
       - 5000:5000
     depends_on:
       - qairline-db
-      - qairline-redis
+      # - qairline-redis
     networks:
       - qairline-network
     env_file: ./backend/qairline/.env
